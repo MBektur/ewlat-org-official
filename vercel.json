@@ -1,0 +1,5 @@
+{
+  "installCommand": "true",
+  "buildCommand": "rm -rf dist && mkdir dist && cp -R preview/. dist/ && cp -R assets/. dist/assets/",
+  "outputDirectory": "dist"
+}
