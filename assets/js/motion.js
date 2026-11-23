@@ -11,6 +11,10 @@
 
   var doc = document;
   var root = doc.documentElement;
+  var SCRIPT_BASE = (function () {
+    var src = (doc.currentScript && doc.currentScript.src) || '';
+    return src ? src.replace(/[^\/]*$/, '') : 'assets/js/';   // …/assets/js/
+  })();
 
   function mq(q) { return !!(window.matchMedia && window.matchMedia(q).matches); }
   var MOTION = !mq('(prefers-reduced-motion: reduce)');
@@ -51,7 +55,6 @@
   function rand(a, b) { return a + Math.random() * (b - a); }
   function pick(arr) { return arr[(Math.random() * arr.length) | 0]; }
   function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
-  function easeInOut(x) { return x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; }
 
   /** Hedef ekranda ve sekme görünürken çalışan requestAnimationFrame döngüsü. */
   function runWhileVisible(target, frame) {
@@ -97,143 +100,6 @@
     }, { threshold: threshold || .15 });
     nodes.forEach(function (n) { io.observe(n); });
   }
-
-  /* ------------------------------------------------------------------ */
-  /* 1. HERO — canlı dünya haritası: diaspora noktaları + ışık yayları    */
-  /* ------------------------------------------------------------------ */
-  safe('hero', function () {
-    var top = $('.top');
-    if (!top) return;
-    var bg = getComputedStyle(top).backgroundImage;
-    var m = bg && bg.match(/url\(["']?(.*?)["']?\)/);
-    if (!m) return;
-
-    var wrap = el('div', 'tw:absolute tw:inset-0 tw:overflow-hidden tw:pointer-events-none', { 'aria-hidden': 'true' });
-    var layer = el('div', 'ew-hero-layer tw:absolute tw:-inset-4 tw:bg-no-repeat tw:bg-top tw:bg-cover tw:will-change-transform');
-    layer.style.backgroundImage = bg;
-    wrap.appendChild(layer);
-    top.insertBefore(wrap, top.firstChild);
-    top.classList.add('ew-hero-ready');
-
-    if (!MOTION) return;
-
-    var cv = el('canvas', 'tw:absolute tw:inset-0 tw:size-full');
-    layer.appendChild(cv);
-
-    // bg.jpg (1920×629) için ölçülmüş Miller projeksiyonu
-    var CAL = { w: 1920, h: 629, x0: 932, kx: 3.31, y0: 427, ky: 189.6 };
-    function geo(lat, lon) {
-      var Y = 1.25 * Math.log(Math.tan(Math.PI / 4 + 0.4 * lat * Math.PI / 180));
-      return [CAL.x0 + CAL.kx * lon, CAL.y0 - CAL.ky * Y];
-    }
-    // home: ana vatan (Doğu Türkistan); diğerleri dünyadaki Uygur toplulukları
-    var CITIES = [
-      { ll: [39.47, 75.99], home: 1 }, { ll: [43.83, 87.62], home: 1 }, { ll: [37.11, 79.93], home: 1 },
-      { ll: [43.91, 81.28], home: 1 }, { ll: [42.95, 89.19], home: 1 },
-      { ll: [43.24, 76.89] }, { ll: [42.87, 74.59] }, { ll: [41.30, 69.24] }, { ll: [41.01, 28.98] },
-      { ll: [38.72, 35.49] }, { ll: [48.14, 11.58] }, { ll: [52.37, 4.90] }, { ll: [59.33, 18.07] },
-      { ll: [51.51, -0.13] }, { ll: [38.91, -77.04] }, { ll: [43.65, -79.38] }, { ll: [49.28, -123.12] },
-      { ll: [35.68, 139.69] }, { ll: [21.39, 39.86] }, { ll: [30.04, 31.24] },
-      { px: [1430, 593] }, { px: [1405, 612] } // Sidney, Melbourne (haritada Avustralya kaydırılmış çizilmiş)
-    ];
-    CITIES.forEach(function (c) { c.img = c.px || geo(c.ll[0], c.ll[1]); c.phase = Math.random(); });
-    var HOME = CITIES.filter(function (c) { return c.home; });
-    var AWAY = CITIES.filter(function (c) { return !c.home; });
-
-    var nat = { w: CAL.w, h: CAL.h };
-    var probe = new Image();
-    probe.onload = function () { nat.w = probe.naturalWidth || CAL.w; nat.h = probe.naturalHeight || CAL.h; layout(); };
-    probe.src = m[1];
-
-    var size = { w: 0, h: 0, ctx: null };
-    function layout() {
-      size = fitCanvas(cv);
-      var s = Math.max(size.w / nat.w, size.h / nat.h);
-      var ox = (size.w - nat.w * s) / 2;
-      var fx = nat.w / CAL.w, fy = nat.h / CAL.h;
-      CITIES.forEach(function (c) { c.x = ox + c.img[0] * fx * s; c.y = c.img[1] * fy * s; });
-    }
-    layout();
-    window.addEventListener('resize', debounce(layout, 150));
-
-    var arcs = [], bursts = [], spawnIn = 600;
-    function spawn() {
-      var a, b, tries = 0;
-      do {
-        if (Math.random() < .72) { a = pick(HOME); b = pick(AWAY); } else { a = pick(AWAY); b = pick(AWAY); }
-        if (Math.random() < .3) { var tmp = a; a = b; b = tmp; }
-        tries++;
-      } while ((a === b || Math.abs(a.x - b.x) < size.w * .16) && tries < 12);
-      if (a === b) return;
-      var apex = rand(.05, .17) * size.h;                // tepe noktası üst bantta → menünün üstünden görünür
-      arcs.push({
-        a: a, b: b, p: 0, dur: rand(2400, 3400),
-        cx: (a.x + b.x) / 2, cy: (4 * apex - a.y - b.y) / 2
-      });
-    }
-    function q(arc, t) {
-      var u = 1 - t;
-      return [u * u * arc.a.x + 2 * u * t * arc.cx + t * t * arc.b.x,
-              u * u * arc.a.y + 2 * u * t * arc.cy + t * t * arc.b.y];
-    }
-
-    runWhileVisible(top, function (dt, now) {
-      var ctx = size.ctx;
-      if (!ctx) return;
-      ctx.clearRect(0, 0, size.w, size.h);
-
-      // Şehir noktaları (nabız halkası)
-      for (var i = 0; i < CITIES.length; i++) {
-        var c = CITIES[i];
-        var f = (now / 3200 + c.phase) % 1;
-        var col = c.home ? '255,224,138' : '235,250,255';
-        ctx.beginPath(); ctx.arc(c.x, c.y, 2 + f * 11, 0, 6.283);
-        ctx.strokeStyle = 'rgba(' + col + ',' + (0.45 * (1 - f)).toFixed(3) + ')';
-        ctx.lineWidth = 1; ctx.stroke();
-        ctx.beginPath(); ctx.arc(c.x, c.y, c.home ? 2.6 : 1.8, 0, 6.283);
-        ctx.fillStyle = 'rgba(' + col + ',.85)'; ctx.fill();
-      }
-
-      // Işık yayları
-      spawnIn -= dt;
-      if (spawnIn <= 0 && arcs.length < 5) { spawn(); spawnIn = rand(700, 1300); }
-      for (var k = arcs.length - 1; k >= 0; k--) {
-        var arc = arcs[k];
-        var before = arc.p;
-        arc.p += dt / arc.dur;
-        if (before < 1 && arc.p >= 1) bursts.push({ x: arc.b.x, y: arc.b.y, p: 0 });
-        if (arc.p >= 1.4) { arcs.splice(k, 1); continue; }
-        var head = easeInOut(Math.min(arc.p, 1));
-        var tail = easeInOut(clamp(arc.p - .4, 0, 1));
-        var N = 26, prev = q(arc, tail);
-        ctx.lineCap = 'round';
-        for (var s = 1; s <= N; s++) {
-          var tt = tail + (head - tail) * s / N;
-          var pt = q(arc, tt);
-          ctx.beginPath(); ctx.moveTo(prev[0], prev[1]); ctx.lineTo(pt[0], pt[1]);
-          ctx.strokeStyle = 'rgba(255,232,160,' + (0.85 * s / N).toFixed(3) + ')';
-          ctx.lineWidth = 0.6 + 1.4 * s / N;
-          ctx.stroke();
-          prev = pt;
-        }
-        if (arc.p < 1) {
-          var h = q(arc, head);
-          ctx.beginPath(); ctx.arc(h[0], h[1], 6, 0, 6.283); ctx.fillStyle = 'rgba(255,232,160,.18)'; ctx.fill();
-          ctx.beginPath(); ctx.arc(h[0], h[1], 2.2, 0, 6.283); ctx.fillStyle = 'rgba(255,250,230,.95)'; ctx.fill();
-        }
-      }
-
-      // Varış patlamaları
-      for (var b = bursts.length - 1; b >= 0; b--) {
-        var bu = bursts[b];
-        bu.p += dt / 900;
-        if (bu.p >= 1) { bursts.splice(b, 1); continue; }
-        ctx.beginPath(); ctx.arc(bu.x, bu.y, 3 + bu.p * 20, 0, 6.283);
-        ctx.strokeStyle = 'rgba(255,232,160,' + (0.7 * (1 - bu.p)).toFixed(3) + ')';
-        ctx.lineWidth = 1.5; ctx.stroke();
-      }
-    });
-  });
 
   /* ------------------------------------------------------------------ */
   /* 2a. SLOGAN — kelime kelime açılış + altın parıltı                    */
@@ -294,184 +160,363 @@
   });
 
   /* ------------------------------------------------------------------ */
-  /* 3. YARIM DAİRE MENÜ                                                 */
+  /* 3. YARIM DAİRE MENÜ — dönme dolap                                   */
   /* ------------------------------------------------------------------ */
   safe('menu', function () {
     var menu = $('.menu');
     var img = menu && $('img', menu);
     if (!img) return;
-    var btns = $$('.mbtn', menu);
-    if (!btns.length) return;
+    var origBtns = $$('.mbtn', menu);
+    if (!origBtns.length) return;
+    var top = $('.top') || menu.parentNode;
 
-    // 3a. Her daireye kendi görsel diliminin kopyası → hover'da ikon "dışarı fırlar"
-    btns.forEach(function (b) {
-      var s = el('span', 'ew-slice', { 'aria-hidden': 'true' });
-      b.insertBefore(s, b.firstChild);
-      b._ewSlice = s;
+    // tools/build-wheel.mjs çıktısı (assets/images/wheel/wheel.json) — menu.png piksel koordinatları
+    var WHEEL = {
+      size: [1409, 701], center: [704.5, 704.5], rIn: 397, rOut: 704,
+      items: [
+        { icon: [89.5, 626.5, 55.5],   label: [160, 613, 86, 57] },
+        { icon: [128.5, 469.4, 55.4],  label: [204, 491, 66, 53] },
+        { icon: [210.6, 324.5, 55.4],  label: [250, 365, 101, 58] },
+        { icon: [327.6, 210.5, 55.4],  label: [352, 270, 81, 57] },
+        { icon: [466.5, 130.4, 55.2],  label: [480, 210, 75, 50] },
+        { icon: [623.5, 87.5, 55.4],   label: [604, 175, 68, 58] },
+        { icon: [787.6, 86.5, 55.4],   label: [727, 177, 84, 56] },
+        { icon: [945.5, 126.5, 55.4],  label: [863, 210, 69, 52] },
+        { icon: [1083.5, 209.5, 55.3], label: [959, 268, 98, 58] },
+        { icon: [1200.7, 325.6, 55.2], label: [1067, 373, 78, 51] },
+        { icon: [1281.5, 465.5, 55.3], label: [1136, 482, 66, 58] },
+        { icon: [1320.5, 623.6, 53.6], label: [1140, 616, 117, 54] }
+      ]
+    };
+    var BASE = SCRIPT_BASE + '../images/wheel/';
+
+    origBtns.forEach(function (b) {
+      b.insertBefore(el('span', 'ew-slice', { 'aria-hidden': 'true' }), b.firstChild);
     });
-    function layoutSlices() {
-      var W = img.clientWidth, H = img.clientHeight;
-      if (!W || !H) return;
-      var src = img.currentSrc || img.src;
-      btns.forEach(function (b) {
-        var s = b._ewSlice;
-        s.style.backgroundImage = 'url("' + src + '")';
-        s.style.backgroundSize = W + 'px ' + H + 'px';
-        s.style.backgroundPosition = (-b.offsetLeft) + 'px ' + (-b.offsetTop) + 'px';
-      });
-    }
-    window.addEventListener('resize', debounce(layoutSlices, 150));
+    $$('a', menu).forEach(function (a) { a.setAttribute('draggable', 'false'); });
+    img.setAttribute('draggable', 'false');
 
-    // 3b. Tooltip baloncuğu
+    // ---- Tooltip baloncuğu (.top içinde; çark dönse de düz kalır) ----
     var tip = el('div',
-      'tw:absolute tw:z-10 tw:pointer-events-none tw:whitespace-nowrap tw:rounded-full tw:bg-white tw:px-4 tw:py-1.5 ' +
+      'tw:absolute tw:z-30 tw:pointer-events-none tw:whitespace-nowrap tw:rounded-full tw:bg-white tw:px-4 tw:py-1.5 ' +
       'tw:text-[15px] tw:font-bold tw:text-ew-deep tw:shadow-[0_10px_30px_rgba(0,0,0,.3)] ' +
-      'tw:opacity-0 tw:transition tw:duration-200 tw:ease-out tw:flex tw:items-center tw:gap-1.5',
+      'tw:opacity-0 tw:transition-opacity tw:duration-200 tw:ease-out tw:flex tw:items-center tw:gap-1.5',
       { role: 'tooltip', dir: 'auto' });
     var tipText = el('span');
     var tipIcon = el('span', 'tw:inline-flex tw:opacity-60');
     tipIcon.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>';
     var tipArrow = el('span', 'tw:absolute tw:left-1/2 tw:top-full tw:-translate-x-1/2 tw:border-[7px] tw:border-transparent tw:border-t-white');
     tip.appendChild(tipText); tip.appendChild(tipIcon); tip.appendChild(tipArrow);
-    tip.style.transform = 'translate(-50%, calc(-100% + 8px))';
-    menu.appendChild(tip);
-
-    function label(b) {
-      var a = $('a', b);
-      if (!a) return null;
-      return a.textContent.trim().replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '');
+    tip.style.transform = 'translate(-50%, -100%)';
+    top.appendChild(tip);
+    var tipFor = null;
+    function placeTip() {
+      if (!tipFor) return;
+      var r = tipFor.getBoundingClientRect(), tr = top.getBoundingClientRect();
+      tip.style.left = (r.left + r.width / 2 - tr.left) + 'px';
+      tip.style.top = (r.top - tr.top - 10) + 'px';
     }
     function showTip(b) {
-      var txt = label(b);
-      var inactive = !txt;
-      tipText.textContent = inactive ? t('soon') : txt;
-      tipIcon.style.display = inactive ? 'none' : '';
-      tip.style.left = (b.offsetLeft + b.offsetWidth / 2) + 'px';
-      tip.style.top = (b.offsetTop - 18) + 'px';     // büyüyen dairenin (scale 1.17) üstünde kalsın
+      var a = $('a', b);
+      var txt = a && a.textContent.trim().replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '');
+      tipText.textContent = txt || t('soon');
+      tipIcon.style.display = txt ? '' : 'none';
+      tipFor = b;
+      placeTip();
       tip.classList.remove('tw:opacity-0');
-      tip.style.transform = 'translate(-50%, -100%)';
     }
-    function hideTip() {
-      tip.classList.add('tw:opacity-0');
-      tip.style.transform = 'translate(-50%, calc(-100% + 8px))';
-    }
-    btns.forEach(function (b) {
-      b.addEventListener('mouseenter', function () { showTip(b); });
-      b.addEventListener('mouseleave', hideTip);
-      b.addEventListener('focusin', function () { showTip(b); });
-      b.addEventListener('focusout', hideTip);
-    });
-
-    // Geometri: menü merkezi görselin alt-ortası; açı 0° = yukarı, +90° = sağ
-    function angles() {
-      var W = img.clientWidth, H = img.clientHeight;
-      return btns.map(function (b) {
-        var x = b.offsetLeft + b.offsetWidth / 2, y = b.offsetTop + b.offsetHeight / 2;
-        return Math.atan2(x - W / 2, H - y) * 180 / Math.PI;
+    function hideTip() { tipFor = null; tip.classList.add('tw:opacity-0'); }
+    function bindTip(list) {
+      list.forEach(function (b) {
+        b.addEventListener('mouseenter', function () { showTip(b); });
+        b.addEventListener('mouseleave', hideTip);
+        b.addEventListener('focusin', function () { showTip(b); });
+        b.addEventListener('focusout', hideTip);
       });
     }
-    function ping(b) {
-      b.classList.add('ew-ping');
-      setTimeout(function () { b.classList.remove('ew-ping'); }, 650);
-    }
 
-    // 3c. Okuyan çocuğun arkasında dönen ışık huzmeleri + merkezden tarama ışını
-    var ratio = (img.naturalHeight && img.naturalWidth) ? img.naturalHeight / img.naturalWidth : 701 / 1409;
-    var HOLE = .2786;                                   // iç boşluk yarıçapı / menü genişliği
+    // ---- Okuyan çocuğun arkasında dönen ışık huzmeleri (sabit merkezde) ----
     var haloWrap = el('div',
       'tw:absolute tw:z-[1] tw:pointer-events-none tw:left-1/2 tw:top-[77%] tw:w-[30%] tw:aspect-square ' +
       'tw:-translate-x-1/2 tw:-translate-y-1/2 tw:opacity-0 tw:transition-opacity tw:duration-[1500ms]',
       { 'aria-hidden': 'true' });
-    var halo = el('div', 'ew-halo tw:size-full tw:rounded-full tw:motion-safe:animate-ew-spin-slow');
-    haloWrap.appendChild(halo);
+    haloWrap.appendChild(el('div', 'ew-halo tw:size-full tw:rounded-full tw:motion-safe:animate-ew-spin-slow'));
     menu.insertBefore(haloWrap, img);
+    function showHalo() { haloWrap.classList.remove('tw:opacity-0'); haloWrap.classList.add('tw:opacity-80'); }
 
-    var beamWrap = el('div', 'tw:absolute tw:z-[1] tw:pointer-events-none tw:overflow-hidden', { 'aria-hidden': 'true' });
-    beamWrap.style.left = ((.5 - HOLE) * 100) + '%';
-    beamWrap.style.width = (HOLE * 200) + '%';
-    beamWrap.style.top = ((1 - HOLE / ratio) * 100) + '%';
-    beamWrap.style.height = ((HOLE / ratio) * 100) + '%';
-    var beam = el('div', 'ew-beam tw:absolute tw:left-0 tw:top-0 tw:w-full tw:aspect-square tw:rounded-full');
-    beamWrap.appendChild(beam);
-    menu.insertBefore(beamWrap, img);
-
-    var SWEEP = 2200;
-    function sweep() {
-      if (doc.hidden) return;
-      beam.classList.remove('ew-sweeping');
-      void beam.offsetWidth;
-      beam.classList.add('ew-sweeping');
-      angles().forEach(function (phi, i) {
-        setTimeout(function () { ping(btns[i]); }, clamp((90 - phi) / 180, 0, 1) * SWEEP);
-      });
+    // ---- Sabit menü (hareket kapalıysa ya da çark parçaları yüklenemezse) ----
+    var wheelOn = false;
+    function staticMode() {
+      if (wheelOn) return;
+      bindTip(origBtns);
+      var lay = function () {
+        var W = img.clientWidth, H = img.clientHeight, src = img.currentSrc || img.src;
+        origBtns.forEach(function (b) {
+          var s = $('.ew-slice', b);
+          s.style.backgroundImage = 'url("' + src + '")';
+          s.style.backgroundSize = W + 'px ' + H + 'px';
+          s.style.backgroundPosition = (-b.offsetLeft) + 'px ' + (-b.offsetTop) + 'px';
+        });
+      };
+      if (img.complete && img.naturalWidth) lay(); else img.addEventListener('load', lay, { once: true });
+      window.addEventListener('resize', debounce(lay, 150));
+      showHalo();
     }
+    if (!MOTION) { staticMode(); return; }
 
-    function afterIntro() {
-      haloWrap.classList.remove('tw:opacity-0');
-      haloWrap.classList.add('tw:opacity-80');
-      if (!MOTION) return;
-      setTimeout(sweep, 500);
-      setInterval(sweep, 8500);
-    }
-
-    // 3d. Yelpaze açılışı (sağdan sola, RTL yönünde)
-    function intro() {
-      layoutSlices();
-      if (!MOTION) { afterIntro(); return; }
-      var angs = angles(), done = btns.map(function () { return false; });
-      var t0 = performance.now(), D = 1500;
-      requestAnimationFrame(function step(now) {
-        var p = Math.min(1, (now - t0) / D);
-        var e = 1 - Math.pow(1 - p, 3);
-        img.style.setProperty('--ew-fan', (e * 186).toFixed(2) + 'deg');
-        var front = 90 - e * 180;                       // yelpaze kenarının açısı
-        angs.forEach(function (a, i) { if (!done[i] && a >= front) { done[i] = true; ping(btns[i]); } });
-        if (p < 1) requestAnimationFrame(step);
-        else {
-          img.classList.remove('ew-fan');
-          img.style.removeProperty('--ew-fan');
-          afterIntro();
-        }
-      });
-    }
-
-    if (MOTION) img.classList.add('ew-fan');
-    if (img.complete && img.naturalWidth) intro();
-    else {
-      img.addEventListener('load', intro, { once: true });
-      img.addEventListener('error', function () { img.classList.remove('ew-fan'); }, { once: true });
-    }
-  });
-
-  /* ------------------------------------------------------------------ */
-  /* 3e. İmleç: harita paralaksı + menünün 3D eğimi                     */
-  /* ------------------------------------------------------------------ */
-  safe('pointer', function () {
-    if (!(MOTION && FINE)) return;
-    var top = $('.top');
-    if (!top) return;
-    var layer = $('.ew-hero-layer', top), menu = $('.menu', top);
-    var tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
-
-    function kick() { if (!raf) raf = requestAnimationFrame(step); }
-    function step() {
-      raf = 0;
-      cx += (tx - cx) * .07; cy += (ty - cy) * .07;
-      var settled = Math.abs(tx - cx) < .0008 && Math.abs(ty - cy) < .0008;
-      if (layer) layer.style.transform = 'translate3d(' + (-cx * 18).toFixed(2) + 'px,' + (-cy * 12).toFixed(2) + 'px,0)';
-      if (menu) {
-        if (settled && !tx && !ty) menu.style.transform = '';   // dinlenirken keskin görüntü
-        else menu.style.transform = 'perspective(1600px) rotateX(' + (-cy * 5).toFixed(3) + 'deg) rotateY(' + (cx * 6).toFixed(3) + 'deg)';
-      }
-      if (!settled) kick();
-    }
-    top.addEventListener('mousemove', function (e) {
-      var r = top.getBoundingClientRect();
-      tx = (e.clientX - r.left) / r.width - .5;
-      ty = (e.clientY - r.top) / r.height - .5;
-      kick();
+    // ---- Çark parçalarını önceden yükle ----
+    var urls = [];
+    WHEEL.items.forEach(function (_, i) { urls.push(BASE + 'icon-' + i + '.png', BASE + 'label-' + i + '.png'); });
+    var pending = urls.length, failed = false;
+    urls.forEach(function (u) {
+      var im = new Image();
+      im.onload = function () { if (--pending === 0 && !failed) whenReady(img, buildWheel); };
+      im.onerror = function () { if (!failed) { failed = true; staticMode(); } };
+      im.src = u;
     });
-    top.addEventListener('mouseleave', function () { tx = 0; ty = 0; kick(); });
+    function whenReady(image, fn) {
+      if (image.complete && image.naturalWidth) fn(); else image.addEventListener('load', fn, { once: true });
+    }
+
+    /* ---- Dönme dolap ----
+       clip    : menü boyutunda (+ yan pay); çarkın alt yarısını gizler
+       wheel   : dönen iskelet — yumuşak renk halkası + SVG (göbek, kollar, jantlar, kafes, ampuller, pimler)
+       cabins  : 24 kabin (12 bağlantı × 2, karşılıklı); her biri bir pime asılı,
+                 yerçekimiyle sarkar ve çarkın ivmesine göre sarkaç gibi sallanır.
+       Ortadaki ay + kitap okuyan çocuk (orijinal görselin merkezi) sabit göbektir. */
+    function buildWheel() {
+      var SLOTS = 24, RP = 524, HANG = 12, GW = 100, GH = 136, ICON = 74, LSCALE = .74;
+      var DEG = Math.PI / 180;
+
+      var clip = el('div', 'tw:absolute tw:top-0 tw:z-[2] tw:overflow-hidden tw:opacity-0 tw:transition-opacity tw:duration-500');
+      var wheel = el('div', 'ew-wheel tw:absolute tw:top-0', { 'aria-hidden': 'true' });
+      wheel.appendChild(el('div', 'ew-wheel-bg tw:absolute tw:inset-0 tw:rounded-full'));
+      wheel.insertAdjacentHTML('beforeend', skeletonSVG());
+      clip.appendChild(wheel);
+
+      // Kabinler
+      var cabins = [];
+      for (var j = 0; j < SLOTS; j++) {
+        var i = 11 - (j % 12);                 // dilim j ↔ menu_item_(11-j) (sağdan sola)
+        var dup = j >= 12;
+        var it = WHEEL.items[i];
+        var b = dup ? origBtns[i].cloneNode(true) : origBtns[i];
+        if (dup) $$('a', b).forEach(function (a) { a.tabIndex = -1; });
+        var cab = el('div', 'ew-cabin', dup ? { 'aria-hidden': 'true' } : null);
+        var hanger = el('span', 'ew-hanger');
+        var gondola = el('div', 'ew-gondola');
+        var lab = el('img', 'tw:absolute tw:pointer-events-none tw:select-none',
+          { src: BASE + 'label-' + i + '.png', alt: '', draggable: 'false', 'aria-hidden': 'true' });
+        var slice = $('.ew-slice', b);
+        slice.style.backgroundImage = 'url("' + BASE + 'icon-' + i + '.png")';
+        gondola.appendChild(b);
+        gondola.appendChild(lab);
+        cab.appendChild(hanger);
+        cab.appendChild(gondola);
+        clip.appendChild(cab);
+        cabins.push({
+          el: cab, hanger: hanger, gondola: gondola, btn: b, slice: slice, label: lab, it: it,
+          th0: (7.5 + 15 * j) * DEG,            // matematiksel açı (saat yönü tersi, sağdan)
+          phi: 0, dphi: 0, wind: Math.random() * 6.28
+        });
+      }
+
+      menu.appendChild(clip);
+      menu.classList.add('ew-wheel-on');
+      img.classList.add('ew-center');            // orijinal görsel yalnızca sabit merkezi göstersin
+      wheelOn = true;
+      bindTip(cabins.map(function (c) { return c.btn; }));
+
+      var geo = { W: 0, H: 0, s: 1, M: 0, cx: 0, cy: 0, rin: 0, rout: 0 };
+      function layout() {
+        var W = img.clientWidth, H = img.clientHeight;
+        if (!W || !H) return;
+        var s = W / 1120, M = Math.round(110 * s);
+        geo = { W: W, H: H, s: s, M: M, cx: M + W / 2, cy: W / 2, rin: 316 * s, rout: 560 * s };
+        clip.style.left = -M + 'px';
+        clip.style.width = (W + 2 * M) + 'px';
+        clip.style.height = H + 'px';
+        wheel.style.left = M + 'px';
+        wheel.style.width = wheel.style.height = W + 'px';
+        menu.style.setProperty('--ew-rin', (WHEEL.rIn - 3) * (W / WHEEL.size[0]) + 'px');
+        menu.style.setProperty('--ew-cdy', (WHEEL.center[1] - WHEEL.size[1]) * (W / WHEEL.size[0]) + 'px');
+        cabins.forEach(function (c) {
+          var gw = GW * s, gh = GH * s, hang = HANG * s, d = ICON * s;
+          c.el.style.width = gw + 'px';
+          c.el.style.height = (hang + gh) + 'px';
+          c.hanger.style.height = (hang + 2) + 'px';
+          c.gondola.style.top = hang + 'px';
+          c.gondola.style.height = gh + 'px';
+          // ikon (bağlantı) — kabinin üst kısmında
+          var R = c.it.icon[2], f = d / (2 * R);
+          var x0 = Math.floor(c.it.icon[0] - R - 1), y0 = Math.floor(c.it.icon[1] - R - 1), sz = Math.ceil(2 * R + 3);
+          c.btn.style.left = (gw - d) / 2 + 'px';
+          c.btn.style.top = 7 * s + 'px';
+          c.btn.style.width = c.btn.style.height = d + 'px';
+          c.slice.style.backgroundSize = sz * f + 'px ' + sz * f + 'px';
+          c.slice.style.backgroundPosition = (x0 - (c.it.icon[0] - R)) * f + 'px ' + (y0 - (c.it.icon[1] - R)) * f + 'px';
+          // yazı — ikonun altında, kabinin içinde
+          var lw = c.it.label[2] * LSCALE * s, lh = c.it.label[3] * LSCALE * s;
+          var areaTop = (7 + ICON + 3) * s, areaH = gh - areaTop - 5 * s;
+          c.label.style.width = lw + 'px';
+          c.label.style.height = lh + 'px';
+          c.label.style.left = (gw - lw) / 2 + 'px';
+          c.label.style.top = areaTop + Math.max(0, (areaH - lh) / 2) + 'px';
+        });
+      }
+      layout();
+      window.addEventListener('resize', debounce(layout, 150));
+
+      // ---- Dönüş: açılışta çevirme → yavaş, sürekli dönüş ----
+      var AUTO = -3.2;              // derece/sn (negatif = saat yönünün tersi: kabinler sağdan sola akar)
+      var angle = 0, omega = -150;
+      var hover = false, drag = null;
+
+      function center() {
+        var r = menu.getBoundingClientRect();
+        return { x: r.left + geo.W / 2, y: r.top + geo.cy };
+      }
+      function polar(e) {
+        var c = center(), dx = e.clientX - c.x, dy = e.clientY - c.y;
+        return { r: Math.sqrt(dx * dx + dy * dy), a: Math.atan2(dy, dx) * 180 / Math.PI, x: e.clientX, y: e.clientY, cy: c.y };
+      }
+      function norm(d) { while (d > 180) d -= 360; while (d < -180) d += 360; return d; }
+      function inRing(p) { return p.r >= geo.rin && p.r <= geo.rout && p.y <= p.cy; }
+
+      // Fare çarkın üzerindeyken yavaşlayıp durur → bağlantılara rahat tıklanır
+      menu.addEventListener('pointermove', function (e) {
+        if (e.pointerType !== 'mouse') return;
+        var on = inRing(polar(e));
+        hover = on;
+        menu.style.cursor = drag && drag.moved ? 'grabbing' : (on ? 'grab' : '');
+      });
+      menu.addEventListener('pointerleave', function () { hover = false; menu.style.cursor = ''; });
+
+      // Sürükleyerek çevirme (fare + dokunmatik), bırakınca savrulma
+      menu.addEventListener('pointerdown', function (e) {
+        if (e.button !== 0) return;
+        var p = polar(e);
+        if (!inRing(p)) return;
+        drag = { sx: p.x, sy: p.y, lastA: p.a, lastT: e.timeStamp, v: 0, moved: false };
+      });
+      window.addEventListener('pointermove', function (e) {
+        if (!drag) return;
+        var p = polar(e);
+        if (!drag.moved) {
+          if (Math.abs(p.x - drag.sx) + Math.abs(p.y - drag.sy) < 7) return;
+          drag.moved = true;
+          menu.classList.add('ew-grabbing');
+          hideTip();
+        }
+        var d = norm(p.a - drag.lastA);
+        angle += d;
+        var dt = (e.timeStamp - drag.lastT) / 1000;
+        if (dt > 0) drag.v = drag.v * .5 + (d / dt) * .5;
+        drag.lastA = p.a; drag.lastT = e.timeStamp;
+      });
+      function endDrag(cancelled) {
+        if (!drag) return;
+        if (drag.moved) {
+          omega = cancelled ? 0 : clamp(drag.v, -180, 180);
+          var block = function (ev) { ev.preventDefault(); ev.stopPropagation(); };   // sürükleme bağlantı açmasın
+          menu.addEventListener('click', block, true);
+          setTimeout(function () { menu.removeEventListener('click', block, true); }, 80);
+        }
+        menu.classList.remove('ew-grabbing');
+        drag = null;
+      }
+      window.addEventListener('pointerup', function () { endDrag(false); });
+      window.addEventListener('pointercancel', function () { endDrag(true); });
+      menu.addEventListener('dragstart', function (e) { e.preventDefault(); });
+
+      // ---- Kabin fiziği: hareketli pime asılı sarkaç ----
+      // φ'' = (g_eff.x·cosφ − g_eff.y·sinφ)/L − c·φ' ,  g_eff = g − a_pim
+      var G = 3000, INERTIA = .35, DAMP = 2.4, WIND = 55, MAXPHI = .7;   // MAXPHI ≈ 40°: kabin tamponu
+      var prevAngle = 0, wS = 0, aS = 0, clock = 0;
+
+      clip.classList.remove('tw:opacity-0');
+      showHalo();
+      runWhileVisible(top, function (dtMs) {
+        var dt = Math.min(.05, dtMs / 1000);
+        clock += dt;
+        if (!drag || !drag.moved) {
+          var target = hover ? 0 : AUTO;
+          omega += (target - omega) * (1 - Math.exp(-dt / .9));
+          angle += omega * dt;
+        }
+        // gerçek açısal hız ve ivme (sürükleme dahil), yumuşatılmış
+        var wNow = norm(angle - prevAngle) / dt * DEG;
+        prevAngle = angle;
+        var wPrev = wS;
+        wS += (wNow - wS) * .35;
+        aS += (clamp((wS - wPrev) / dt, -6, 6) - aS) * .25;
+        angle %= 360;
+        wheel.style.setProperty('--ew-a', angle.toFixed(3) + 'deg');
+
+        var s = geo.s, Rp = RP * s, L = (HANG + GH / 2) * s, g = G * s, A = angle * DEG;
+        var gw = GW * s;
+        for (var k = 0; k < cabins.length; k++) {
+          var c = cabins[k];
+          var beta = -c.th0 + A;                 // ekran açısı (y aşağı)
+          var cb = Math.cos(beta), sb = Math.sin(beta);
+          var px = geo.cx + Rp * cb, py = geo.cy + Rp * sb;
+          // pim ivmesi: merkezcil + teğetsel
+          var ax = Rp * (-wS * wS * cb - aS * sb) * INERTIA;
+          var ay = Rp * (-wS * wS * sb + aS * cb) * INERTIA;
+          var gx = -ax + WIND * s * Math.sin(clock * .8 + c.wind), gy = g - ay;
+          var acc = (gx * Math.cos(c.phi) - gy * Math.sin(c.phi)) / L - DAMP * c.dphi;
+          c.dphi += acc * dt;
+          c.phi += c.dphi * dt;
+          if (c.phi > MAXPHI) { c.phi = MAXPHI; if (c.dphi > 0) c.dphi *= -.3; }       // tampona yumuşak çarpma
+          else if (c.phi < -MAXPHI) { c.phi = -MAXPHI; if (c.dphi < 0) c.dphi *= -.3; }
+          // Ufkun altında kalan kabinleri çizme
+          var hidden = py > geo.H + 4 * s && py - geo.H > 10;
+          if (hidden !== c.hidden) { c.hidden = hidden; c.el.style.visibility = hidden ? 'hidden' : ''; }
+          if (hidden) continue;
+          c.el.style.transform = 'translate(' + (px - gw / 2).toFixed(2) + 'px,' + py.toFixed(2) + 'px) rotate(' + (-c.phi).toFixed(4) + 'rad)';
+        }
+        placeTip();
+      });
+
+      function skeletonSVG() {
+        var R_HUB = 316, R_IN = 524, R_OUT = 548, R_BULB = 536;
+        var o = '<svg class="ew-skeleton" width="100%" height="100%" viewBox="-560 -560 1120 1120">';
+        var P = function (r, deg) { var a = deg * DEG; return (r * Math.cos(a)).toFixed(1) + ' ' + (-r * Math.sin(a)).toFixed(1); };
+        // çapraz destekler (ince)
+        o += '<g stroke="rgba(255,255,255,.22)" stroke-width="1.2">';
+        for (var k = 0; k < 24; k++) {
+          o += '<path d="M' + P(R_HUB, 15 * k) + ' L' + P(R_IN, 15 * k + 7.5) + ' M' + P(R_HUB, 15 * k + 15) + ' L' + P(R_IN, 15 * k + 7.5) + '"/>';
+        }
+        o += '</g>';
+        // ana kollar
+        o += '<g stroke="rgba(255,255,255,.7)" stroke-width="3" stroke-linecap="round">';
+        for (k = 0; k < 24; k++) o += '<path d="M' + P(R_HUB, 15 * k) + ' L' + P(R_IN, 15 * k) + '"/>';
+        o += '</g>';
+        // jant kafesi (iki jant arası zikzak)
+        var z = '';
+        for (k = 0; k <= 144; k++) z += (k ? ' L' : 'M') + P(k % 2 ? R_OUT : R_IN, k * 2.5);
+        o += '<path d="' + z + '" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.2"/>';
+        // jantlar ve göbek halkası
+        o += '<g fill="none" stroke="rgba(255,255,255,.92)">' +
+             '<circle r="' + R_OUT + '" stroke-width="3.5"/><circle r="' + R_IN + '" stroke-width="3.5"/>' +
+             '<circle r="' + R_HUB + '" stroke-width="5"/><circle r="' + (R_HUB - 9) + '" stroke-width="1.5" stroke="rgba(255,255,255,.4)"/></g>';
+        // ampuller (sırayla yanıp söner)
+        o += '<g class="ew-bulbs">';
+        for (k = 0; k < 72; k++) {
+          var a = k * 5 * DEG;
+          o += '<circle cx="' + (R_BULB * Math.cos(a)).toFixed(1) + '" cy="' + (-R_BULB * Math.sin(a)).toFixed(1) + '" r="3.4" style="animation-delay:' + (-(k % 12) * .2).toFixed(1) + 's"/>';
+        }
+        o += '</g>';
+        // kabin pimleri
+        o += '<g fill="#fff" stroke="#ffe08a" stroke-width="2">';
+        for (k = 0; k < 24; k++) {
+          var aa = (7.5 + 15 * k) * DEG;
+          o += '<circle cx="' + (R_IN * Math.cos(aa)).toFixed(1) + '" cy="' + (-R_IN * Math.sin(aa)).toFixed(1) + '" r="6"/>';
+        }
+        o += '</g></svg>';
+        return o;
+      }
+    }
   });
 
   /* ------------------------------------------------------------------ */

@@ -70,19 +70,6 @@
   from { opacity: .9; transform: scale(1); }
   to   { opacity: 0;  transform: scale(1.75); }
 }
-@keyframes ew-sweep {
-  0%   { opacity: 0; transform: rotate(0deg); }
-  8%   { opacity: 1; }
-  90%  { opacity: 1; }
-  100% { opacity: 0; transform: rotate(-180deg); }
-}
-
-/* ==========================================================================
-   1. HERO — canlı dünya haritası katmanı
-   ========================================================================== */
-html.ew-js .top.ew-hero-ready { background-image: none !important; }
-html.ew-js .top > .title,
-html.ew-js .top > .chislaDiv { position: relative; }
 
 /* ==========================================================================
    2. SLOGAN & TARİH
@@ -114,20 +101,82 @@ html.ew-motion .chislaDiv > :nth-child(3) { animation-delay: .95s; }
 html.ew-motion .chislaDiv > :nth-child(4) { animation-delay: 1.05s; }
 
 /* ==========================================================================
-   3. YARIM DAİRE MENÜ
+   3. YARIM DAİRE MENÜ — dönme dolap
    ========================================================================== */
 html.ew-js .menu > img { position: relative; z-index: 2; }
-html.ew-js .menu { transform-origin: 50% 100%; }
 
-/* Yelpaze açılışı: JS --ew-fan değişkenini 0deg → 186deg arasında sürer */
-html.ew-motion .menu > img.ew-fan {
-  -webkit-mask-image: conic-gradient(from -90deg at 50% 100%,
-      transparent calc(180deg - var(--ew-fan, 0deg)),
-      #000 calc(186deg - var(--ew-fan, 0deg)));
-  mask-image: conic-gradient(from -90deg at 50% 100%,
-      transparent calc(180deg - var(--ew-fan, 0deg)),
-      #000 calc(186deg - var(--ew-fan, 0deg)));
+/* Çark kurulunca orijinal görsel yalnızca sabit göbeği (ay + çocuk) gösterir.
+   JS --ew-rin / --ew-cdy değişkenlerini ayarlar. */
+html.ew-motion .menu.ew-wheel-on > img.ew-center {
+  -webkit-mask-image: radial-gradient(circle at 50% calc(100% + var(--ew-cdy, 0px)), #000 var(--ew-rin, 0px), transparent calc(var(--ew-rin, 0px) + .5px));
+  mask-image: radial-gradient(circle at 50% calc(100% + var(--ew-cdy, 0px)), #000 var(--ew-rin, 0px), transparent calc(var(--ew-rin, 0px) + .5px));
 }
+
+/* Dönen iskelet */
+.ew-wheel { rotate: var(--ew-a, 0deg); pointer-events: none; }
+/* Kesintisiz, yumuşak renk halkası: koyu → açık → koyu (hiçbir açıda sert dikiş yok) */
+.ew-wheel-bg {
+  background:
+    radial-gradient(circle closest-side, rgba(4, 30, 42, .35) 56%, rgba(4, 30, 42, 0) 72%, rgba(4, 30, 42, .18) 98%),
+    conic-gradient(from 0deg, #164a5e, #1c6880 22%, #2b93ad 40%, #3aaec7 50%, #2b93ad 60%, #1c6880 78%, #164a5e);
+  -webkit-mask-image: radial-gradient(circle closest-side, transparent 56.2%, #000 56.5%, #000 97.7%, transparent 98%);
+  mask-image: radial-gradient(circle closest-side, transparent 56.2%, #000 56.5%, #000 97.7%, transparent 98%);
+  opacity: .92;
+}
+.ew-skeleton { position: absolute; inset: 0; overflow: visible; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .25)); }
+.ew-bulbs circle { fill: #ffe9a8; }
+html.ew-motion .ew-bulbs circle { animation: ew-bulb 2.4s ease-in-out infinite; }
+@keyframes ew-bulb {
+  0%, 100% { opacity: .3; }
+  50%      { opacity: 1; }
+}
+
+/* Kabinler: pime asılı, yerçekimiyle sarkar (konum ve açı JS'ten) */
+.ew-cabin {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 50% 0;
+  will-change: transform;
+}
+.ew-hanger {
+  position: absolute;
+  left: 50%;
+  top: -1px;
+  width: 3px;
+  translate: -50% 0;
+  border-radius: 2px;
+  background: linear-gradient(#fff, rgba(255, 255, 255, .75));
+}
+.ew-gondola {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-radius: 16px 16px 22px 22px;
+  background: linear-gradient(180deg, rgba(14, 70, 90, .86), rgba(7, 42, 56, .92));
+  border: 1.5px solid rgba(255, 255, 255, .6);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(255, 255, 255, .25);
+}
+.ew-gondola::before {                 /* çatı */
+  content: "";
+  position: absolute;
+  left: 28%;
+  right: 28%;
+  top: -6px;
+  height: 7px;
+  border-radius: 6px 6px 0 0;
+  background: rgba(255, 255, 255, .9);
+}
+html.ew-js .menu.ew-wheel-on .ew-slice { opacity: 1; box-shadow: 0 3px 8px rgba(0, 0, 0, .25); }
+html.ew-js .menu.ew-wheel-on .mbtn-inactive .ew-slice { filter: none; }
+html.ew-js .menu.ew-wheel-on .mbtn-inactive:hover .ew-slice { filter: grayscale(.85); }
+html.ew-motion .menu.ew-wheel-on {
+  touch-action: pan-y;               /* dokunmatikte yatay kaydırma çarkı çevirir */
+  -webkit-user-select: none;
+  user-select: none;
+}
+html.ew-motion .menu.ew-grabbing,
+html.ew-motion .menu.ew-grabbing * { cursor: grabbing !important; }
 
 /* Daire bağlantılar: eski "karartan" hover yerine dışarı fırlayan ikon */
 html.ew-js .menu .mbtn {
@@ -137,12 +186,12 @@ html.ew-js .menu .mbtn {
   transition: transform .5s cubic-bezier(.34, 1.56, .64, 1);
 }
 html.ew-js .menu .mbtn:hover,
-html.ew-js .menu .mbtn:focus-within,
-html.ew-js .menu .mbtn.ew-ping {
+html.ew-js .menu .mbtn:focus-within {
   opacity: 1;
   background: transparent;
   transform: scale(1.17);
 }
+html.ew-js .menu.ew-grabbing .mbtn { transform: none; }
 html.ew-js .menu .mbtn-inactive {
   pointer-events: auto;
   cursor: not-allowed;
@@ -157,17 +206,13 @@ html.ew-js .menu .mbtn-inactive {
   transition: opacity .25s ease, box-shadow .35s ease;
 }
 .mbtn-inactive .ew-slice { filter: grayscale(.85) brightness(1.05); }
-html.ew-js .mbtn:hover .ew-slice,
-html.ew-js .mbtn:focus-within .ew-slice,
-html.ew-js .mbtn.ew-ping .ew-slice {
+html.ew-js .menu:not(.ew-grabbing) .mbtn:hover .ew-slice,
+html.ew-js .mbtn:focus-within .ew-slice {
   opacity: 1;
   box-shadow:
     0 0 0 3px rgba(255, 255, 255, .95),
     0 0 26px 8px rgba(255, 224, 138, .55),
     0 14px 26px rgba(0, 0, 0, .35);
-}
-html.ew-js .mbtn.ew-ping:not(:hover) .ew-slice {
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, .8), 0 0 22px 6px rgba(255, 224, 138, .45);
 }
 html.ew-js .menu .mbtn::after {
   content: "";
@@ -178,21 +223,8 @@ html.ew-js .menu .mbtn::after {
   opacity: 0;
   pointer-events: none;
 }
-html.ew-motion .menu .mbtn:hover::after { animation: ew-ring-out .9s ease-out; }
+html.ew-motion .menu:not(.ew-grabbing) .mbtn:hover::after { animation: ew-ring-out .9s ease-out; }
 html.ew-js .menu .mbtn a:focus-visible { outline: none; }
-
-/* Merkezden yayılan "bilgi ışını" taraması */
-html.ew-motion .ew-beam.ew-sweeping { animation: ew-sweep 2.2s linear forwards; }
-.ew-beam {
-  opacity: 0;
-  background: conic-gradient(from 90deg,
-      rgba(255, 236, 170, .55) 0deg,
-      rgba(255, 236, 170, .18) 14deg,
-      rgba(255, 236, 170, 0) 38deg,
-      transparent 360deg);
-  -webkit-mask-image: radial-gradient(circle closest-side, transparent 22%, #000 36%, #000 78%, transparent 100%);
-  mask-image: radial-gradient(circle closest-side, transparent 22%, #000 36%, #000 78%, transparent 100%);
-}
 
 /* Okuyan çocuğun arkasındaki ışık huzmeleri */
 .ew-halo {

@@ -24,16 +24,15 @@ Başka bir şey değiştirmenize gerek yok. Kaldırmak için bu iki satırı sil
 
 | Bölüm | Etki |
 |---|---|
-| Hero haritası | Uygur topluluklarının yaşadığı şehirlerde nabız gibi atan noktalar; ana vatandan dünyaya uzanan ışık yayları; imleçle hafif paralaks |
 | Slogan | Kelimeler sırayla bulanıktan netleşir, ardından üzerinden periyodik altın bir parıltı geçer |
 | Tarih | Hicri tarihin yanında bugünkü **ay evresi** (UQCal'dan hesaplanır) |
-| Yarım daire menü | Sağdan sola yelpaze gibi açılır; merkezden 8,5 sn'de bir ışın taraması yapılır ve ikonlar sırayla parlar; hover'da ikon dışarı fırlar + site adını gösteren baloncuk; pasif öğede "يېقىندا"; çocuğun arkasında dönen ışık huzmeleri; imlece göre 3D eğim |
+| Yarım daire menü | **Dönen çark:** menu.png'nin dış halkası (12 dilim) çark gibi döner, ortadaki ay + kitap okuyan çocuk sabit kalır. Alt yarı, halkanın 180° döndürülmüş kopyasıyla tamamlanır, böylece kesintisiz tam bir çark olur. Açılışta hızlı döner ve yavaşlar, sonra yavaşça dönmeye devam eder. Fare halkanın üzerine gelince durur, böylece bağlantılara rahat tıklanır. Fareyle ya da parmakla tutup çevrilebilir, bırakınca savrulur (sürükleme bağlantı açmaz). Hover'da ikon dışarı fırlar ve site adını gösteren baloncuk çıkar; pasif öğede "يېقىندا"; çocuğun arkasında dönen ışık huzmeleri |
 | Geçiş | Hero'nun altında akan katmanlı dalgalar |
 | Uygulamalar | Arka planda yükselen Uygur harfleri; ikonlar kaydırınca yaylanarak belirir, hafifçe süzülür; hover'da 3D eğim + ışık yansıması; tıklamada dalga efekti |
 | Modal | Bulanık arka plan, yaylanarak açılış, iframe yüklenene kadar "يۈكلىنىۋاتىدۇ…" göstergesi |
 | Dil seçici & footer | Yumuşak açılan menü; sosyal ikonlar sırayla belirir ve imlece "mıknatıs" gibi çekilir |
 
-**Erişilebilirlik ve performans:** "Hareketi azalt" ayarı açık olan ziyaretçilerde tüm hareket kapanır. Canvas animasyonları yalnızca ekranda görünürken çalışır. Dokunmatik cihazlarda eğim, paralaks ve mıknatıs efektleri kapalıdır. JS çalışmazsa sayfa bugünkü haliyle görünür. Arayüz metinleri sitedeki 6 dilin hepsinde (`pageLang`) hazır.
+**Erişilebilirlik ve performans:** "Hareketi azalt" ayarı açık olan ziyaretçilerde tüm hareket kapanır. Çark ve harf animasyonu yalnızca ekranda görünürken çalışır; "hareketi azalt" açıksa çark kurulmaz, menü orijinal haliyle durur. Çarkın hızı `motion.js` içindeki `AUTO` değeriyle (derece/saniye) ayarlanır. Dokunmatik cihazlarda eğim ve mıknatıs efektleri kapalıdır. JS çalışmazsa sayfa bugünkü haliyle görünür. Arayüz metinleri sitedeki 6 dilin hepsinde (`pageLang`) hazır.
 
 ## Geliştirme
 
@@ -47,5 +46,3 @@ npm run preview      # http://localhost:8080/preview/
 - `src/motion.css` — Tailwind kaynağı (tema, keyframe'ler, mevcut seçicilere ait geçersiz kılma kuralları)
 - `assets/js/motion.js` — tüm etkileşimler; Tailwind sınıfları bu dosyadan taranır. JS'e yeni bir `tw:` sınıfı eklediğinizde `npm run build` çalıştırın.
 - `preview/` — canlı ana sayfanın yerel kopyası, **yalnızca test içindir, sunucuya yüklemeyin.** Uygulama popup'ları localhost'tan açılmaz; canlı sitede normal çalışır.
-
-Harita kalibrasyonu `bg.jpg` (1920×629) içindir; arka plan görseli değişirse `motion.js` içindeki `CAL` değerlerinin güncellenmesi gerekir.
