@@ -206,6 +206,7 @@
       'tw:absolute tw:z-[1] tw:pointer-events-none tw:left-1/2 tw:top-[77%] tw:w-[30%] tw:aspect-square ' +
       'tw:-translate-x-1/2 tw:-translate-y-1/2 tw:opacity-0 tw:transition-opacity tw:duration-[1500ms]',
       { 'aria-hidden': 'true' });
+    haloWrap.style.clipPath = 'inset(0 0 12.5% 0)';   // huzmeler hero'nun alt kenarından aşağı taşmasın
     haloWrap.appendChild(el('div', 'ew-halo tw:size-full tw:rounded-full tw:motion-safe:animate-ew-spin-slow'));
     menu.insertBefore(haloWrap, img);
     function showHalo() { haloWrap.classList.remove('tw:opacity-0'); haloWrap.classList.add('tw:opacity-80'); }
@@ -489,33 +490,6 @@
       });
 
     }
-  });
-
-  /* ------------------------------------------------------------------ */
-  /* 4. Hero → Uygulamalar arası akan dalgalar                           */
-  /* ------------------------------------------------------------------ */
-  safe('waves', function () {
-    var top = $('.top');
-    if (!top || !top.parentNode) return;
-    function path(a, base, ph) {
-      var d = 'M0 0 L2880 0';
-      for (var x = 2880; x >= 0; x -= 40) d += ' L' + x + ' ' + (base + a * Math.sin(2 * Math.PI * x / 720 + ph)).toFixed(1);
-      return d + ' Z';
-    }
-    var holder = el('div', 'tw:relative tw:h-0 tw:pointer-events-none', { 'aria-hidden': 'true' });
-    var box = el('div', 'tw:absolute tw:inset-x-0 tw:top-0 tw:h-[46px] tw:overflow-hidden');
-    [
-      { a: 7, b: 26, ph: 0,   fill: 'rgba(12,72,92,.30)',   cls: 'tw:motion-safe:animate-ew-wave-a' },
-      { a: 6, b: 18, ph: 1.7, fill: 'rgba(12,72,92,.22)',   cls: 'tw:motion-safe:animate-ew-wave-b' },
-      { a: 5, b: 11, ph: 3.1, fill: 'rgba(255,255,255,.10)', cls: 'tw:motion-safe:animate-ew-wave-c' }
-    ].forEach(function (w) {
-      var wrap = el('div', 'tw:absolute tw:left-0 tw:top-0 tw:h-full tw:w-[200%] ' + w.cls);
-      wrap.innerHTML = '<svg width="100%" height="100%" viewBox="0 0 2880 46" preserveAspectRatio="none">' +
-        '<path d="' + path(w.a, w.b, w.ph) + '" fill="' + w.fill + '"/></svg>';
-      box.appendChild(wrap);
-    });
-    holder.appendChild(box);
-    top.parentNode.insertBefore(holder, top.nextSibling);
   });
 
   /* ------------------------------------------------------------------ */

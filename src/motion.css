@@ -28,9 +28,6 @@
   --animate-ew-spin-slow: ew-spin 48s linear infinite;
   --animate-ew-pulse-soft: ew-pulse-soft 4s ease-in-out infinite;
   --animate-ew-ripple: ew-ripple .75s ease-out forwards;
-  --animate-ew-wave-a: ew-wave 16s linear infinite;
-  --animate-ew-wave-b: ew-wave 23s linear infinite reverse;
-  --animate-ew-wave-c: ew-wave 31s linear infinite;
 
   @keyframes ew-spin { to { transform: rotate(360deg); } }
   @keyframes ew-pulse-soft {
@@ -41,7 +38,6 @@
     from { opacity: .7; transform: scale(0); }
     to   { opacity: 0;  transform: scale(14); }
   }
-  @keyframes ew-wave { to { transform: translateX(-50%); } }
 }
 
 /* ---------- Ortak keyframe'ler (katmansız kurallar için) ---------- */
