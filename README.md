@@ -20,6 +20,15 @@ Stiller **Tailwind CSS v4** ile yazıldı. Bootstrap ile çakışmaması için T
 ```
 
 Başka bir şey değiştirmenize gerek yok. Kaldırmak için bu iki satırı silmeniz yeterli.
+
+**Mobil için (önerilir):** `index.php`'deki viewport satırını değiştirin:
+
+```html
+<!-- eski -->  <meta name="viewport" content="width=1120">
+<!-- yeni -->  <meta name="viewport" content="width=device-width, initial-scale=1">
+```
+
+Eski ayar telefonları sayfayı 1120px genişlikte küçültülmüş çizmeye zorluyor; altta büyük bir boşluk kalıyor ve sitenin `app.css` içindeki mobil kuralları hiç devreye girmiyor. Yeni ayarla sayfa telefon ekranını dolduruyor; dönme dolap da telefonda otomatik olarak büyük logolu düzene geçiyor.
 `wheel/` klasörü yüklenmezse dönme dolap kurulmaz, menü orijinal haliyle çalışmaya devam eder.
 
 ## Neler eklendi
@@ -28,7 +37,7 @@ Başka bir şey değiştirmenize gerek yok. Kaldırmak için bu iki satırı sil
 |---|---|
 | Slogan | Kelimeler sırayla bulanıktan netleşir, ardından üzerinden periyodik altın bir parıltı geçer |
 | Tarih | Hicri tarihin yanında bugünkü **ay evresi** (UQCal'dan hesaplanır) |
-| Yarım daire menü | **Dönme dolap.** Ortadaki ay ve kitap okuyan çocuk sabit göbektir; hilalde oturan çocuğun bacakları dizden hafifçe sallanır. Çevresinde 360° bir çark döner: orijinal menu.png'nin bir diliminden üretilmiş 24 özdeş dilim (aralarında orijinaldeki gölgeli sınır çizgileri), iç ve dış çemberde çarkın kendi renginin koyu tonunda kenar çizgisi. Bandın tam ortasında 24 yer vardır; 12 yuvarlak logo karşılıklı ikişer kez yer alır, böylece görünen üst yarıda 12'sinin hepsi her an görünür. Logolar çarka merkezlerinden takılıdır ve hep dik durur; altlarındaki tek satırlık yazılar (gerçek metin) ağırlık merkezini aşağıda tutar, çark hızlanıp yavaşladıkça logo ve yazı birlikte hafifçe sallanır (sınırlı ve sönümlü). Açılışta çark bir kez çevrilir, sonra yavaşça döner. Fare çarkın üzerine gelince durur; fareyle ya da parmakla tutup çevrilebilir, bırakınca savrulur (sürükleme bağlantı açmaz). Hover'da logo büyür ve site adını gösteren baloncuk çıkar; pasif öğede "يېقىندا" |
+| Yarım daire menü | **Dönme dolap.** Ortadaki ay ve kitap okuyan çocuk sabit göbektir; hilalde oturan çocuğun bacakları dizden hafifçe sallanır. Çevresinde 360° bir çark döner: orijinal menu.png'nin bir diliminden üretilmiş 24 özdeş dilim (aralarında orijinaldeki gölgeli sınır çizgileri), iç ve dış çemberde çarkın kendi renginin koyu tonunda kenar çizgisi. Bandın tam ortasında 24 yer vardır; 12 yuvarlak logo karşılıklı ikişer kez yer alır, böylece görünen üst yarıda 12'sinin hepsi her an görünür. Logolar çarka merkezlerinden takılıdır ve hep dik durur; altlarındaki tek satırlık yazılar (gerçek metin) ağırlık merkezini aşağıda tutar, çark hızlanıp yavaşladıkça logo ve yazı birlikte hafifçe sallanır (sınırlı ve sönümlü). Açılışta çark bir kez çevrilir, sonra yavaşça döner. Fare çarkın üzerine gelince durur; fareyle ya da parmakla tutup çevrilebilir, bırakınca savrulur (sürükleme bağlantı açmaz). Hover'da logo büyür. Çemberin altındaki oklarla (üzerine gelince o yöne döner, tıklayınca iter) çevrilebilir. Telefonda her logo bir kez ve iki kat büyük gösterilir. **"Hepsini gör"** düğmesi ya da ortadaki çocuğa tıklama, tüm siteleri kartlarla listeleyen bir pencere açar (pasif öğede "يېقىندا"). Çocuk ara sıra başını kaldırıp indirir |
 | Uygulamalar | Arka planda yükselen Uygur harfleri; ikonlar kaydırınca yaylanarak belirir, hafifçe süzülür; hover'da 3D eğim + ışık yansıması; tıklamada dalga efekti |
 | Modal | Bulanık arka plan, yaylanarak açılış, iframe yüklenene kadar "يۈكلىنىۋاتىدۇ…" göstergesi |
 | Dil seçici & footer | Yumuşak açılan menü; sosyal ikonlar sırayla belirir ve imlece "mıknatıs" gibi çekilir |

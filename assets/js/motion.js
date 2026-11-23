@@ -30,6 +30,9 @@
   var LANG = (typeof window.pageLang === 'string' && window.pageLang) || 'ug';
   var I18N = {
     soon:    { ug: 'يېقىندا', ul: 'Yéqinda', uc: 'Йеқинда', tr: 'Yakında', en: 'Coming soon', ar: 'قريباً' },
+    seeAll:     { ug: 'ھەممىسىنى كۆرۈش', ul: 'Hemmisini körüsh', uc: 'Һәммисини көрүш', tr: 'Hepsini gör', en: 'See all', ar: 'عرض الكل' },
+    sitesTitle: { ug: 'ئەۋلاد تور بېكەتلىرى', ul: 'Ewlad tor béketliri', uc: 'Әвлад тор бекәтлири', tr: 'Ewlad siteleri', en: 'Ewlad websites', ar: 'مواقع أولاد' },
+    close:      { ug: 'تاقاش', ul: 'Taqash', uc: 'Тақаш', tr: 'Kapat', en: 'Close', ar: 'إغلاق' },
     turnLeft:  { ug: 'سولغا چۆرۈش', ul: 'Solgha chörüsh', uc: 'Солға чөрүш', tr: 'Sola çevir', en: 'Turn left', ar: 'أدر لليسار' },
     turnRight: { ug: 'ئوڭغا چۆرۈش', ul: 'Onggha chörüsh', uc: 'Оңға чөрүш', tr: 'Sağa çevir', en: 'Turn right', ar: 'أدر لليمين' },
     loading: { ug: 'يۈكلىنىۋاتىدۇ…', ul: 'Yüklüniwatidu…', uc: 'Йүклиниватиду…', tr: 'Yükleniyor…', en: 'Loading…', ar: 'جارٍ التحميل…' }
@@ -193,7 +196,7 @@
       ]
     };
     var BASE = SCRIPT_BASE + '../images/wheel/';
-    var ASSET_V = '?v=6';                 // wheel/ dosyaları her değiştiğinde artırın
+    var ASSET_V = '?v=7';                 // wheel/ dosyaları her değiştiğinde artırın
     function asset(name) { return BASE + name + ASSET_V; }
 
     origBtns.forEach(function (b) {
@@ -211,6 +214,111 @@
     haloWrap.appendChild(el('div', 'ew-halo tw:size-full tw:rounded-full tw:motion-safe:animate-ew-spin-slow'));
     menu.insertBefore(haloWrap, img);
     function showHalo() { haloWrap.classList.remove('tw:opacity-0'); haloWrap.classList.add('tw:opacity-80'); }
+
+    // ---- "Hepsini gör": tüm siteler kartlarla bir pencerede (düğme + çocuğa tıklama) ----
+    var sites = null;
+    function buildSites() {
+      var overlay = el('div',
+        'ew-sites tw:fixed tw:inset-0 tw:z-[2000] tw:flex tw:items-center tw:justify-center tw:p-4 ' +
+        'tw:bg-[#062a35]/60 tw:backdrop-blur-sm tw:opacity-0 tw:transition-opacity tw:duration-300',
+        { role: 'dialog', 'aria-modal': 'true', 'aria-label': t('sitesTitle'), hidden: '' });
+      var panel = el('div',
+        'ew-sites-panel tw:relative tw:w-full tw:max-w-[880px] tw:max-h-[88vh] tw:overflow-auto tw:bg-white tw:text-ew-deep ' +
+        'tw:shadow-[0_30px_80px_rgba(0,0,0,.35)] tw:translate-y-4 tw:scale-[.97] tw:transition-transform tw:duration-300 tw:ease-ew-spring');
+      var head = el('div', 'ew-sites-head tw:sticky tw:top-0 tw:z-[1] tw:flex tw:items-center tw:justify-between tw:gap-3 tw:px-5 tw:py-4 tw:bg-white tw:border-b tw:border-[#e2eef1]');
+      var title = el('div', 'tw:text-xl tw:font-bold');
+      title.textContent = t('sitesTitle');
+      var close = el('button', 'ew-sites-close tw:flex tw:items-center tw:justify-center tw:size-10 tw:p-0 tw:shrink-0 tw:cursor-pointer tw:border-0 tw:bg-[#eef5f7] tw:text-ew-deep tw:transition tw:hover:bg-[#dcebef]',
+        { type: 'button', 'aria-label': t('close') });
+      close.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+      head.appendChild(title); head.appendChild(close);
+      var grid = el('div', 'ew-sites-grid tw:grid tw:grid-cols-2 tw:sm:grid-cols-3 tw:md:grid-cols-4 tw:gap-3 tw:p-5');
+      // Çarktaki sırayla (sağdan sola): menu_item_11 … 0
+      for (var i = origBtns.length - 1; i >= 0; i--) {
+        var a = $('a', origBtns[i]);
+        var href = a && a.getAttribute('href');
+        var card = el(href ? 'a' : 'div',
+          'ew-site-card tw:relative tw:flex tw:flex-col tw:items-center tw:gap-2 tw:p-4 tw:text-center tw:border tw:border-[#e2eef1] ' +
+          'tw:bg-[#f7fbfc] tw:transition tw:duration-200 ' + (href ? 'tw:hover:-translate-y-1 tw:hover:shadow-[0_12px_28px_rgba(15,76,92,.18)] tw:hover:border-ew-teal' : 'tw:opacity-60'),
+          href ? { href: href, target: '_blank', rel: 'noopener' } : { 'aria-disabled': 'true' });
+        var logo = el('img', 'tw:size-16 tw:rounded-full tw:shadow-[0_4px_12px_rgba(0,0,0,.18)]', { src: asset('icon-' + i + '.png'), alt: '', loading: 'lazy' });
+        logo.onerror = function () { this.style.visibility = 'hidden'; };
+        var name = el('span', 'tw:text-[15px] tw:font-bold tw:text-ew-deep tw:leading-snug', { dir: 'auto' });
+        name.textContent = WHEEL.labels[i];
+        card.appendChild(logo); card.appendChild(name);
+        if (href) {
+          var host = el('span', 'tw:text-xs tw:text-[#5b7f89]', { dir: 'ltr' });
+          try { host.textContent = new URL(href, location.href).hostname.replace(/^www\./, ''); } catch (e) { host.textContent = href; }
+          card.appendChild(host);
+        } else {
+          var soon = el('span', 'ew-soon tw:text-xs tw:font-bold tw:px-2 tw:py-0.5 tw:rounded-full tw:bg-[#ffe08a] tw:text-[#6b4e00]');
+          soon.textContent = t('soon');
+          card.appendChild(soon);
+        }
+        grid.appendChild(card);
+      }
+      panel.appendChild(head); panel.appendChild(grid);
+      overlay.appendChild(panel);
+      doc.body.appendChild(overlay);
+
+      var lastFocus = null;
+      function open() {
+        lastFocus = doc.activeElement;
+        overlay.hidden = false;
+        doc.documentElement.classList.add('ew-sites-open');
+        requestAnimationFrame(function () {
+          overlay.classList.remove('tw:opacity-0');
+          panel.classList.remove('tw:translate-y-4', 'tw:scale-[.97]');
+        });
+        close.focus();
+      }
+      function hide() {
+        overlay.classList.add('tw:opacity-0');
+        panel.classList.add('tw:translate-y-4', 'tw:scale-[.97]');
+        doc.documentElement.classList.remove('ew-sites-open');
+        setTimeout(function () { overlay.hidden = true; }, MOTION ? 300 : 0);
+        if (lastFocus && lastFocus.focus) lastFocus.focus();
+      }
+      close.addEventListener('click', hide);
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) hide(); });
+      doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !overlay.hidden) hide(); });
+      return { open: open };
+    }
+    function openSites() { (sites = sites || buildSites()).open(); }
+
+    var seeAll = el('button',
+      'ew-seeall tw:absolute tw:z-[4] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:px-5 tw:cursor-pointer tw:whitespace-nowrap ' +
+      'tw:border-2 tw:border-white/45 tw:bg-[#14566a]/90 tw:text-white tw:font-bold tw:shadow-[0_6px_16px_rgba(0,0,0,.3)] ' +
+      'tw:transition tw:duration-200 tw:hover:bg-[#1b6c84] tw:hover:border-white/80 tw:active:scale-95',
+      { type: 'button' });
+    seeAll.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span></span>';
+    seeAll.lastChild.textContent = t('seeAll');
+    seeAll.addEventListener('click', openSites);
+    top.appendChild(seeAll);
+
+    // Çocuğa (hilal + çocuk) tıklayınca da aynı pencere
+    var hubBtn = el('button', 'ew-hubbtn tw:absolute tw:z-[3] tw:p-0 tw:border-0 tw:bg-transparent tw:cursor-pointer',
+      { type: 'button', 'aria-label': t('seeAll'), title: t('seeAll') });
+    hubBtn.addEventListener('click', openSites);
+    menu.appendChild(hubBtn);
+
+    function placeExtras() {
+      var W = img.clientWidth;
+      if (!W) return;
+      var k = W / WHEEL.size[0], s = W / 1120;
+      // çocuk + hilal: menu.png'de merkez ≈ (700, 535), yarıçap ≈ 110
+      hubBtn.style.left = (700 - 110) * k + 'px'; hubBtn.style.top = (535 - 110) * k + 'px';
+      hubBtn.style.width = hubBtn.style.height = 220 * k + 'px';
+      var h = Math.max(44 * s, COARSE ? W * .11 : 34, 34);
+      seeAll.style.height = h + 'px';
+      seeAll.style.fontSize = Math.max(13, Math.min(16, h * .36)) + 'px';
+      seeAll.style.left = (menu.offsetLeft + W / 2) + 'px';
+      seeAll.style.transform = 'translateX(-50%)';
+      seeAll.style.top = (top.offsetHeight + 8 * s) + 'px';
+    }
+    if (img.complete && img.naturalWidth) placeExtras(); else img.addEventListener('load', placeExtras, { once: true });
+    window.addEventListener('resize', debounce(placeExtras, 150));
+    if ('ResizeObserver' in window) new ResizeObserver(debounce(placeExtras, 50)).observe(top);
 
     // ---- Sabit menü (hareket kapalıysa ya da çark parçaları yüklenemezse) ----
     var wheelOn = false;
@@ -232,7 +340,10 @@
     if (!MOTION) { staticMode(); return; }
 
     // ---- Çark parçalarını önceden yükle ----
-    var urls = [asset('ring.webp'), asset('hub.png'), asset('legs.png'), asset('head.png')];
+    // Dar ekran (telefon): 12 dilimli halka ve 12 logo; geniş ekran: 24 dilim / 24 logo
+    var COMPACT = (menu.clientWidth || img.clientWidth) < 700;
+    var RING_FILE = COMPACT ? 'ring-12.webp' : 'ring.webp';
+    var urls = [asset(RING_FILE), asset('hub.png'), asset('legs.png'), asset('head.png')];
     WHEEL.icons.forEach(function (_, i) { urls.push(asset('icon-' + i + '.png')); });
     var pending = urls.length, failed = false;
     urls.forEach(function (u) {
@@ -256,14 +367,17 @@
       var R_HUB = 316, R_EDGE = 520;
       // RP: logo merkezlerinin yarıçapı. Logo + altındaki yazı birlikte bandın ortasında dursun diye
       // logo, bandın tam ortasından 18px dışarıda.
-      var SLOTS = 24, RP = (R_HUB + R_EDGE) / 2 + 18, GW = 120, GH = 94, ICON = 72, FONT = 13.5;
+      // Dar ekranda (telefon): her logo bir kez (12 yer, 30° arayla) ve logolar/yazılar ~2 kat büyük →
+      // okunur ve parmakla basılabilir. Geniş ekranda: 24 yer (her logo karşılıklı iki kez, 15° arayla).
+      var SLOTS = COMPACT ? 12 : 24, SLOT_DEG = 360 / SLOTS, Z = COMPACT ? 1.8 : 1;
+      var RP = (R_HUB + R_EDGE) / 2 + 18, GW = 120 * Z, GH = 94 * Z, ICON = 72 * Z, FONT = 13.5 * (COMPACT ? 2.1 : 1);
       var DEG = Math.PI / 180;
 
       var clip = el('div', 'tw:absolute tw:top-0 tw:z-[2] tw:overflow-hidden tw:opacity-0 tw:transition-opacity tw:duration-500');
       var wheel = el('div', 'ew-wheel tw:absolute tw:top-0', { 'aria-hidden': 'true' });
       // orijinal dilimlerden üretilmiş temiz halka (ikon/yazısız, 24 dilim, kenar çizgisi yok)
       var ringImg = el('img', 'tw:absolute tw:pointer-events-none tw:select-none',
-        { src: asset('ring.webp'), alt: '', draggable: 'false' });
+        { src: asset(RING_FILE), alt: '', draggable: 'false' });
       wheel.appendChild(ringImg);
       clip.appendChild(wheel);
 
@@ -288,7 +402,7 @@
         clip.appendChild(cab);
         cabins.push({
           el: cab, gondola: gondola, btn: b, slice: slice, label: lab, icon: icon,
-          th0: (7.5 + 15 * j) * DEG,            // matematiksel açı (saat yönü tersi, sağdan)
+          th0: (SLOT_DEG / 2 + SLOT_DEG * j) * DEG,   // matematiksel açı (saat yönü tersi, sağdan); dilimin tam ortası
           phi: 0, dphi: 0, wind: Math.random() * 6.28
         });
       }
@@ -329,7 +443,9 @@
       function layout() {
         var W = img.clientWidth, H = img.clientHeight;
         if (!W || !H) return;
-        var s = W / 1120, M = Math.round(110 * s);
+        // M: kırpma kutusunun yan payı. 0 olmalı — pay, overflow:clip desteklemeyen tarayıcılarda
+        // (ör. Safari < 16) sayfayı yana taşırıyor. Logolar menü genişliğinin içinde kalıyor.
+        var s = W / 1120, M = 0;
         geo = { W: W, H: H, s: s, M: M, cx: M + W / 2, cy: W / 2, rin: R_HUB * s, rout: R_EDGE * s };
         clip.style.left = -M + 'px';
         clip.style.width = (W + 2 * M) + 'px';

@@ -282,15 +282,21 @@ const RING_SIZE = 1440, RING_INNER = 316, RING_OUTER = 520;
 const RING_BORDER = 3;                                      // kenar çizgisi kalınlığı (halka görselinin pikseli; 3 ≈ 2px ekranda)
 const RING_WEDGE = 5;                                       // örnek alınan orijinal dilim (0 = sağ, 11 = sol)
 const ro = RING_SIZE / 2, ri = ro * RING_INNER / RING_OUTER;
+// Dilim sayısı motion.js'teki SLOTS ile aynı olmalı (logo = dilim ortası):
+//   ring.webp    → 24 dilim (geniş ekran, her logo karşılıklı iki kez)
+//   ring-12.webp → 12 dilim (dar ekran / COMPACT, her logo bir kez)
+for (const [SLOTS, FILE] of [[24, 'ring.webp'], [12, 'ring-12.webp']]) {
+const SLOT = 360 / SLOTS;
 const ring = Buffer.alloc(RING_SIZE * RING_SIZE * 4);
 for (let y = 0; y < RING_SIZE; y++) for (let x = 0; x < RING_SIZE; x++) {
   const dx = x + .5 - ro, dy = ro - (y + .5), rho = Math.hypot(dx, dy);
   if (rho < ri - 1 || rho > ro + 1) continue;
   let th = Math.atan2(dy, dx) * 180 / Math.PI; if (th < 0) th += 360;
-  const j = Math.min(23, Math.floor(th / STEP));
-  // Bütün dilimler aynı: orijinaldeki tek bir dilimin dokusu (sınır gölgesi + iç bant dahil)
+  const j = Math.min(SLOTS - 1, Math.floor(th / SLOT));
+  // Bütün dilimler aynı: orijinaldeki tek bir dilimin dokusu (sınır gölgesi + iç bant dahil),
+  // dilim genişliğine göre açısal olarak gerilir
   const k = RING_WEDGE;
-  const u = (th - j * STEP) / STEP * U - .5;
+  const u = (th - j * SLOT) / SLOT * U - .5;
   const r = R0 + (rho - ri) / (ro - ri) * (ROUT - R0);
   const p = texSample(k, r - R0, u);
   const edge = Math.min(1, Math.max(0, ro + .5 - rho)) * Math.min(1, Math.max(0, rho - ri + .5));
@@ -306,7 +312,8 @@ for (let y = 0; y < RING_SIZE; y++) for (let x = 0; x < RING_SIZE; x++) {
   ring[o] = c[0]; ring[o + 1] = c[1]; ring[o + 2] = c[2]; ring[o + 3] = Math.round(p[3] * edge);
 }
 await sharp(ring, { raw: { width: RING_SIZE, height: RING_SIZE, channels: 4 } })
-  .webp({ quality: 86, alphaQuality: 90, effort: 6 }).toFile(path.join(OUT, 'ring.webp'));
+  .webp({ quality: 86, alphaQuality: 90, effort: 6 }).toFile(path.join(OUT, FILE));
+}
 
 const data = {
   size: [W, H], icons, ring: { inner: RING_INNER, outer: RING_OUTER },

@@ -95,6 +95,8 @@ html.ew-motion .chislaDiv > :nth-child(1) { animation-delay: .75s; }
 html.ew-motion .chislaDiv > :nth-child(2) { animation-delay: .85s; }
 html.ew-motion .chislaDiv > :nth-child(3) { animation-delay: .95s; }
 html.ew-motion .chislaDiv > :nth-child(4) { animation-delay: 1.05s; }
+/* "|" ayırıcısı animasyonsuz: Chrome bu ince karakteri animasyon bittikten sonra çizmeyebiliyor */
+html.ew-motion .chislaDiv > .date-sep { animation: none; }
 
 /* Dar ekranda tarih: 1. satır ay + Hicri, 2. satır Miladi (ortalı); "|" ayırıcı gizli */
 @media (max-width: 1023px) {
@@ -112,7 +114,11 @@ html.ew-motion .chislaDiv > :nth-child(4) { animation-delay: 1.05s; }
    3. YARIM DAİRE MENÜ — dönme dolap
    ========================================================================== */
 html.ew-js .menu > img:first-of-type { position: relative; z-index: 2; }   /* yalnızca orijinal menu.png */
-html.ew-js .top { overflow-x: clip; }   /* çarkın yan payı sayfayı genişletmesin */
+html.ew-js .top { overflow-x: clip; }   /* hero'dan taşan hiçbir şey sayfayı yana genişletmesin */
+/* overflow:clip'i bilmeyen tarayıcılar (ör. Safari < 16): sayfa düzeyinde yatay taşmayı kapat */
+@supports not (overflow: clip) {
+  html.ew-js, html.ew-js body { overflow-x: hidden; }
+}
 
 /* Çark kurulunca orijinal görselin yerini hub.png (sabit göbek) + legs.png alır */
 html.ew-motion .menu.ew-wheel-on > img.ew-center { opacity: 0; }
@@ -164,6 +170,24 @@ html.ew-js .menu.ew-wheel-on .mbtn-inactive:hover .ew-slice { filter: grayscale(
 
 /* Ok düğmeleri: Bootstrap'in button { border-radius: 0 } kuralını ez (Tailwind utility'leri katmanlı) */
 html.ew-js .top .ew-arrow { border-radius: 50%; line-height: 0; outline-offset: 3px; }
+
+/* "Hepsini gör" düğmesi + siteler penceresi (Bootstrap'in button/a kurallarını ezmek için katmansız) */
+/* Not: app.css'teki evrensel "margin:0; padding:0" kuralı katmansız olduğu için Tailwind'in
+   padding/margin sınıflarını ezer; iç boşluklar burada katmansız verilir. */
+html.ew-js .top .ew-seeall { border-radius: 999px; line-height: 1; font-family: inherit; padding: 0 22px; }
+.ew-sites { padding: 16px; }
+.ew-sites-head { padding: 14px 20px; }
+.ew-sites-grid { padding: 20px; }
+.ew-site-card { padding: 18px 12px 16px; }
+.ew-soon { padding: 2px 10px; }
+html.ew-js .menu .ew-hubbtn { border-radius: 50%; }
+html.ew-js .menu .ew-hubbtn:focus-visible { outline: 3px solid rgba(255, 224, 138, .9); outline-offset: 4px; }
+.ew-sites[hidden] { display: none !important; }
+.ew-sites-panel { border-radius: 24px; }
+.ew-sites-close { border-radius: 50%; }
+.ew-site-card { border-radius: 18px; text-decoration: none !important; }
+.ew-site-card:focus-visible { outline: 3px solid #44acbf; outline-offset: 2px; }
+html.ew-sites-open, html.ew-sites-open body { overflow: hidden; }
 html.ew-motion .menu.ew-wheel-on {
   touch-action: pan-y;               /* dokunmatikte yatay kaydırma çarkı çevirir */
   -webkit-user-select: none;
