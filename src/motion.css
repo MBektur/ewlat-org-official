@@ -103,35 +103,29 @@ html.ew-motion .chislaDiv > :nth-child(4) { animation-delay: 1.05s; }
 /* ==========================================================================
    3. YARIM DAİRE MENÜ — dönme dolap
    ========================================================================== */
-html.ew-js .menu > img { position: relative; z-index: 2; }
+html.ew-js .menu > img:first-of-type { position: relative; z-index: 2; }   /* yalnızca orijinal menu.png */
 html.ew-js .top { overflow-x: clip; }   /* çarkın yan payı sayfayı genişletmesin */
 
-/* Çark kurulunca orijinal görsel yalnızca sabit göbeği (ay + çocuk) gösterir.
-   JS --ew-rin / --ew-cdy değişkenlerini ayarlar. */
-html.ew-motion .menu.ew-wheel-on > img.ew-center {
-  -webkit-mask-image: radial-gradient(circle at 50% calc(100% + var(--ew-cdy, 0px)), #000 var(--ew-rin, 0px), transparent calc(var(--ew-rin, 0px) + .5px));
-  mask-image: radial-gradient(circle at 50% calc(100% + var(--ew-cdy, 0px)), #000 var(--ew-rin, 0px), transparent calc(var(--ew-rin, 0px) + .5px));
+/* Çark kurulunca orijinal görselin yerini hub.png (sabit göbek) + legs.png alır */
+html.ew-motion .menu.ew-wheel-on > img.ew-center { opacity: 0; }
+
+/* Çocuğun başı: çoğunlukla kitaba bakar, ara sıra başını kaldırıp yavaşça indirir */
+html.ew-motion .ew-head { animation: ew-head 9s ease-in-out infinite; }
+@keyframes ew-head {
+  0%, 38%   { rotate: 1.5deg; }    /* kitaba bakıyor */
+  48%, 62%  { rotate: -6deg; }     /* başını kaldırıyor */
+  72%, 100% { rotate: 1.5deg; }    /* tekrar kitaba */
+}
+
+/* Hilalde oturan çocuğun bacakları: dizden hafifçe ileri-geri sallanır */
+html.ew-motion .ew-legs { animation: ew-legs 1.6s ease-in-out infinite alternate; }
+@keyframes ew-legs {
+  from { rotate: -3.5deg; }
+  to   { rotate: 3.5deg; }
 }
 
 /* Dönen iskelet */
 .ew-wheel { rotate: var(--ew-a, 0deg); pointer-events: none; }
-/* Kesintisiz, yumuşak renk halkası: koyu → açık → koyu (hiçbir açıda sert dikiş yok) */
-.ew-wheel-bg {
-  background:
-    radial-gradient(circle closest-side, rgba(4, 30, 42, .35) 56%, rgba(4, 30, 42, 0) 72%, rgba(4, 30, 42, .18) 98%),
-    conic-gradient(from 0deg, #164a5e, #1c6880 22%, #2b93ad 40%, #3aaec7 50%, #2b93ad 60%, #1c6880 78%, #164a5e);
-  -webkit-mask-image: radial-gradient(circle closest-side, transparent 56.2%, #000 56.5%, #000 97.7%, transparent 98%);
-  mask-image: radial-gradient(circle closest-side, transparent 56.2%, #000 56.5%, #000 97.7%, transparent 98%);
-  opacity: .92;
-}
-.ew-skeleton { position: absolute; inset: 0; overflow: visible; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .25)); }
-.ew-bulbs circle { fill: #ffe9a8; }
-html.ew-motion .ew-bulbs circle { animation: ew-bulb 2.4s ease-in-out infinite; }
-@keyframes ew-bulb {
-  0%, 100% { opacity: .3; }
-  50%      { opacity: 1; }
-}
-
 /* Logolar: pime merkezinden takılı, yazının ağırlığıyla dik durur (konum ve açı JS'ten) */
 .ew-cabin {
   position: absolute;
@@ -144,12 +138,24 @@ html.ew-motion .ew-bulbs circle { animation: ew-bulb 2.4s ease-in-out infinite; 
   left: 0;
   right: 0;
 }
-.ew-gondola > img {                   /* yazı: çarkın üzerinde okunaklı kalsın */
-  filter: drop-shadow(0 1px 1.5px rgba(0, 20, 30, .9)) drop-shadow(0 0 6px rgba(0, 30, 45, .55));
+.ew-label {                           /* logonun altındaki yazı: gerçek metin, tek satır */
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+  white-space: nowrap;
+  font-family: 'UKIJ', 'uyghur', sans-serif;
+  line-height: 1.25;
+  color: #fff;
+  text-align: center;
+  pointer-events: none;
+  text-shadow: 0 1px 2px rgba(0, 20, 30, .9), 0 0 8px rgba(0, 30, 45, .6);
 }
 html.ew-js .menu.ew-wheel-on .ew-slice { opacity: 1; box-shadow: 0 0 0 2px rgba(255, 255, 255, .9), 0 6px 14px rgba(0, 0, 0, .3); }
 html.ew-js .menu.ew-wheel-on .mbtn-inactive .ew-slice { filter: none; }
 html.ew-js .menu.ew-wheel-on .mbtn-inactive:hover .ew-slice { filter: grayscale(.85); }
+
+/* Ok düğmeleri: Bootstrap'in button { border-radius: 0 } kuralını ez (Tailwind utility'leri katmanlı) */
+html.ew-js .menu .ew-arrow { border-radius: 50%; line-height: 0; outline-offset: 3px; }
 html.ew-motion .menu.ew-wheel-on {
   touch-action: pan-y;               /* dokunmatikte yatay kaydırma çarkı çevirir */
   -webkit-user-select: none;
@@ -304,15 +310,16 @@ html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(4) { transition-
 html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(5) { transition-delay: .12s; }
 html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(6) { transition-delay: .15s; }
 
-html.ew-js .footer-social .social-icon { transition: transform .25s cubic-bezier(.34, 1.56, .64, 1), opacity .2s, box-shadow .25s; }
+html.ew-js .footer-social .social-icon { transition: transform .25s ease, opacity .2s, box-shadow .25s; }
 html.ew-js .footer-social .social-icon:hover {
   opacity: 1;
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, .35), 0 10px 24px rgba(0, 0, 0, .25);
+  transform: translateY(-2px) scale(1.06);       /* sakin: hafif kalkma (app.css'teki 1.15 yerine) */
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, .3), 0 8px 18px rgba(0, 0, 0, .22);
 }
 html.ew-motion .footer-social .social-icon { opacity: 0; }
 html.ew-motion .footer-social .social-icon.ew-in {
-  animation: ew-pop-in .8s cubic-bezier(.34, 1.56, .64, 1) forwards;
-  animation-delay: calc(var(--i, 0) * 80ms);
+  animation: ew-rise .6s ease-out forwards;          /* sade: yukarı kayarak belirme */
+  animation-delay: calc(var(--i, 0) * 60ms);
 }
 html.ew-motion .footer-social .social-icon.ew-in.ew-done { animation: none; opacity: .85; }
 html.ew-motion .footer-social .social-icon.ew-in.ew-done:hover { opacity: 1; }

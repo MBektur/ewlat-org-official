@@ -29,6 +29,8 @@
   var LANG = (typeof window.pageLang === 'string' && window.pageLang) || 'ug';
   var I18N = {
     soon:    { ug: 'يېقىندا', ul: 'Yéqinda', uc: 'Йеқинда', tr: 'Yakında', en: 'Coming soon', ar: 'قريباً' },
+    turnLeft:  { ug: 'سولغا چۆرۈش', ul: 'Solgha chörüsh', uc: 'Солға чөрүш', tr: 'Sola çevir', en: 'Turn left', ar: 'أدر لليسار' },
+    turnRight: { ug: 'ئوڭغا چۆرۈش', ul: 'Onggha chörüsh', uc: 'Оңға чөрүш', tr: 'Sağa çevir', en: 'Turn right', ar: 'أدر لليمين' },
     loading: { ug: 'يۈكلىنىۋاتىدۇ…', ul: 'Yüklüniwatidu…', uc: 'Йүклиниватиду…', tr: 'Yükleniyor…', en: 'Loading…', ar: 'جارٍ التحميل…' }
   };
   function t(key) { var m = I18N[key]; return m[LANG] || m.ug; }
@@ -171,69 +173,33 @@
     var top = $('.top') || menu.parentNode;
 
     // tools/build-wheel.mjs çıktısı (assets/images/wheel/wheel.json) — menu.png piksel koordinatları
+    // tools/build-wheel.mjs çıktısı (assets/images/wheel/wheel.json): menu.png'deki ikon daireleri [x, y, r]
     var WHEEL = {
-      size: [1409, 701], center: [704.5, 704.5], rIn: 397, rOut: 704,
-      items: [
-        { icon: [89.5, 626.5, 55.5],   label: [160, 613, 86, 57] },
-        { icon: [128.5, 469.4, 55.4],  label: [204, 491, 66, 53] },
-        { icon: [210.6, 324.5, 55.4],  label: [250, 365, 101, 58] },
-        { icon: [327.6, 210.5, 55.4],  label: [352, 270, 81, 57] },
-        { icon: [466.5, 130.4, 55.2],  label: [480, 210, 75, 50] },
-        { icon: [623.5, 87.5, 55.4],   label: [604, 175, 68, 58] },
-        { icon: [787.6, 86.5, 55.4],   label: [727, 177, 84, 56] },
-        { icon: [945.5, 126.5, 55.4],  label: [863, 210, 69, 52] },
-        { icon: [1083.5, 209.5, 55.3], label: [959, 268, 98, 58] },
-        { icon: [1200.7, 325.6, 55.2], label: [1067, 373, 78, 51] },
-        { icon: [1281.5, 465.5, 55.3], label: [1136, 482, 66, 58] },
-        { icon: [1320.5, 623.6, 53.6], label: [1140, 616, 117, 54] }
+      size: [1409, 701], center: [704.5, 704.5], rIn: 397,
+      hub: [310, 310, 790, 391],          // sabit göbek (alt bacakları silinmiş) — hub.png
+      legs: [717, 553, 54, 72], knee: [747, 565],   // alt bacaklar — legs.png, diz = dönme noktası
+      head: [664, 458, 47, 49], neck: [690, 500],   // baş (takke + yüz) — head.png, boyun = dönme noktası
+      icons: [
+        [89.5, 626.5, 55.5], [128.5, 469.4, 55.4], [210.6, 324.5, 55.4], [327.6, 210.5, 55.4],
+        [466.5, 130.4, 55.2], [623.5, 87.5, 55.4], [787.6, 86.5, 55.4], [945.5, 126.5, 55.4],
+        [1083.5, 209.5, 55.3], [1200.7, 325.6, 55.2], [1281.5, 465.5, 55.3], [1320.5, 623.6, 53.6]
+      ],
+      // menu.png'deki yazıların aynısı (menu_item_0 … 11) — gerçek metin, tek satır
+      labels: [
+        'دۇئا ۋە زىكرلەر', 'خەتمە قۇرئان', 'ئەۋلاد نەشرىياتى', 'ئەۋلاد يۇتيۇب',
+        'E-Kuran', 'ئەۋلاد لۇغىتى', 'ماقالىلەر ئامبىرى', 'ئۇيغۇر كىتاب',
+        'فارابى جەمئىيىتى', 'سىيرەت ژۇرنىلى', 'قۇرئان كەرىم', 'ئەۋلاد كارتون-فىلىم'
       ]
     };
     var BASE = SCRIPT_BASE + '../images/wheel/';
+    var ASSET_V = '?v=6';                 // wheel/ dosyaları her değiştiğinde artırın
+    function asset(name) { return BASE + name + ASSET_V; }
 
     origBtns.forEach(function (b) {
       b.insertBefore(el('span', 'ew-slice', { 'aria-hidden': 'true' }), b.firstChild);
     });
     $$('a', menu).forEach(function (a) { a.setAttribute('draggable', 'false'); });
     img.setAttribute('draggable', 'false');
-
-    // ---- Tooltip baloncuğu (.top içinde; çark dönse de düz kalır) ----
-    var tip = el('div',
-      'tw:absolute tw:z-30 tw:pointer-events-none tw:whitespace-nowrap tw:rounded-full tw:bg-white tw:px-4 tw:py-1.5 ' +
-      'tw:text-[15px] tw:font-bold tw:text-ew-deep tw:shadow-[0_10px_30px_rgba(0,0,0,.3)] ' +
-      'tw:opacity-0 tw:transition-opacity tw:duration-200 tw:ease-out tw:flex tw:items-center tw:gap-1.5',
-      { role: 'tooltip', dir: 'auto' });
-    var tipText = el('span');
-    var tipIcon = el('span', 'tw:inline-flex tw:opacity-60');
-    tipIcon.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>';
-    var tipArrow = el('span', 'tw:absolute tw:left-1/2 tw:top-full tw:-translate-x-1/2 tw:border-[7px] tw:border-transparent tw:border-t-white');
-    tip.appendChild(tipText); tip.appendChild(tipIcon); tip.appendChild(tipArrow);
-    tip.style.transform = 'translate(-50%, -100%)';
-    top.appendChild(tip);
-    var tipFor = null;
-    function placeTip() {
-      if (!tipFor) return;
-      var r = tipFor.getBoundingClientRect(), tr = top.getBoundingClientRect();
-      tip.style.left = (r.left + r.width / 2 - tr.left) + 'px';
-      tip.style.top = (r.top - tr.top - 10) + 'px';
-    }
-    function showTip(b) {
-      var a = $('a', b);
-      var txt = a && a.textContent.trim().replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '');
-      tipText.textContent = txt || t('soon');
-      tipIcon.style.display = txt ? '' : 'none';
-      tipFor = b;
-      placeTip();
-      tip.classList.remove('tw:opacity-0');
-    }
-    function hideTip() { tipFor = null; tip.classList.add('tw:opacity-0'); }
-    function bindTip(list) {
-      list.forEach(function (b) {
-        b.addEventListener('mouseenter', function () { showTip(b); });
-        b.addEventListener('mouseleave', hideTip);
-        b.addEventListener('focusin', function () { showTip(b); });
-        b.addEventListener('focusout', hideTip);
-      });
-    }
 
     // ---- Okuyan çocuğun arkasında dönen ışık huzmeleri (sabit merkezde) ----
     var haloWrap = el('div',
@@ -248,7 +214,6 @@
     var wheelOn = false;
     function staticMode() {
       if (wheelOn) return;
-      bindTip(origBtns);
       var lay = function () {
         var W = img.clientWidth, H = img.clientHeight, src = img.currentSrc || img.src;
         origBtns.forEach(function (b) {
@@ -265,8 +230,8 @@
     if (!MOTION) { staticMode(); return; }
 
     // ---- Çark parçalarını önceden yükle ----
-    var urls = [];
-    WHEEL.items.forEach(function (_, i) { urls.push(BASE + 'icon-' + i + '.png', BASE + 'label-' + i + '.png'); });
+    var urls = [asset('ring.webp'), asset('hub.png'), asset('legs.png'), asset('head.png')];
+    WHEEL.icons.forEach(function (_, i) { urls.push(asset('icon-' + i + '.png')); });
     var pending = urls.length, failed = false;
     urls.forEach(function (u) {
       var im = new Image();
@@ -280,19 +245,24 @@
 
     /* ---- Dönme dolap ----
        clip    : menü boyutunda (+ yan pay); çarkın alt yarısını gizler
-       wheel   : dönen iskelet — yumuşak renk halkası + SVG (göbek halkası, jantlar, ampuller)
+       wheel   : dönen halka — orijinal dilimlerden üretilmiş ring.webp (sınır gölgeleri dahil)
        cabins  : 24 logo (12 bağlantı × 2, karşılıklı); her biri pime tam merkezinden takılı,
                  altındaki yazının ağırlığıyla dik durur ve çarkın ivmesine göre hafifçe sallanır.
        Ortadaki ay + kitap okuyan çocuk (orijinal görselin merkezi) sabit göbektir. */
     function buildWheel() {
-      // RP: logo merkezlerinin (pimlerin) yarıçapı. Logo pime tam ortasından takılıdır.
-      var SLOTS = 24, RP = 478, GW = 100, GH = 134, ICON = 84, LSCALE = .8;
+      // Çarkın bandı: iç kenar (sabit göbek) → dış kenar. tools/build-wheel.mjs'teki RING_INNER / RING_OUTER ile aynı.
+      var R_HUB = 316, R_EDGE = 520;
+      // RP: logo merkezlerinin yarıçapı. Logo + altındaki yazı birlikte bandın ortasında dursun diye
+      // logo, bandın tam ortasından 18px dışarıda.
+      var SLOTS = 24, RP = (R_HUB + R_EDGE) / 2 + 18, GW = 120, GH = 94, ICON = 72, FONT = 13.5;
       var DEG = Math.PI / 180;
 
       var clip = el('div', 'tw:absolute tw:top-0 tw:z-[2] tw:overflow-hidden tw:opacity-0 tw:transition-opacity tw:duration-500');
       var wheel = el('div', 'ew-wheel tw:absolute tw:top-0', { 'aria-hidden': 'true' });
-      wheel.appendChild(el('div', 'ew-wheel-bg tw:absolute tw:inset-0 tw:rounded-full'));
-      wheel.insertAdjacentHTML('beforeend', skeletonSVG());
+      // orijinal dilimlerden üretilmiş temiz halka (ikon/yazısız, 24 dilim, kenar çizgisi yok)
+      var ringImg = el('img', 'tw:absolute tw:pointer-events-none tw:select-none',
+        { src: asset('ring.webp'), alt: '', draggable: 'false' });
+      wheel.appendChild(ringImg);
       clip.appendChild(wheel);
 
       // Kabinler
@@ -300,43 +270,90 @@
       for (var j = 0; j < SLOTS; j++) {
         var i = 11 - (j % 12);                 // dilim j ↔ menu_item_(11-j) (sağdan sola)
         var dup = j >= 12;
-        var it = WHEEL.items[i];
+        var icon = WHEEL.icons[i];
         var b = dup ? origBtns[i].cloneNode(true) : origBtns[i];
         if (dup) $$('a', b).forEach(function (a) { a.tabIndex = -1; });
         var cab = el('div', 'ew-cabin', dup ? { 'aria-hidden': 'true' } : null);
         var gondola = el('div', 'ew-gondola');
-        var lab = el('img', 'tw:absolute tw:pointer-events-none tw:select-none',
-          { src: BASE + 'label-' + i + '.png', alt: '', draggable: 'false', 'aria-hidden': 'true' });
+        var lab = el('div', 'ew-label', { lang: i === 4 ? 'en' : 'ug', dir: i === 4 ? 'ltr' : 'rtl' });
+        if (dup) lab.setAttribute('aria-hidden', 'true');
+        lab.textContent = WHEEL.labels[i];
         var slice = $('.ew-slice', b);
-        slice.style.backgroundImage = 'url("' + BASE + 'icon-' + i + '.png")';
+        slice.style.backgroundImage = 'url("' + asset('icon-' + i + '.png') + '")';
         gondola.appendChild(b);
         gondola.appendChild(lab);
         cab.appendChild(gondola);
         clip.appendChild(cab);
         cabins.push({
-          el: cab, gondola: gondola, btn: b, slice: slice, label: lab, it: it,
+          el: cab, gondola: gondola, btn: b, slice: slice, label: lab, icon: icon,
           th0: (7.5 + 15 * j) * DEG,            // matematiksel açı (saat yönü tersi, sağdan)
           phi: 0, dphi: 0, wind: Math.random() * 6.28
         });
       }
 
       menu.appendChild(clip);
+      // Sabit göbek + dizden sallanan bacaklar + boyundan kalkıp inen baş (hilalde oturan çocuk)
+      var hub = el('img', 'tw:absolute tw:z-[2] tw:pointer-events-none tw:select-none',
+        { src: asset('hub.png'), alt: '', draggable: 'false', 'aria-hidden': 'true' });
+      var legs = el('img', 'ew-legs tw:absolute tw:z-[2] tw:pointer-events-none tw:select-none',
+        { src: asset('legs.png'), alt: '', draggable: 'false', 'aria-hidden': 'true' });
+      var head = el('img', 'ew-head tw:absolute tw:z-[2] tw:pointer-events-none tw:select-none',
+        { src: asset('head.png'), alt: '', draggable: 'false', 'aria-hidden': 'true' });
+      menu.appendChild(hub);
+      menu.appendChild(legs);
+      menu.appendChild(head);
+
+      // Ok düğmeleri: dış çemberin sol-alt ve sağ-alt ucunda. Üzerine gelince çark o yöne döner,
+      // tıklayınca o yöne bir itme verir. (dir −1: saat yönünün tersi → öğeler sola akar)
+      var arrows = [-1, 1].map(function (dir) {
+        var btn = el('button',
+          'ew-arrow tw:absolute tw:z-[4] tw:flex tw:items-center tw:justify-center tw:rounded-full tw:p-0 tw:cursor-pointer ' +
+          'tw:border-2 tw:border-white/45 tw:bg-[#14566a]/90 tw:text-white tw:shadow-[0_6px_16px_rgba(0,0,0,.3)] ' +
+          'tw:transition tw:duration-200 tw:hover:scale-110 tw:hover:bg-[#1b6c84] tw:hover:border-white/80 tw:active:scale-95',
+          { type: 'button', 'aria-label': t(dir < 0 ? 'turnLeft' : 'turnRight') });
+        btn.innerHTML = '<svg width="55%" height="55%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">' +
+          (dir < 0 ? '<path d="M15 5l-7 7 7 7"/>' : '<path d="M9 5l7 7-7 7"/>') + '</svg>';
+        btn.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') steer = dir; });
+        btn.addEventListener('pointerleave', function () { steer = 0; });
+        btn.addEventListener('click', function () { omega = dir * KICK; });
+        menu.appendChild(btn);
+        return { el: btn, dir: dir };
+      });
       menu.classList.add('ew-wheel-on');
       img.classList.add('ew-center');            // orijinal görsel yalnızca sabit merkezi göstersin
       wheelOn = true;
-      bindTip(cabins.map(function (c) { return c.btn; }));
 
       var geo = { W: 0, H: 0, s: 1, M: 0, cx: 0, cy: 0, rin: 0, rout: 0 };
       function layout() {
         var W = img.clientWidth, H = img.clientHeight;
         if (!W || !H) return;
         var s = W / 1120, M = Math.round(110 * s);
-        geo = { W: W, H: H, s: s, M: M, cx: M + W / 2, cy: W / 2, rin: 316 * s, rout: 560 * s };
+        geo = { W: W, H: H, s: s, M: M, cx: M + W / 2, cy: W / 2, rin: R_HUB * s, rout: R_EDGE * s };
         clip.style.left = -M + 'px';
         clip.style.width = (W + 2 * M) + 'px';
         clip.style.height = H + 'px';
         wheel.style.left = M + 'px';
         wheel.style.width = wheel.style.height = W + 'px';
+        var rd = R_EDGE * s;                     // halkanın dış yarıçapı
+        ringImg.style.left = ringImg.style.top = (W / 2 - rd) + 'px';
+        ringImg.style.width = ringImg.style.height = 2 * rd + 'px';
+        var k = W / WHEEL.size[0], hb = WHEEL.hub, lg = WHEEL.legs;
+        hub.style.left = hb[0] * k + 'px'; hub.style.top = hb[1] * k + 'px';
+        hub.style.width = hb[2] * k + 'px'; hub.style.height = hb[3] * k + 'px';
+        legs.style.left = lg[0] * k + 'px'; legs.style.top = lg[1] * k + 'px';
+        legs.style.width = lg[2] * k + 'px'; legs.style.height = lg[3] * k + 'px';
+        legs.style.transformOrigin = (WHEEL.knee[0] - lg[0]) * k + 'px ' + (WHEEL.knee[1] - lg[1]) * k + 'px';
+        var hd = WHEEL.head;
+        head.style.left = hd[0] * k + 'px'; head.style.top = hd[1] * k + 'px';
+        head.style.width = hd[2] * k + 'px'; head.style.height = hd[3] * k + 'px';
+        head.style.transformOrigin = (WHEEL.neck[0] - hd[0]) * k + 'px ' + (WHEEL.neck[1] - hd[1]) * k + 'px';
+        // ok düğmeleri: çemberi kapatmasın diye bandın sol/sağ ucunun hemen altında (hero'nun alt kenarının altı)
+        var ab = 44 * s;
+        arrows.forEach(function (a) {
+          a.el.style.width = a.el.style.height = ab + 'px';
+          a.el.style.left = (W / 2 + a.dir * (R_HUB + R_EDGE) / 2 * s - ab / 2) + 'px';
+          a.el.style.top = (H + 10 * s) + 'px';
+        });
         menu.style.setProperty('--ew-rin', (WHEEL.rIn - 3) * (W / WHEEL.size[0]) + 'px');
         menu.style.setProperty('--ew-cdy', (WHEEL.center[1] - WHEEL.size[1]) * (W / WHEEL.size[0]) + 'px');
         cabins.forEach(function (c) {
@@ -347,20 +364,16 @@
           c.gondola.style.top = '0px';
           c.gondola.style.height = gh + 'px';
           // yuvarlak logo (bağlantı) — merkezi pime takılı
-          var R = c.it.icon[2], f = d / (2 * R);
-          var x0 = Math.floor(c.it.icon[0] - R - 1), y0 = Math.floor(c.it.icon[1] - R - 1), sz = Math.ceil(2 * R + 3);
+          var ic = c.icon, R = ic[2], f = d / (2 * R);
+          var x0 = Math.floor(ic[0] - R - 1), y0 = Math.floor(ic[1] - R - 1), sz = Math.ceil(2 * R + 3);
           c.btn.style.left = (gw - d) / 2 + 'px';
           c.btn.style.top = '0px';
           c.btn.style.width = c.btn.style.height = d + 'px';
           c.slice.style.backgroundSize = sz * f + 'px ' + sz * f + 'px';
-          c.slice.style.backgroundPosition = (x0 - (c.it.icon[0] - R)) * f + 'px ' + (y0 - (c.it.icon[1] - R)) * f + 'px';
-          // yazı — ikonun hemen altında, onunla birlikte asılı
-          var lw = c.it.label[2] * LSCALE * s, lh = c.it.label[3] * LSCALE * s;
-          var areaTop = (ICON + 4) * s;
-          c.label.style.width = lw + 'px';
-          c.label.style.height = lh + 'px';
-          c.label.style.left = (gw - lw) / 2 + 'px';
-          c.label.style.top = areaTop + 'px';
+          c.slice.style.backgroundPosition = (x0 - (ic[0] - R)) * f + 'px ' + (y0 - (ic[1] - R)) * f + 'px';
+          // yazı — logonun hemen altında tek satır, onunla birlikte asılı
+          c.label.style.top = (ICON + 3) * s + 'px';
+          c.label.style.fontSize = FONT * s + 'px';
         });
       }
       layout();
@@ -369,7 +382,7 @@
       // ---- Dönüş: açılışta çevirme → yavaş, sürekli dönüş ----
       var AUTO = -3.2;              // derece/sn (negatif = saat yönünün tersi: kabinler sağdan sola akar)
       var angle = 0, omega = -150;
-      var hover = false, drag = null;
+      var hover = false, drag = null, steer = 0, STEER_SPEED = 40, KICK = 150;
 
       function center() {
         var r = menu.getBoundingClientRect();
@@ -405,7 +418,6 @@
           if (Math.abs(p.x - drag.sx) + Math.abs(p.y - drag.sy) < 7) return;
           drag.moved = true;
           menu.classList.add('ew-grabbing');
-          hideTip();
         }
         var d = norm(p.a - drag.lastA);
         angle += d;
@@ -439,7 +451,7 @@
         var dt = Math.min(.05, dtMs / 1000);
         clock += dt;
         if (!drag || !drag.moved) {
-          var target = hover ? 0 : AUTO;
+          var target = steer ? steer * STEER_SPEED : (hover ? 0 : AUTO);   // ok üzerindeyken o yöne döner
           omega += (target - omega) * (1 - Math.exp(-dt / .9));
           angle += omega * dt;
         }
@@ -474,27 +486,8 @@
           if (hidden) continue;
           c.el.style.transform = 'translate(' + (px - gw / 2).toFixed(2) + 'px,' + (py - half).toFixed(2) + 'px) rotate(' + (-c.phi).toFixed(4) + 'rad)';
         }
-        placeTip();
       });
 
-      function skeletonSVG() {
-        var R_HUB = 316, R_IN = 524, R_OUT = 548, R_BULB = 536, k;
-        var o = '<svg class="ew-skeleton" width="100%" height="100%" viewBox="-560 -560 1120 1120">';
-        var P = function (r, deg) { var a = deg * DEG; return (r * Math.cos(a)).toFixed(1) + ' ' + (-r * Math.sin(a)).toFixed(1); };
-        // jantlar ve göbek halkası
-        o += '<g fill="none" stroke="rgba(255,255,255,.92)">' +
-             '<circle r="' + R_OUT + '" stroke-width="3.5"/><circle r="' + R_IN + '" stroke-width="3.5"/>' +
-             '<circle r="' + R_HUB + '" stroke-width="5"/><circle r="' + (R_HUB - 9) + '" stroke-width="1.5" stroke="rgba(255,255,255,.4)"/></g>';
-        // ampuller (sırayla yanıp söner)
-        o += '<g class="ew-bulbs">';
-        for (k = 0; k < 72; k++) {
-          var a = k * 5 * DEG;
-          o += '<circle cx="' + (R_BULB * Math.cos(a)).toFixed(1) + '" cy="' + (-R_BULB * Math.sin(a)).toFixed(1) + '" r="3.4" style="animation-delay:' + (-(k % 12) * .2).toFixed(1) + 's"/>';
-        }
-        o += '</g>';
-        o += '</svg>';
-        return o;
-      }
     }
   });
 
@@ -663,24 +656,13 @@
   });
 
   /* ------------------------------------------------------------------ */
-  /* 7. FOOTER — sosyal ikonlar: sırayla beliriş + manyetik hover        */
+  /* 7. FOOTER — sosyal ikonlar: sırayla beliriş                          */
   /* ------------------------------------------------------------------ */
   safe('social', function () {
     var icons = $$('.footer-social .social-icon');
     icons.forEach(function (a, i) {
       a.style.setProperty('--i', i);
       a.addEventListener('animationend', function () { a.classList.add('ew-done'); });
-      if (!(MOTION && FINE)) return;
-      var cx = 0, cy = 0;
-      a.addEventListener('mouseenter', function () {
-        a.style.transform = '';
-        var r = a.getBoundingClientRect();
-        cx = r.left + r.width / 2; cy = r.top + r.height / 2;
-      });
-      a.addEventListener('mousemove', function (e) {
-        a.style.transform = 'translate(' + ((e.clientX - cx) * .4).toFixed(1) + 'px,' + ((e.clientY - cy) * .4).toFixed(1) + 'px) scale(1.18)';
-      });
-      a.addEventListener('mouseleave', function () { a.style.transform = ''; });
     });
     if (MOTION) revealOnScroll(icons, .3);
   });
