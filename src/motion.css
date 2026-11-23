@@ -132,22 +132,12 @@ html.ew-motion .ew-bulbs circle { animation: ew-bulb 2.4s ease-in-out infinite; 
   50%      { opacity: 1; }
 }
 
-/* Kabinler: pime asılı, yerçekimiyle sarkar (konum ve açı JS'ten) */
+/* Logolar: pime merkezinden takılı, yazının ağırlığıyla dik durur (konum ve açı JS'ten) */
 .ew-cabin {
   position: absolute;
   left: 0;
   top: 0;
-  transform-origin: 50% 0;
   will-change: transform;
-}
-.ew-hanger {
-  position: absolute;
-  left: 50%;
-  top: -1px;
-  width: 3px;
-  translate: -50% 0;
-  border-radius: 2px;
-  background: linear-gradient(#fff, rgba(255, 255, 255, .75));
 }
 .ew-gondola {                         /* görünmez taşıyıcı: yuvarlak ikon + altında yazı */
   position: absolute;

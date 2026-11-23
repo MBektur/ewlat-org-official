@@ -280,12 +280,13 @@
 
     /* ---- Dönme dolap ----
        clip    : menü boyutunda (+ yan pay); çarkın alt yarısını gizler
-       wheel   : dönen iskelet — yumuşak renk halkası + SVG (göbek halkası, jantlar, ampuller, pimler)
-       cabins  : 24 kabin (12 bağlantı × 2, karşılıklı); her biri bir pime asılı,
-                 yerçekimiyle sarkar ve çarkın ivmesine göre sarkaç gibi sallanır.
+       wheel   : dönen iskelet — yumuşak renk halkası + SVG (göbek halkası, jantlar, ampuller)
+       cabins  : 24 logo (12 bağlantı × 2, karşılıklı); her biri pime tam merkezinden takılı,
+                 altındaki yazının ağırlığıyla dik durur ve çarkın ivmesine göre hafifçe sallanır.
        Ortadaki ay + kitap okuyan çocuk (orijinal görselin merkezi) sabit göbektir. */
     function buildWheel() {
-      var SLOTS = 24, RP = 524, HANG = 12, GW = 100, GH = 134, ICON = 84, LSCALE = .8;
+      // RP: logo merkezlerinin (pimlerin) yarıçapı. Logo pime tam ortasından takılıdır.
+      var SLOTS = 24, RP = 478, GW = 100, GH = 134, ICON = 84, LSCALE = .8;
       var DEG = Math.PI / 180;
 
       var clip = el('div', 'tw:absolute tw:top-0 tw:z-[2] tw:overflow-hidden tw:opacity-0 tw:transition-opacity tw:duration-500');
@@ -303,7 +304,6 @@
         var b = dup ? origBtns[i].cloneNode(true) : origBtns[i];
         if (dup) $$('a', b).forEach(function (a) { a.tabIndex = -1; });
         var cab = el('div', 'ew-cabin', dup ? { 'aria-hidden': 'true' } : null);
-        var hanger = el('span', 'ew-hanger');
         var gondola = el('div', 'ew-gondola');
         var lab = el('img', 'tw:absolute tw:pointer-events-none tw:select-none',
           { src: BASE + 'label-' + i + '.png', alt: '', draggable: 'false', 'aria-hidden': 'true' });
@@ -311,11 +311,10 @@
         slice.style.backgroundImage = 'url("' + BASE + 'icon-' + i + '.png")';
         gondola.appendChild(b);
         gondola.appendChild(lab);
-        cab.appendChild(hanger);
         cab.appendChild(gondola);
         clip.appendChild(cab);
         cabins.push({
-          el: cab, hanger: hanger, gondola: gondola, btn: b, slice: slice, label: lab, it: it,
+          el: cab, gondola: gondola, btn: b, slice: slice, label: lab, it: it,
           th0: (7.5 + 15 * j) * DEG,            // matematiksel açı (saat yönü tersi, sağdan)
           phi: 0, dphi: 0, wind: Math.random() * 6.28
         });
@@ -341,13 +340,13 @@
         menu.style.setProperty('--ew-rin', (WHEEL.rIn - 3) * (W / WHEEL.size[0]) + 'px');
         menu.style.setProperty('--ew-cdy', (WHEEL.center[1] - WHEEL.size[1]) * (W / WHEEL.size[0]) + 'px');
         cabins.forEach(function (c) {
-          var gw = GW * s, gh = GH * s, hang = HANG * s, d = ICON * s;
+          var gw = GW * s, gh = GH * s, d = ICON * s;
           c.el.style.width = gw + 'px';
-          c.el.style.height = (hang + gh) + 'px';
-          c.hanger.style.height = (hang + 2) + 'px';
-          c.gondola.style.top = hang + 'px';
+          c.el.style.height = gh + 'px';
+          c.el.style.transformOrigin = '50% ' + d / 2 + 'px';   // dönme noktası = logonun merkezi
+          c.gondola.style.top = '0px';
           c.gondola.style.height = gh + 'px';
-          // yuvarlak ikon (bağlantı) — askının hemen ucunda
+          // yuvarlak logo (bağlantı) — merkezi pime takılı
           var R = c.it.icon[2], f = d / (2 * R);
           var x0 = Math.floor(c.it.icon[0] - R - 1), y0 = Math.floor(c.it.icon[1] - R - 1), sz = Math.ceil(2 * R + 3);
           c.btn.style.left = (gw - d) / 2 + 'px';
@@ -453,8 +452,8 @@
         angle %= 360;
         wheel.style.setProperty('--ew-a', angle.toFixed(3) + 'deg');
 
-        var s = geo.s, Rp = RP * s, L = (HANG + GH / 2) * s, g = G * s, A = angle * DEG;
-        var gw = GW * s;
+        var s = geo.s, Rp = RP * s, L = 45 * s, g = G * s, A = angle * DEG;   // L: pim → ağırlık merkezi (yazı tarafında)
+        var gw = GW * s, half = ICON * s / 2;
         for (var k = 0; k < cabins.length; k++) {
           var c = cabins[k];
           var beta = -c.th0 + A;                 // ekran açısı (y aşağı)
@@ -470,10 +469,10 @@
           if (c.phi > MAXPHI) { c.phi = MAXPHI; if (c.dphi > 0) c.dphi *= -.3; }       // tampona yumuşak çarpma
           else if (c.phi < -MAXPHI) { c.phi = -MAXPHI; if (c.dphi < 0) c.dphi *= -.3; }
           // Ufkun altında kalan kabinleri çizme
-          var hidden = py > geo.H + 4 * s && py - geo.H > 10;
+          var hidden = py - half > geo.H;
           if (hidden !== c.hidden) { c.hidden = hidden; c.el.style.visibility = hidden ? 'hidden' : ''; }
           if (hidden) continue;
-          c.el.style.transform = 'translate(' + (px - gw / 2).toFixed(2) + 'px,' + py.toFixed(2) + 'px) rotate(' + (-c.phi).toFixed(4) + 'rad)';
+          c.el.style.transform = 'translate(' + (px - gw / 2).toFixed(2) + 'px,' + (py - half).toFixed(2) + 'px) rotate(' + (-c.phi).toFixed(4) + 'rad)';
         }
         placeTip();
       });
@@ -493,13 +492,7 @@
           o += '<circle cx="' + (R_BULB * Math.cos(a)).toFixed(1) + '" cy="' + (-R_BULB * Math.sin(a)).toFixed(1) + '" r="3.4" style="animation-delay:' + (-(k % 12) * .2).toFixed(1) + 's"/>';
         }
         o += '</g>';
-        // kabin pimleri
-        o += '<g fill="#fff" stroke="#ffe08a" stroke-width="2">';
-        for (k = 0; k < 24; k++) {
-          var aa = (7.5 + 15 * k) * DEG;
-          o += '<circle cx="' + (R_IN * Math.cos(aa)).toFixed(1) + '" cy="' + (-R_IN * Math.sin(aa)).toFixed(1) + '" r="6"/>';
-        }
-        o += '</g></svg>';
+        o += '</svg>';
         return o;
       }
     }
