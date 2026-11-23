@@ -96,6 +96,18 @@ html.ew-motion .chislaDiv > :nth-child(2) { animation-delay: .85s; }
 html.ew-motion .chislaDiv > :nth-child(3) { animation-delay: .95s; }
 html.ew-motion .chislaDiv > :nth-child(4) { animation-delay: 1.05s; }
 
+/* Dar ekranda tarih: 1. satır ay + Hicri, 2. satır Miladi (ortalı); "|" ayırıcı gizli */
+@media (max-width: 1023px) {
+  html.ew-js .chislaDiv {
+    flex-wrap: wrap;
+    justify-content: center;
+    column-gap: 10px;
+    row-gap: 2px;
+  }
+  html.ew-js .chislaDiv .date-sep { display: none; }
+  html.ew-js .chislaDiv .chisla-ug { flex-basis: 100%; text-align: center; }
+}
+
 /* ==========================================================================
    3. YARIM DAİRE MENÜ — dönme dolap
    ========================================================================== */
@@ -151,7 +163,7 @@ html.ew-js .menu.ew-wheel-on .mbtn-inactive .ew-slice { filter: none; }
 html.ew-js .menu.ew-wheel-on .mbtn-inactive:hover .ew-slice { filter: grayscale(.85); }
 
 /* Ok düğmeleri: Bootstrap'in button { border-radius: 0 } kuralını ez (Tailwind utility'leri katmanlı) */
-html.ew-js .menu .ew-arrow { border-radius: 50%; line-height: 0; outline-offset: 3px; }
+html.ew-js .top .ew-arrow { border-radius: 50%; line-height: 0; outline-offset: 3px; }
 html.ew-motion .menu.ew-wheel-on {
   touch-action: pan-y;               /* dokunmatikte yatay kaydırma çarkı çevirir */
   -webkit-user-select: none;

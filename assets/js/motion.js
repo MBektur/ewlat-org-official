@@ -19,6 +19,7 @@
   function mq(q) { return !!(window.matchMedia && window.matchMedia(q).matches); }
   var MOTION = !mq('(prefers-reduced-motion: reduce)');
   var FINE = mq('(hover: hover) and (pointer: fine)');
+  var COARSE = mq('(pointer: coarse)');
 
   root.classList.add('ew-js');
   if (MOTION) root.classList.add('ew-motion');
@@ -317,7 +318,7 @@
         btn.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') steer = dir; });
         btn.addEventListener('pointerleave', function () { steer = 0; });
         btn.addEventListener('click', function () { omega = dir * KICK; });
-        menu.appendChild(btn);
+        top.appendChild(btn);
         return { el: btn, dir: dir };
       });
       menu.classList.add('ew-wheel-on');
@@ -348,12 +349,13 @@
         head.style.left = hd[0] * k + 'px'; head.style.top = hd[1] * k + 'px';
         head.style.width = hd[2] * k + 'px'; head.style.height = hd[3] * k + 'px';
         head.style.transformOrigin = (WHEEL.neck[0] - hd[0]) * k + 'px ' + (WHEEL.neck[1] - hd[1]) * k + 'px';
-        // ok düğmeleri: çemberi kapatmasın diye bandın sol/sağ ucunun hemen altında (hero'nun alt kenarının altı)
-        var ab = 44 * s;
+        // ok düğmeleri: .top içinde (dar ekranda .menu taşanı gizliyor), bandın sol/sağ ucunun altında,
+        // hero'nun alt kenarının hemen altında. Dokunmatikte parmakla basılabilecek büyüklükte.
+        var ab = Math.max(44 * s, COARSE ? W * .11 : 34);
         arrows.forEach(function (a) {
           a.el.style.width = a.el.style.height = ab + 'px';
-          a.el.style.left = (W / 2 + a.dir * (R_HUB + R_EDGE) / 2 * s - ab / 2) + 'px';
-          a.el.style.top = (H + 10 * s) + 'px';
+          a.el.style.left = (menu.offsetLeft + W / 2 + a.dir * (R_HUB + R_EDGE) / 2 * s - ab / 2) + 'px';
+          a.el.style.top = (top.offsetHeight + 8 * s) + 'px';
         });
         menu.style.setProperty('--ew-rin', (WHEEL.rIn - 3) * (W / WHEEL.size[0]) + 'px');
         menu.style.setProperty('--ew-cdy', (WHEEL.center[1] - WHEEL.size[1]) * (W / WHEEL.size[0]) + 'px');
@@ -379,6 +381,8 @@
       }
       layout();
       window.addEventListener('resize', debounce(layout, 150));
+      // hero yüksekliği font yüklenince / tarih satırı kırılınca değişebilir → okları yeniden yerleştir
+      if ('ResizeObserver' in window) new ResizeObserver(debounce(layout, 50)).observe(top);
 
       // ---- Dönüş: açılışta çevirme → yavaş, sürekli dönüş ----
       var AUTO = -3.2;              // derece/sn (negatif = saat yönünün tersi: kabinler sağdan sola akar)
