@@ -15,7 +15,7 @@ Deliverables (the only things that ship to ewlat.org):
 
 The live site's `<meta name="viewport" content="width=1120">` forces phones to render a scaled-down desktop page (huge empty area below the footer). `preview/index.html` uses `width=device-width, initial-scale=1`, which activates `app.css`'s own mobile rules; the same one-line change is needed in production `index.php`.
 
-`preview/` is a local mirror of the live homepage (`preview/index.html` + the site's own assets in `preview/assets/`) that loads the deliverables via `../assets/...`. It exists only for testing; app popups point at `https://ewlat.org/popup.php` and fail to load from localhost (expected).
+`preview/` is a local mirror of the live homepage (`preview/index.html` + the site's own assets in `preview/assets/`) that loads the deliverables via `../assets/...`. It exists only for testing. The app-icon modal iframes `popup.php?id=N`, which ewlat.org serves with `X-Frame-Options: SAMEORIGIN`, so the preview must serve it from its own origin: `tools/serve.mjs` proxies it locally and `vercel.json` has a matching `rewrites` rule. A plain static server (e.g. `python -m http.server`) shows an empty modal.
 
 ## Commands
 
@@ -23,7 +23,7 @@ The live site's `<meta name="viewport" content="width=1120">` forces phones to r
 npm run build     # src/motion.css → assets/css/motion.css (minified). Required after ANY change to src/motion.css or to tw: classes in motion.js
 npm run dev       # same, watch mode
 npm run wheel     # menu.png → assets/images/wheel/* (tools/build-wheel.mjs; uses pngjs + sharp)
-npm run preview   # python http.server on :8080 from repo root → open http://localhost:8080/preview/
+npm run preview   # tools/serve.mjs on :8080 (PORT=… to change) → http://localhost:8080/preview/; proxies popup.php to ewlat.org
 ```
 
 There are no tests or linter. `node --check assets/js/motion.js` catches syntax errors. Verify visually in a browser (desktop, a <1023px window, mobile emulation, and with `prefers-reduced-motion: reduce`).
@@ -62,6 +62,8 @@ The original menu is a single image (`menu.png`, 1409×701) with 12 transparent 
 - Arrow buttons and the "see all" pill are appended to `.top`, **not** `.menu`: below 1023px the site's `app.css` sets `.menu { overflow: hidden }`, which would clip them. They're positioned from `menu.offsetLeft` / `top.offsetHeight` and re-laid out via a `ResizeObserver` on `.top`.
 - "See all" (`openSites`): the pill button or a transparent `.ew-hubbtn` over the boy/crescent opens a custom dialog (not Bootstrap's modal) listing all 12 links as cards (logo `icon-N.png`, `WHEEL.labels`, hostname; the link-less item gets a "soon" badge). Built lazily; Esc/backdrop/close button; works in static mode too.
 - If any wheel asset fails to load (or reduced motion), `staticMode()` keeps the original menu image with hover effects.
+
+The modal module also resizes the site's fixed-height (440px) popup iframe to its content (capped to the viewport) on load — only possible same-origin, i.e. on production or through the preview proxy.
 
 ### Regenerating wheel assets
 

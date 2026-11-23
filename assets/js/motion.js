@@ -746,8 +746,31 @@
       clearTimeout(timer);
       loader.classList.add('tw:opacity-0', 'tw:pointer-events-none');
     }
-    frame.addEventListener('load', function () { if (frame.getAttribute('src')) hide(); });
-    modal.addEventListener('show.bs.modal', show);
+    // iframe yüksekliğini içeriğe uydur: sitenin iframe'i 440px'e sabit, popup.php içeriği ise ~600–700px →
+    // mağaza düğmeleri ve paylaşım bölümü kesiliyordu. Pencere ekrana sığacak kadar; fazlası iframe içinde kayar.
+    // (Yalnızca aynı kökende okunabilir: canlı sitede ve proxy'li önizlemede çalışır, aksi halde 440px kalır.)
+    var BASE_H = parseInt(frame.getAttribute('height'), 10) || 440;
+    function fit() {
+      try {
+        var d = frame.contentDocument;
+        if (!d || !d.documentElement) return;
+        var h = Math.max(d.documentElement.scrollHeight, d.body ? d.body.scrollHeight : 0);
+        // üst sınır: ekran yüksekliği − (pencere kenar boşlukları + "تاقاش" altlığı ≈ 150px)
+        if (h > 0) frame.style.height = Math.min(h, Math.max(BASE_H, window.innerHeight - 150)) + 'px';
+      } catch (e) { /* farklı köken: ölçülemez */ }
+    }
+    frame.addEventListener('load', function () {
+      if (!frame.getAttribute('src')) return;
+      hide();
+      fit();
+      setTimeout(fit, 400);                          // fontlar/görseller yüklendikten sonra yeniden ölç
+      try {
+        var w = frame.contentWindow;
+        w.addEventListener('load', fit);
+        if (w.ResizeObserver) new w.ResizeObserver(fit).observe(w.document.documentElement);
+      } catch (e) {}
+    });
+    modal.addEventListener('show.bs.modal', function () { frame.style.height = BASE_H + 'px'; show(); });
     modal.addEventListener('hidden.bs.modal', hide);
   });
 

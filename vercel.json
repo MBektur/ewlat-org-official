@@ -1,5 +1,8 @@
 {
   "installCommand": "true",
   "buildCommand": "rm -rf dist && mkdir dist && cp -R preview/. dist/ && cp -R assets/. dist/assets/",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/popup.php", "destination": "https://ewlat.org/popup.php" }
+  ]
 }

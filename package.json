@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tailwindcss -i ./src/motion.css -o ./assets/css/motion.css --minify",
     "dev": "tailwindcss -i ./src/motion.css -o ./assets/css/motion.css --watch",
-    "preview": "python3 -m http.server 8080",
+    "preview": "node tools/serve.mjs",
     "wheel": "node tools/build-wheel.mjs"
   },
   "devDependencies": {

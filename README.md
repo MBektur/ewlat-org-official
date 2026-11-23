@@ -39,7 +39,7 @@ Eski ayar telefonları sayfayı 1120px genişlikte küçültülmüş çizmeye zo
 | Tarih | Hicri tarihin yanında bugünkü **ay evresi** (UQCal'dan hesaplanır) |
 | Yarım daire menü | **Dönme dolap.** Ortadaki ay ve kitap okuyan çocuk sabit göbektir; hilalde oturan çocuğun bacakları dizden hafifçe sallanır. Çevresinde 360° bir çark döner: orijinal menu.png'nin bir diliminden üretilmiş 24 özdeş dilim (aralarında orijinaldeki gölgeli sınır çizgileri), iç ve dış çemberde çarkın kendi renginin koyu tonunda kenar çizgisi. Bandın tam ortasında 24 yer vardır; 12 yuvarlak logo karşılıklı ikişer kez yer alır, böylece görünen üst yarıda 12'sinin hepsi her an görünür. Logolar çarka merkezlerinden takılıdır ve hep dik durur; altlarındaki tek satırlık yazılar (gerçek metin) ağırlık merkezini aşağıda tutar, çark hızlanıp yavaşladıkça logo ve yazı birlikte hafifçe sallanır (sınırlı ve sönümlü). Açılışta çark bir kez çevrilir, sonra yavaşça döner. Fare çarkın üzerine gelince durur; fareyle ya da parmakla tutup çevrilebilir, bırakınca savrulur (sürükleme bağlantı açmaz). Hover'da logo büyür. Çemberin altındaki oklarla (üzerine gelince o yöne döner, tıklayınca iter) çevrilebilir. Telefonda her logo bir kez ve iki kat büyük gösterilir. **"Hepsini gör"** düğmesi ya da ortadaki çocuğa tıklama, tüm siteleri kartlarla listeleyen bir pencere açar (pasif öğede "يېقىندا"). Çocuk ara sıra başını kaldırıp indirir |
 | Uygulamalar | Arka planda yükselen Uygur harfleri; ikonlar kaydırınca yaylanarak belirir, hafifçe süzülür; hover'da 3D eğim + ışık yansıması; tıklamada dalga efekti |
-| Modal | Bulanık arka plan, yaylanarak açılış, iframe yüklenene kadar "يۈكلىنىۋاتىدۇ…" göstergesi |
+| Modal | Bulanık arka plan, yaylanarak açılış, iframe yüklenene kadar "يۈكلىنىۋاتىدۇ…" göstergesi. İframe yüksekliği içeriğe göre ayarlanır (sitenin sabit 440px'i mağaza düğmelerini ve paylaşım bölümünü kesiyordu) |
 | Dil seçici & footer | Yumuşak açılan menü; sosyal ikonlar sırayla belirir ve imlece "mıknatıs" gibi çekilir |
 
 **Erişilebilirlik ve performans:** "Hareketi azalt" ayarı açık olan ziyaretçilerde tüm hareket kapanır ve menü orijinal haliyle durur. Çark ve harf animasyonu yalnızca ekranda görünürken çalışır. Dokunmatik cihazlarda eğim ve mıknatıs efektleri kapalıdır. JS çalışmazsa sayfa bugünkü haliyle görünür. Arayüz metinleri sitedeki 6 dilin hepsinde (`pageLang`) hazır.
@@ -57,10 +57,10 @@ npm install          # Tailwind CLI + pngjs
 npm run dev          # src/motion.css → assets/css/motion.css (izleme modu)
 npm run build        # küçültülmüş derleme
 npm run wheel        # menu.png → assets/images/wheel/ (logolar, göbek, bacaklar)
-npm run preview      # http://localhost:8080/preview/
+npm run preview      # http://localhost:8080/preview/ (popup.php'yi ewlat.org'a aktaran yerel sunucu)
 ```
 
 - `src/motion.css` — Tailwind kaynağı (tema, keyframe'ler, mevcut seçicilere ait geçersiz kılma kuralları)
 - `assets/js/motion.js` — tüm etkileşimler; Tailwind sınıfları bu dosyadan taranır. JS'e yeni bir `tw:` sınıfı eklediğinizde `npm run build` çalıştırın.
 - `tools/build-wheel.mjs` — `menu.png`'den çark halkasını (`ring.webp`; dilim, kenar kalınlığı ve band ölçüleri dosyanın başındaki `RING_*` sabitleriyle ayarlanır), 12 yuvarlak logoyu, sabit göbeği (`hub.png`, alt bacakları silinmiş) ve çocuğun alt bacaklarını (`legs.png`) saydam parçalar olarak çıkarır. Logoların altındaki yazılar resim değil, `motion.js` içindeki `WHEEL.labels` dizisinde gerçek metindir. **`menu.png` değişirse** `npm run wheel` çalıştırın ve çıktıdaki `wheel.json` değerlerini `motion.js` içindeki `WHEEL` sabitine kopyalayın.
-- `preview/` — canlı ana sayfanın yerel kopyası, **yalnızca test içindir, sunucuya yüklemeyin.** Uygulama popup'ları localhost'tan açılmaz; canlı sitede normal çalışır.
+- `preview/` — canlı ana sayfanın yerel kopyası, **yalnızca test içindir, sunucuya yüklemeyin.** `popup.php` `X-Frame-Options: SAMEORIGIN` ile geldiği için başka bir alan adındaki iframe'de gösterilmez; bu yüzden önizlemede `popup.php` istekleri ewlat.org'a aktarılır (yerelde `tools/serve.mjs`, Vercel'de `vercel.json` → `rewrites`).
