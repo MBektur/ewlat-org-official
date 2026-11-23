@@ -1,0 +1,306 @@
+/* ==========================================================================
+   ewlat.org — Animasyon & Etkileşim Katmanı (Tailwind CSS v4 kaynağı)
+   Derleme:  npm run build   →  assets/css/motion.css
+   --------------------------------------------------------------------------
+   • Bootstrap ile çakışmasın diye: preflight (reset) YOK, tüm utility'ler
+     "tw:" önekli (ör. tw:absolute, tw:motion-safe:animate-ew-float).
+   • Utility sınıfları assets/js/motion.js içinden taranır ve JS'in
+     oluşturduğu öğelere verilir.
+   • Mevcut PHP işaretlemesindeki seçicileri (.mbtn, .icon, .modal …)
+     ezmek gereken kurallar aşağıda katmansız (unlayered) yazılmıştır;
+     böylece app.css / Bootstrap kurallarını güvenle geçersiz kılarlar.
+   • Hareket gerektiren her şey html.ew-motion altında: kullanıcı
+     "hareketi azalt" seçtiyse ya da JS çalışmadıysa sayfa bugünkü gibi kalır.
+   ========================================================================== */
+
+@layer theme, utilities;
+@import "tailwindcss/theme.css" layer(theme) prefix(tw);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@source "../assets/js/motion.js";
+
+@theme {
+  --color-ew-gold: #ffe08a;
+  --color-ew-teal: #44acbf;
+  --color-ew-deep: #0f4c5c;
+  --ease-ew-spring: cubic-bezier(.34, 1.56, .64, 1);
+
+  --animate-ew-spin: ew-spin .9s linear infinite;
+  --animate-ew-spin-slow: ew-spin 48s linear infinite;
+  --animate-ew-pulse-soft: ew-pulse-soft 4s ease-in-out infinite;
+  --animate-ew-ripple: ew-ripple .75s ease-out forwards;
+  --animate-ew-wave-a: ew-wave 16s linear infinite;
+  --animate-ew-wave-b: ew-wave 23s linear infinite reverse;
+  --animate-ew-wave-c: ew-wave 31s linear infinite;
+
+  @keyframes ew-spin { to { transform: rotate(360deg); } }
+  @keyframes ew-pulse-soft {
+    0%, 100% { opacity: .85; filter: drop-shadow(0 0 4px rgba(255, 224, 138, .45)); }
+    50%      { opacity: 1;   filter: drop-shadow(0 0 10px rgba(255, 224, 138, .9)); }
+  }
+  @keyframes ew-ripple {
+    from { opacity: .7; transform: scale(0); }
+    to   { opacity: 0;  transform: scale(14); }
+  }
+  @keyframes ew-wave { to { transform: translateX(-50%); } }
+}
+
+/* ---------- Ortak keyframe'ler (katmansız kurallar için) ---------- */
+@keyframes ew-word-in {
+  from { opacity: 0; filter: blur(10px); transform: translateY(16px) scale(.96); }
+  to   { opacity: 1; filter: none;       transform: none; }
+}
+@keyframes ew-shine {
+  0%        { background-position: 0% 50%; }
+  28%, 100% { background-position: 100% 50%; }
+}
+@keyframes ew-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes ew-pop-in {
+  0%   { opacity: 0; transform: translateY(46px) scale(.6) rotate(-6deg); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes ew-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+@keyframes ew-ring-out {
+  from { opacity: .9; transform: scale(1); }
+  to   { opacity: 0;  transform: scale(1.75); }
+}
+@keyframes ew-sweep {
+  0%   { opacity: 0; transform: rotate(0deg); }
+  8%   { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { opacity: 0; transform: rotate(-180deg); }
+}
+
+/* ==========================================================================
+   1. HERO — canlı dünya haritası katmanı
+   ========================================================================== */
+html.ew-js .top.ew-hero-ready { background-image: none !important; }
+html.ew-js .top > .title,
+html.ew-js .top > .chislaDiv { position: relative; }
+
+/* ==========================================================================
+   2. SLOGAN & TARİH
+   ========================================================================== */
+.ew-word { display: inline-block; }
+html.ew-motion .ew-word {
+  opacity: 0;
+  animation: ew-word-in 1s cubic-bezier(.2, .7, .2, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 150ms + 250ms);
+}
+.ew-word-txt { display: inline-block; }
+html.ew-motion .ew-word-txt.ew-shine {
+  background-image: linear-gradient(100deg, #fff 0 42%, #ffe08a 47%, #fffbe9 50%, #ffe08a 53%, #fff 58% 100%);
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: ew-shine 7s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 260ms);
+}
+
+html.ew-motion .chislaDiv > * {
+  animation: ew-rise .9s cubic-bezier(.2, .7, .2, 1) both;
+}
+html.ew-motion .chislaDiv > :nth-child(1) { animation-delay: .75s; }
+html.ew-motion .chislaDiv > :nth-child(2) { animation-delay: .85s; }
+html.ew-motion .chislaDiv > :nth-child(3) { animation-delay: .95s; }
+html.ew-motion .chislaDiv > :nth-child(4) { animation-delay: 1.05s; }
+
+/* ==========================================================================
+   3. YARIM DAİRE MENÜ
+   ========================================================================== */
+html.ew-js .menu > img { position: relative; z-index: 2; }
+html.ew-js .menu { transform-origin: 50% 100%; }
+
+/* Yelpaze açılışı: JS --ew-fan değişkenini 0deg → 186deg arasında sürer */
+html.ew-motion .menu > img.ew-fan {
+  -webkit-mask-image: conic-gradient(from -90deg at 50% 100%,
+      transparent calc(180deg - var(--ew-fan, 0deg)),
+      #000 calc(186deg - var(--ew-fan, 0deg)));
+  mask-image: conic-gradient(from -90deg at 50% 100%,
+      transparent calc(180deg - var(--ew-fan, 0deg)),
+      #000 calc(186deg - var(--ew-fan, 0deg)));
+}
+
+/* Daire bağlantılar: eski "karartan" hover yerine dışarı fırlayan ikon */
+html.ew-js .menu .mbtn {
+  z-index: 3;
+  opacity: 1;
+  background: transparent;
+  transition: transform .5s cubic-bezier(.34, 1.56, .64, 1);
+}
+html.ew-js .menu .mbtn:hover,
+html.ew-js .menu .mbtn:focus-within,
+html.ew-js .menu .mbtn.ew-ping {
+  opacity: 1;
+  background: transparent;
+  transform: scale(1.17);
+}
+html.ew-js .menu .mbtn-inactive {
+  pointer-events: auto;
+  cursor: not-allowed;
+}
+.ew-slice {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease, box-shadow .35s ease;
+}
+.mbtn-inactive .ew-slice { filter: grayscale(.85) brightness(1.05); }
+html.ew-js .mbtn:hover .ew-slice,
+html.ew-js .mbtn:focus-within .ew-slice,
+html.ew-js .mbtn.ew-ping .ew-slice {
+  opacity: 1;
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, .95),
+    0 0 26px 8px rgba(255, 224, 138, .55),
+    0 14px 26px rgba(0, 0, 0, .35);
+}
+html.ew-js .mbtn.ew-ping:not(:hover) .ew-slice {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, .8), 0 0 22px 6px rgba(255, 224, 138, .45);
+}
+html.ew-js .menu .mbtn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 236, 170, .9);
+  opacity: 0;
+  pointer-events: none;
+}
+html.ew-motion .menu .mbtn:hover::after { animation: ew-ring-out .9s ease-out; }
+html.ew-js .menu .mbtn a:focus-visible { outline: none; }
+
+/* Merkezden yayılan "bilgi ışını" taraması */
+html.ew-motion .ew-beam.ew-sweeping { animation: ew-sweep 2.2s linear forwards; }
+.ew-beam {
+  opacity: 0;
+  background: conic-gradient(from 90deg,
+      rgba(255, 236, 170, .55) 0deg,
+      rgba(255, 236, 170, .18) 14deg,
+      rgba(255, 236, 170, 0) 38deg,
+      transparent 360deg);
+  -webkit-mask-image: radial-gradient(circle closest-side, transparent 22%, #000 36%, #000 78%, transparent 100%);
+  mask-image: radial-gradient(circle closest-side, transparent 22%, #000 36%, #000 78%, transparent 100%);
+}
+
+/* Okuyan çocuğun arkasındaki ışık huzmeleri */
+.ew-halo {
+  background: repeating-conic-gradient(from 0deg,
+      rgba(255, 236, 170, .38) 0deg 5deg,
+      transparent 5deg 15deg);
+  -webkit-mask-image: radial-gradient(circle closest-side, #000 18%, rgba(0, 0, 0, .5) 55%, transparent 100%);
+  mask-image: radial-gradient(circle closest-side, #000 18%, rgba(0, 0, 0, .5) 55%, transparent 100%);
+}
+
+/* ==========================================================================
+   5. UYGULAMALAR
+   ========================================================================== */
+html.ew-js .apps { position: relative; }
+html.ew-js .apps > .item-title,
+html.ew-js .apps > .items { position: relative; z-index: 1; }
+html.ew-js .apps .icon { position: relative; }
+
+html.ew-motion .apps .item { opacity: 0; }
+html.ew-motion .apps .item.ew-in {
+  animation: ew-pop-in .9s cubic-bezier(.34, 1.56, .64, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 95ms);
+}
+html.ew-motion .apps .item.ew-in .ew-floater {
+  animation: ew-float 5.5s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * -.8s);
+}
+html.ew-motion .apps .item-title { animation: ew-rise .9s ease-out both; }
+
+/* 3D eğim (JS --rx / --ry değişkenlerini imlece göre ayarlar) */
+html.ew-js .apps .icon.ew-tilt { transition: transform .18s ease-out, filter .2s ease; }
+html.ew-js .apps .icon.ew-tilt:hover {
+  transform: perspective(520px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(1.13) translateY(-6px);
+}
+.ew-iconmask {
+  -webkit-mask-image: var(--ew-mask);
+  mask-image: var(--ew-mask);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+.ew-glare {
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 30%),
+      rgba(255, 255, 255, .6), rgba(255, 255, 255, .12) 32%, transparent 60%);
+}
+
+/* ==========================================================================
+   6. MODAL
+   ========================================================================== */
+html.ew-js .modal-backdrop {
+  --bs-backdrop-bg: #062a35;
+  --bs-backdrop-opacity: .6;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+html.ew-js #appMpdal .modal-content {
+  border: 0;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .35);
+}
+html.ew-js #appMpdal .modal-body { position: relative; }
+html.ew-motion #appMpdal.fade .modal-dialog {
+  opacity: 0;
+  transform: translateY(40px) scale(.9);
+  transition: transform .55s cubic-bezier(.34, 1.56, .64, 1), opacity .3s ease;
+}
+html.ew-motion #appMpdal.show .modal-dialog { opacity: 1; transform: none; }
+
+/* ==========================================================================
+   7. DİL SEÇİCİ & FOOTER
+   ========================================================================== */
+html.ew-js .d-lang-trigger { transition: background .2s ease, border-color .2s ease; }
+html.ew-js .d-lang-trigger:hover { background: rgba(255, 255, 255, .28); border-color: rgba(255, 255, 255, .6); }
+html.ew-js .d-lang-dropdown {
+  display: block;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px) scale(.97);
+  transform-origin: top left;
+  transition: opacity .2s ease, transform .28s cubic-bezier(.2, .8, .2, 1), visibility 0s linear .28s;
+}
+html.ew-js .d-lang-picker.open .d-lang-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
+}
+html.ew-motion .d-lang-dropdown a {
+  opacity: 0;
+  transform: translateX(10px);
+  transition: opacity .25s ease, transform .3s ease, background .15s ease;
+}
+html.ew-motion .d-lang-picker.open .d-lang-dropdown a { opacity: 1; transform: none; }
+html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(2) { transition-delay: .03s; }
+html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(3) { transition-delay: .06s; }
+html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(4) { transition-delay: .09s; }
+html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(5) { transition-delay: .12s; }
+html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(6) { transition-delay: .15s; }
+
+html.ew-js .footer-social .social-icon { transition: transform .25s cubic-bezier(.34, 1.56, .64, 1), opacity .2s, box-shadow .25s; }
+html.ew-js .footer-social .social-icon:hover {
+  opacity: 1;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, .35), 0 10px 24px rgba(0, 0, 0, .25);
+}
+html.ew-motion .footer-social .social-icon { opacity: 0; }
+html.ew-motion .footer-social .social-icon.ew-in {
+  animation: ew-pop-in .8s cubic-bezier(.34, 1.56, .64, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 80ms);
+}
+html.ew-motion .footer-social .social-icon.ew-in.ew-done { animation: none; opacity: .85; }
+html.ew-motion .footer-social .social-icon.ew-in.ew-done:hover { opacity: 1; }
