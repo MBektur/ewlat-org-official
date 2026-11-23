@@ -365,12 +365,14 @@
     function buildWheel() {
       // Çarkın bandı: iç kenar (sabit göbek) → dış kenar. tools/build-wheel.mjs'teki RING_INNER / RING_OUTER ile aynı.
       var R_HUB = 316, R_EDGE = 520;
-      // RP: logo merkezlerinin yarıçapı. Logo + altındaki yazı birlikte bandın ortasında dursun diye
-      // logo, bandın tam ortasından 18px dışarıda.
-      // Dar ekranda (telefon): her logo bir kez (12 yer, 30° arayla) ve logolar/yazılar ~2 kat büyük →
+      // Dar ekranda (telefon): her logo bir kez (12 yer, 30° arayla), logolar/yazılar ~1.55 kat büyük →
       // okunur ve parmakla basılabilir. Geniş ekranda: 24 yer (her logo karşılıklı iki kez, 15° arayla).
-      var SLOTS = COMPACT ? 12 : 24, SLOT_DEG = 360 / SLOTS, Z = COMPACT ? 1.8 : 1;
-      var RP = (R_HUB + R_EDGE) / 2 + 18, GW = 120 * Z, GH = 94 * Z, ICON = 72 * Z, FONT = 13.5 * (COMPACT ? 2.1 : 1);
+      var SLOTS = COMPACT ? 12 : 24, SLOT_DEG = 360 / SLOTS, Z = COMPACT ? 1.55 : 1;
+      var GW = 120 * Z, GH = 94 * Z, ICON = 72 * Z, FONT = 13.5 * (COMPACT ? 1.9 : 1);
+      // RP: logo merkezlerinin yarıçapı. Logo + altındaki yazı (grup) bandın içinde ortalanır:
+      // grubun üstü dış çembere, altı iç çembere eşit uzaklıkta. (Masaüstündeki değer ≈ 436.)
+      var GROUP = ICON + 3 + FONT * 1.25;
+      var RP = (R_HUB + R_EDGE) / 2 + GROUP / 2 - ICON / 2 + (COMPACT ? 0 : 8);
       var DEG = Math.PI / 180;
 
       var clip = el('div', 'tw:absolute tw:top-0 tw:z-[2] tw:overflow-hidden tw:opacity-0 tw:transition-opacity tw:duration-500');
