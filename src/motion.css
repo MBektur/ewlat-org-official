@@ -104,6 +104,7 @@ html.ew-motion .chislaDiv > :nth-child(4) { animation-delay: 1.05s; }
    3. YARIM DAİRE MENÜ — dönme dolap
    ========================================================================== */
 html.ew-js .menu > img { position: relative; z-index: 2; }
+html.ew-js .top { overflow-x: clip; }   /* çarkın yan payı sayfayı genişletmesin */
 
 /* Çark kurulunca orijinal görsel yalnızca sabit göbeği (ay + çocuk) gösterir.
    JS --ew-rin / --ew-cdy değişkenlerini ayarlar. */
@@ -148,26 +149,15 @@ html.ew-motion .ew-bulbs circle { animation: ew-bulb 2.4s ease-in-out infinite; 
   border-radius: 2px;
   background: linear-gradient(#fff, rgba(255, 255, 255, .75));
 }
-.ew-gondola {
+.ew-gondola {                         /* görünmez taşıyıcı: yuvarlak ikon + altında yazı */
   position: absolute;
   left: 0;
   right: 0;
-  border-radius: 16px 16px 22px 22px;
-  background: linear-gradient(180deg, rgba(14, 70, 90, .86), rgba(7, 42, 56, .92));
-  border: 1.5px solid rgba(255, 255, 255, .6);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(255, 255, 255, .25);
 }
-.ew-gondola::before {                 /* çatı */
-  content: "";
-  position: absolute;
-  left: 28%;
-  right: 28%;
-  top: -6px;
-  height: 7px;
-  border-radius: 6px 6px 0 0;
-  background: rgba(255, 255, 255, .9);
+.ew-gondola > img {                   /* yazı: çarkın üzerinde okunaklı kalsın */
+  filter: drop-shadow(0 1px 1.5px rgba(0, 20, 30, .9)) drop-shadow(0 0 6px rgba(0, 30, 45, .55));
 }
-html.ew-js .menu.ew-wheel-on .ew-slice { opacity: 1; box-shadow: 0 3px 8px rgba(0, 0, 0, .25); }
+html.ew-js .menu.ew-wheel-on .ew-slice { opacity: 1; box-shadow: 0 0 0 2px rgba(255, 255, 255, .9), 0 6px 14px rgba(0, 0, 0, .3); }
 html.ew-js .menu.ew-wheel-on .mbtn-inactive .ew-slice { filter: none; }
 html.ew-js .menu.ew-wheel-on .mbtn-inactive:hover .ew-slice { filter: grayscale(.85); }
 html.ew-motion .menu.ew-wheel-on {

@@ -6,7 +6,6 @@
  *   (varsayılan: preview/assets/images/menu.png → assets/images/wheel)
  *
  * Üretilenler:
- *   ring.png        İkon ve yazılardan temizlenmiş, 24 dilimli tam çark (dönen arka plan)
  *   icon-N.png      N. bağlantının yuvarlak ikonu (saydam)
  *   label-N.png     N. bağlantının yazısı (beyaz, saydam)
  *   wheel.json      Konumlar (menu.png piksel koordinatlarında) — motion.js'deki WHEEL sabitine kopyalanır
@@ -125,7 +124,8 @@ for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {   // 5px genişlet (ke
   }
 }
 
-/* ---------- 3. Her dilim için temiz kutupsal doku (içeriği komşularla doldur) ---------- */
+/* ---------- 3. Her dilim için temiz kutupsal doku (içeriği komşularla doldur) ----------
+   Yazıları arka plandan ayırmak için kullanılır (yazı alfası = piksel − temiz arka plan). */
 const U = 220;                              // açısal sütun
 const R0 = RIN - 4, ROWS = ROUT - R0 + 1;   // radyal satır
 const tex = [];
@@ -182,25 +182,6 @@ function texSample(k, row, u) {            // u ∈ [0, U)
   }
   return o;
 }
-
-/* ---------- 4. ring.png — tam çark (alt yarı = üst yarının 180° kopyası) ---------- */
-const S = W;                               // kare, merkez (CX, CX)
-const ring = new PNG({ width: S, height: S });
-for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
-  const dx = x + .5 - CX, dy = CX - (y + .5);
-  const r = Math.hypot(dx, dy);
-  const o = (y * S + x) * 4;
-  if (r < R0 || r > ROUT + 1) { ring.data[o + 3] = 0; continue; }
-  let th = Math.atan2(dy, dx) * 180 / Math.PI;
-  if (th < 0) th += 360;
-  const tm = th % 180;
-  const k = Math.min(11, Math.floor(tm / STEP));
-  const u = (tm - k * STEP) / STEP * U - .5;
-  const p = texSample(k, r - R0, u);
-  ring.data[o] = p[0]; ring.data[o + 1] = p[1]; ring.data[o + 2] = p[2];
-  ring.data[o + 3] = r > ROUT ? p[3] * (ROUT + 1 - r) : p[3];
-}
-fs.writeFileSync(path.join(OUT, 'ring.png'), PNG.sync.write(ring));
 
 // Temiz arka planın orijinal koordinatlardaki değeri (yazı çıkarmak için)
 function cleanAt(x, y) {

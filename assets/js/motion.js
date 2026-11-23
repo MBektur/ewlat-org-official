@@ -280,12 +280,12 @@
 
     /* ---- Dönme dolap ----
        clip    : menü boyutunda (+ yan pay); çarkın alt yarısını gizler
-       wheel   : dönen iskelet — yumuşak renk halkası + SVG (göbek, kollar, jantlar, kafes, ampuller, pimler)
+       wheel   : dönen iskelet — yumuşak renk halkası + SVG (göbek halkası, jantlar, ampuller, pimler)
        cabins  : 24 kabin (12 bağlantı × 2, karşılıklı); her biri bir pime asılı,
                  yerçekimiyle sarkar ve çarkın ivmesine göre sarkaç gibi sallanır.
        Ortadaki ay + kitap okuyan çocuk (orijinal görselin merkezi) sabit göbektir. */
     function buildWheel() {
-      var SLOTS = 24, RP = 524, HANG = 12, GW = 100, GH = 136, ICON = 74, LSCALE = .74;
+      var SLOTS = 24, RP = 524, HANG = 12, GW = 100, GH = 134, ICON = 84, LSCALE = .8;
       var DEG = Math.PI / 180;
 
       var clip = el('div', 'tw:absolute tw:top-0 tw:z-[2] tw:overflow-hidden tw:opacity-0 tw:transition-opacity tw:duration-500');
@@ -347,21 +347,21 @@
           c.hanger.style.height = (hang + 2) + 'px';
           c.gondola.style.top = hang + 'px';
           c.gondola.style.height = gh + 'px';
-          // ikon (bağlantı) — kabinin üst kısmında
+          // yuvarlak ikon (bağlantı) — askının hemen ucunda
           var R = c.it.icon[2], f = d / (2 * R);
           var x0 = Math.floor(c.it.icon[0] - R - 1), y0 = Math.floor(c.it.icon[1] - R - 1), sz = Math.ceil(2 * R + 3);
           c.btn.style.left = (gw - d) / 2 + 'px';
-          c.btn.style.top = 7 * s + 'px';
+          c.btn.style.top = '0px';
           c.btn.style.width = c.btn.style.height = d + 'px';
           c.slice.style.backgroundSize = sz * f + 'px ' + sz * f + 'px';
           c.slice.style.backgroundPosition = (x0 - (c.it.icon[0] - R)) * f + 'px ' + (y0 - (c.it.icon[1] - R)) * f + 'px';
-          // yazı — ikonun altında, kabinin içinde
+          // yazı — ikonun hemen altında, onunla birlikte asılı
           var lw = c.it.label[2] * LSCALE * s, lh = c.it.label[3] * LSCALE * s;
-          var areaTop = (7 + ICON + 3) * s, areaH = gh - areaTop - 5 * s;
+          var areaTop = (ICON + 4) * s;
           c.label.style.width = lw + 'px';
           c.label.style.height = lh + 'px';
           c.label.style.left = (gw - lw) / 2 + 'px';
-          c.label.style.top = areaTop + Math.max(0, (areaH - lh) / 2) + 'px';
+          c.label.style.top = areaTop + 'px';
         });
       }
       layout();
@@ -479,23 +479,9 @@
       });
 
       function skeletonSVG() {
-        var R_HUB = 316, R_IN = 524, R_OUT = 548, R_BULB = 536;
+        var R_HUB = 316, R_IN = 524, R_OUT = 548, R_BULB = 536, k;
         var o = '<svg class="ew-skeleton" width="100%" height="100%" viewBox="-560 -560 1120 1120">';
         var P = function (r, deg) { var a = deg * DEG; return (r * Math.cos(a)).toFixed(1) + ' ' + (-r * Math.sin(a)).toFixed(1); };
-        // çapraz destekler (ince)
-        o += '<g stroke="rgba(255,255,255,.22)" stroke-width="1.2">';
-        for (var k = 0; k < 24; k++) {
-          o += '<path d="M' + P(R_HUB, 15 * k) + ' L' + P(R_IN, 15 * k + 7.5) + ' M' + P(R_HUB, 15 * k + 15) + ' L' + P(R_IN, 15 * k + 7.5) + '"/>';
-        }
-        o += '</g>';
-        // ana kollar
-        o += '<g stroke="rgba(255,255,255,.7)" stroke-width="3" stroke-linecap="round">';
-        for (k = 0; k < 24; k++) o += '<path d="M' + P(R_HUB, 15 * k) + ' L' + P(R_IN, 15 * k) + '"/>';
-        o += '</g>';
-        // jant kafesi (iki jant arası zikzak)
-        var z = '';
-        for (k = 0; k <= 144; k++) z += (k ? ' L' : 'M') + P(k % 2 ? R_OUT : R_IN, k * 2.5);
-        o += '<path d="' + z + '" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.2"/>';
         // jantlar ve göbek halkası
         o += '<g fill="none" stroke="rgba(255,255,255,.92)">' +
              '<circle r="' + R_OUT + '" stroke-width="3.5"/><circle r="' + R_IN + '" stroke-width="3.5"/>' +
