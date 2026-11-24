@@ -1,2 +1,594 @@
-/*! tailwindcss v4.3.5 | MIT License | https://tailwindcss.com */
-@layer properties{@supports (((-webkit-hyphens:none)) and (not (margin-trim:block))) or ((-moz-orient:inline) and (not (color:rgb(from red r g b)))){*,:before,:after,::backdrop{--tw-translate-x:0;--tw-translate-y:0;--tw-translate-z:0;--tw-border-style:solid;--tw-leading:initial;--tw-font-weight:initial;--tw-shadow:0 0 #0000;--tw-shadow-color:initial;--tw-shadow-alpha:100%;--tw-inset-shadow:0 0 #0000;--tw-inset-shadow-color:initial;--tw-inset-shadow-alpha:100%;--tw-ring-color:initial;--tw-ring-shadow:0 0 #0000;--tw-inset-ring-color:initial;--tw-inset-ring-shadow:0 0 #0000;--tw-ring-inset:initial;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-offset-shadow:0 0 #0000;--tw-backdrop-blur:initial;--tw-backdrop-brightness:initial;--tw-backdrop-contrast:initial;--tw-backdrop-grayscale:initial;--tw-backdrop-hue-rotate:initial;--tw-backdrop-invert:initial;--tw-backdrop-opacity:initial;--tw-backdrop-saturate:initial;--tw-backdrop-sepia:initial;--tw-duration:initial;--tw-ease:initial;--tw-scale-x:1;--tw-scale-y:1;--tw-scale-z:1}}}@layer theme{:root,:host{--tw-color-white:#fff;--tw-spacing:.25rem;--tw-text-xs:.75rem;--tw-text-xs--line-height:calc(1 / .75);--tw-text-base:1rem;--tw-text-base--line-height:calc(1.5 / 1);--tw-text-xl:1.25rem;--tw-text-xl--line-height:calc(1.75 / 1.25);--tw-font-weight-bold:700;--tw-leading-snug:1.375;--tw-blur-sm:8px;--tw-default-transition-duration:.15s;--tw-default-transition-timing-function:cubic-bezier(.4, 0, .2, 1);--tw-color-ew-teal:#44acbf;--tw-color-ew-deep:#0f4c5c;--tw-ease-ew-spring:cubic-bezier(.34, 1.56, .64, 1);--tw-animate-ew-spin:ew-spin .9s linear infinite;--tw-animate-ew-spin-slow:ew-spin 48s linear infinite;--tw-animate-ew-pulse-soft:ew-pulse-soft 4s ease-in-out infinite;--tw-animate-ew-ripple:ew-ripple .75s ease-out forwards}}@layer utilities{.tw\:pointer-events-none{pointer-events:none}.tw\:absolute{position:absolute}.tw\:fixed{position:fixed}.tw\:relative{position:relative}.tw\:sticky{position:sticky}.tw\:inset-0{inset:0}.tw\:top-0{top:0}.tw\:top-\[77\%\]{top:77%}.tw\:left-1\/2{left:50%}.tw\:z-10{z-index:10}.tw\:z-\[1\]{z-index:1}.tw\:z-\[2\]{z-index:2}.tw\:z-\[3\]{z-index:3}.tw\:z-\[4\]{z-index:4}.tw\:z-\[2000\]{z-index:2000}.tw\:-mt-2\.5{margin-top:calc(var(--tw-spacing) * -2.5)}.tw\:-ml-2\.5{margin-left:calc(var(--tw-spacing) * -2.5)}.tw\:block{display:block}.tw\:flex{display:flex}.tw\:grid{display:grid}.tw\:inline-flex{display:inline-flex}.tw\:aspect-square{aspect-ratio:1}.tw\:size-5{width:calc(var(--tw-spacing) * 5);height:calc(var(--tw-spacing) * 5)}.tw\:size-10{width:calc(var(--tw-spacing) * 10);height:calc(var(--tw-spacing) * 10)}.tw\:size-12{width:calc(var(--tw-spacing) * 12);height:calc(var(--tw-spacing) * 12)}.tw\:size-16{width:calc(var(--tw-spacing) * 16);height:calc(var(--tw-spacing) * 16)}.tw\:size-full{width:100%;height:100%}.tw\:max-h-\[88vh\]{max-height:88vh}.tw\:w-\[30\%\]{width:30%}.tw\:w-full{width:100%}.tw\:max-w-\[880px\]{max-width:880px}.tw\:shrink-0{flex-shrink:0}.tw\:-translate-x-1\/2{--tw-translate-x:calc(calc(1 / 2 * 100%) * -1);translate:var(--tw-translate-x) var(--tw-translate-y)}.tw\:-translate-y-1\/2{--tw-translate-y:calc(calc(1 / 2 * 100%) * -1);translate:var(--tw-translate-x) var(--tw-translate-y)}.tw\:translate-y-4{--tw-translate-y:calc(var(--tw-spacing) * 4);translate:var(--tw-translate-x) var(--tw-translate-y)}.tw\:scale-\[\.97\]{scale:.97}.tw\:animate-ew-ripple{animation:var(--tw-animate-ew-ripple)}.tw\:cursor-pointer{cursor:pointer}.tw\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.tw\:flex-col{flex-direction:column}.tw\:items-center{align-items:center}.tw\:justify-between{justify-content:space-between}.tw\:justify-center{justify-content:center}.tw\:gap-2{gap:calc(var(--tw-spacing) * 2)}.tw\:gap-3{gap:calc(var(--tw-spacing) * 3)}.tw\:gap-4{gap:calc(var(--tw-spacing) * 4)}.tw\:overflow-auto{overflow:auto}.tw\:overflow-hidden{overflow:hidden}.tw\:rounded-full{border-radius:2147483647px}.tw\:border{border-style:var(--tw-border-style);border-width:1px}.tw\:border-0{border-style:var(--tw-border-style);border-width:0}.tw\:border-2{border-style:var(--tw-border-style);border-width:2px}.tw\:border-4{border-style:var(--tw-border-style);border-width:4px}.tw\:border-b{border-bottom-style:var(--tw-border-style);border-bottom-width:1px}.tw\:border-\[\#e2eef1\]{border-color:#e2eef1}.tw\:border-ew-teal\/25{border-color:var(--tw-color-ew-teal)}@supports (color:color-mix(in lab, red, red)){.tw\:border-ew-teal\/25{border-color:color-mix(in oklab, var(--tw-color-ew-teal) 25%, transparent)}}.tw\:border-white\/45{border-color:var(--tw-color-white)}@supports (color:color-mix(in lab, red, red)){.tw\:border-white\/45{border-color:color-mix(in oklab, var(--tw-color-white) 45%, transparent)}}.tw\:border-t-ew-teal{border-top-color:var(--tw-color-ew-teal)}.tw\:bg-\[\#062a35\]\/60{background-color:oklab(26.5963% -.0324578 -.0300105/.6)}.tw\:bg-\[\#14566a\]\/90{background-color:oklab(42.2886% -.0517446 -.0483629/.9)}.tw\:bg-\[\#eef5f7\]{background-color:#eef5f7}.tw\:bg-\[\#f7fbfc\]{background-color:#f7fbfc}.tw\:bg-\[\#ffe08a\]{background-color:#ffe08a}.tw\:bg-transparent{background-color:#0000}.tw\:bg-white,.tw\:bg-white\/70{background-color:var(--tw-color-white)}@supports (color:color-mix(in lab, red, red)){.tw\:bg-white\/70{background-color:color-mix(in oklab, var(--tw-color-white) 70%, transparent)}}.tw\:p-0{padding:0}.tw\:p-4{padding:calc(var(--tw-spacing) * 4)}.tw\:p-5{padding:calc(var(--tw-spacing) * 5)}.tw\:px-2{padding-inline:calc(var(--tw-spacing) * 2)}.tw\:px-5{padding-inline:calc(var(--tw-spacing) * 5)}.tw\:py-0\.5{padding-block:calc(var(--tw-spacing) * .5)}.tw\:py-4{padding-block:calc(var(--tw-spacing) * 4)}.tw\:text-center{text-align:center}.tw\:text-base{font-size:var(--tw-text-base);line-height:var(--tw-leading,var(--tw-text-base--line-height))}.tw\:text-xl{font-size:var(--tw-text-xl);line-height:var(--tw-leading,var(--tw-text-xl--line-height))}.tw\:text-xs{font-size:var(--tw-text-xs);line-height:var(--tw-leading,var(--tw-text-xs--line-height))}.tw\:text-\[15px\]{font-size:15px}.tw\:leading-snug{--tw-leading:var(--tw-leading-snug);line-height:var(--tw-leading-snug)}.tw\:font-bold{--tw-font-weight:var(--tw-font-weight-bold);font-weight:var(--tw-font-weight-bold)}.tw\:whitespace-nowrap{white-space:nowrap}.tw\:text-\[\#5b7f89\]{color:#5b7f89}.tw\:text-\[\#6b4e00\]{color:#6b4e00}.tw\:text-ew-deep{color:var(--tw-color-ew-deep)}.tw\:text-white{color:var(--tw-color-white)}.tw\:opacity-0{opacity:0}.tw\:opacity-60{opacity:.6}.tw\:opacity-80{opacity:.8}.tw\:shadow-\[0_4px_12px_rgba\(0\,0\,0\,\.18\)\]{--tw-shadow:0 4px 12px var(--tw-shadow-color,#0000002e);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.tw\:shadow-\[0_6px_16px_rgba\(0\,0\,0\,\.3\)\]{--tw-shadow:0 6px 16px var(--tw-shadow-color,#0000004d);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.tw\:shadow-\[0_30px_80px_rgba\(0\,0\,0\,\.35\)\]{--tw-shadow:0 30px 80px var(--tw-shadow-color,#00000059);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.tw\:backdrop-blur-sm{--tw-backdrop-blur:blur(var(--tw-blur-sm));-webkit-backdrop-filter:var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );backdrop-filter:var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, )}.tw\:transition{transition-property:color,background-color,border-color,outline-color,text-decoration-color,fill,stroke,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,opacity,box-shadow,transform,translate,scale,rotate,filter,-webkit-backdrop-filter,backdrop-filter,display,content-visibility,overlay,pointer-events;transition-timing-function:var(--tw-ease,var(--tw-default-transition-timing-function));transition-duration:var(--tw-duration,var(--tw-default-transition-duration))}.tw\:transition-opacity{transition-property:opacity;transition-timing-function:var(--tw-ease,var(--tw-default-transition-timing-function));transition-duration:var(--tw-duration,var(--tw-default-transition-duration))}.tw\:transition-transform{transition-property:transform,translate,scale,rotate;transition-timing-function:var(--tw-ease,var(--tw-default-transition-timing-function));transition-duration:var(--tw-duration,var(--tw-default-transition-duration))}.tw\:duration-200{--tw-duration:.2s;transition-duration:.2s}.tw\:duration-300{--tw-duration:.3s;transition-duration:.3s}.tw\:duration-500{--tw-duration:.5s;transition-duration:.5s}.tw\:duration-\[1500ms\]{--tw-duration:1.5s;transition-duration:1.5s}.tw\:ease-ew-spring{--tw-ease:var(--tw-ease-ew-spring);transition-timing-function:var(--tw-ease-ew-spring)}.tw\:select-none{-webkit-user-select:none;user-select:none}@media (hover:hover){:is(:where(.tw\:group):hover .tw\:group-hover\:opacity-100){opacity:1}.tw\:hover\:-translate-y-1:hover{--tw-translate-y:calc(var(--tw-spacing) * -1);translate:var(--tw-translate-x) var(--tw-translate-y)}.tw\:hover\:scale-110:hover{--tw-scale-x:110%;--tw-scale-y:110%;--tw-scale-z:110%;scale:var(--tw-scale-x) var(--tw-scale-y)}.tw\:hover\:border-ew-teal:hover{border-color:var(--tw-color-ew-teal)}.tw\:hover\:border-white\/80:hover{border-color:var(--tw-color-white)}@supports (color:color-mix(in lab, red, red)){.tw\:hover\:border-white\/80:hover{border-color:color-mix(in oklab, var(--tw-color-white) 80%, transparent)}}.tw\:hover\:bg-\[\#1b6c84\]:hover{background-color:#1b6c84}.tw\:hover\:bg-\[\#dcebef\]:hover{background-color:#dcebef}.tw\:hover\:shadow-\[0_12px_28px_rgba\(15\,76\,92\,\.18\)\]:hover{--tw-shadow:0 12px 28px var(--tw-shadow-color,#0f4c5c2e);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}}.tw\:active\:scale-95:active{--tw-scale-x:95%;--tw-scale-y:95%;--tw-scale-z:95%;scale:var(--tw-scale-x) var(--tw-scale-y)}@media (prefers-reduced-motion:no-preference){.tw\:motion-safe\:animate-ew-pulse-soft{animation:var(--tw-animate-ew-pulse-soft)}.tw\:motion-safe\:animate-ew-spin{animation:var(--tw-animate-ew-spin)}.tw\:motion-safe\:animate-ew-spin-slow{animation:var(--tw-animate-ew-spin-slow)}}@media (min-width:40rem){.tw\:sm\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:48rem){.tw\:md\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}}}@keyframes ew-word-in{0%{opacity:0;filter:blur(10px);transform:translateY(16px)scale(.96)}to{opacity:1;filter:none;transform:none}}@keyframes ew-shine{0%{background-position:0%}28%,to{background-position:100%}}@keyframes ew-rise{0%{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}@keyframes ew-pop-in{0%{opacity:0;transform:translateY(46px)scale(.6)rotate(-6deg)}60%{opacity:1}to{opacity:1;transform:none}}@keyframes ew-float{0%,to{transform:translateY(0)}50%{transform:translateY(-7px)}}@keyframes ew-ring-out{0%{opacity:.9;transform:scale(1)}to{opacity:0;transform:scale(1.75)}}.ew-word{display:inline-block}html.ew-motion .ew-word{opacity:0;animation:1s cubic-bezier(.2,.7,.2,1) forwards ew-word-in;animation-delay:calc(var(--i,0) * .15s + .25s)}.ew-word-txt{display:inline-block}html.ew-motion .ew-word-txt.ew-shine{-webkit-text-fill-color:transparent;color:#0000;animation:7s ease-in-out infinite ew-shine;animation-delay:calc(var(--i,0) * .26s);background-image:linear-gradient(100deg,#fff 0 42%,#ffe08a 47%,#fffbe9 50%,#ffe08a 53%,#fff 58% 100%);background-size:260% 100%;-webkit-background-clip:text;background-clip:text}html.ew-motion .chislaDiv>*{animation:.9s cubic-bezier(.2,.7,.2,1) both ew-rise}html.ew-motion .chislaDiv>:first-child{animation-delay:.75s}html.ew-motion .chislaDiv>:nth-child(2){animation-delay:.85s}html.ew-motion .chislaDiv>:nth-child(3){animation-delay:.95s}html.ew-motion .chislaDiv>:nth-child(4){animation-delay:1.05s}html.ew-motion .chislaDiv>.date-sep{animation:none}@media (max-width:1023px){html.ew-js .chislaDiv{flex-wrap:wrap;justify-content:center;gap:2px 10px}html.ew-js .chislaDiv .date-sep{display:none}html.ew-js .chislaDiv .chisla-ug{text-align:center;flex-basis:100%}}html.ew-js .menu>img:first-of-type{z-index:2;position:relative}html.ew-js .top{overflow-x:clip}@supports not (overflow:clip){html.ew-js,html.ew-js body{overflow-x:hidden}}html.ew-motion .menu.ew-wheel-on>img.ew-center{opacity:0}html.ew-motion .ew-head{animation:7s ease-in-out infinite ew-head}@keyframes ew-head{0%,30%{rotate:3deg}40%,58%{rotate:-13deg}68%,to{rotate:3deg}}html.ew-motion .ew-legs{animation:1.3s ease-in-out infinite alternate ew-legs}@keyframes ew-legs{0%{rotate:-10deg}to{rotate:10deg}}.ew-wheel{rotate:var(--ew-a,0deg);pointer-events:none}.ew-sector{pointer-events:none;position:absolute;overflow:visible}.ew-sector path{fill:#031e286b}.ew-cabin{will-change:transform;position:absolute;top:0;left:0}.ew-gondola{position:absolute;left:0;right:0}.ew-label{white-space:nowrap;color:#fff;text-align:center;pointer-events:none;text-shadow:0 1px 2px #00141ee6,0 0 8px #001e2d99;font-family:UKIJ,uyghur,sans-serif;line-height:1.25;position:absolute;left:50%;translate:-50%}html.ew-js .menu.ew-wheel-on .ew-slice{opacity:1;box-shadow:0 0 0 2px #ffffffe6,0 6px 14px #0000004d}html.ew-js .menu.ew-wheel-on .mbtn-inactive .ew-slice{filter:none}html.ew-js .top .ew-arrow{outline-offset:3px;border-radius:50%;line-height:0}html.ew-js .top .ew-seeall{border-radius:999px;padding:0 22px;font-family:inherit;line-height:1}.ew-sites{padding:16px}.ew-sites-head{padding:14px 20px}.ew-sites-grid{padding:20px}.ew-site-card{padding:18px 12px 16px}.ew-soon{padding:2px 10px}html.ew-js .menu .ew-hubbtn{border-radius:50%}html.ew-js .menu .ew-hubbtn:focus-visible{outline-offset:4px;outline:3px solid #ffe08ae6}.ew-sites[hidden]{display:none!important}.ew-sites-panel{border-radius:24px}.ew-sites-close{border-radius:50%}.ew-site-card{border-radius:18px;text-decoration:none!important}.ew-site-card:focus-visible{outline-offset:2px;outline:3px solid #44acbf}html.ew-sites-open,html.ew-sites-open body{overflow:hidden}html.ew-motion .menu.ew-wheel-on{touch-action:pan-y;-webkit-user-select:none;user-select:none}html.ew-motion .menu.ew-grabbing,html.ew-motion .menu.ew-grabbing *{cursor:grabbing!important}html.ew-js .menu .mbtn{z-index:3;opacity:1;background:0 0;transition:transform .5s cubic-bezier(.34,1.56,.64,1)}html.ew-js .menu .mbtn:hover,html.ew-js .menu .mbtn:focus-within,html.ew-js .menu.ew-grabbing .mbtn{transform:none}html.ew-js .menu .mbtn-inactive{pointer-events:auto;cursor:not-allowed}.ew-slice{opacity:0;pointer-events:none;background-repeat:no-repeat;border-radius:50%;transition:opacity .25s,box-shadow .35s;position:absolute;inset:0}.mbtn-inactive .ew-slice{filter:grayscale(.85)brightness(1.05)}html.ew-js .menu .mbtn a:focus-visible{outline:none}.ew-halo{background:repeating-conic-gradient(#ffecaa61 0deg 5deg,#0000 5deg 15deg);-webkit-mask-image:radial-gradient(circle closest-side,#000 18%,#00000080 55%,#0000 100%);mask-image:radial-gradient(circle closest-side,#000 18%,#00000080 55%,#0000 100%)}html.ew-js .apps{position:relative}html.ew-js .apps>.item-title,html.ew-js .apps>.items{z-index:1;position:relative}html.ew-js .apps .icon{position:relative}.apps{padding-bottom:28px}.apps .items{row-gap:22px}.apps .item-text{padding-top:2px;line-height:1.5}html.ew-motion .apps .item{opacity:0}html.ew-motion .apps .item.ew-in{animation:.9s cubic-bezier(.34,1.56,.64,1) forwards ew-pop-in;animation-delay:calc(var(--i,0) * 95ms)}html.ew-motion .apps .item.ew-in .ew-floater{animation:5.5s ease-in-out infinite ew-float;animation-delay:calc(var(--i,0) * -.8s)}html.ew-motion .apps .item-title{animation:.9s ease-out both ew-rise}html.ew-js .apps .icon.ew-tilt{transition:transform .18s ease-out,filter .2s}html.ew-js .apps .icon.ew-tilt:hover{transform:perspective(520px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) scale(1.13) translateY(-6px)}.ew-iconmask{-webkit-mask-image:var(--ew-mask);-webkit-mask-image:var(--ew-mask);-webkit-mask-image:var(--ew-mask);mask-image:var(--ew-mask);-webkit-mask-size:100% 100%;mask-size:100% 100%}.ew-glare{background:radial-gradient(circle at var(--gx,50%) var(--gy,30%), #fff9, #ffffff1f 32%, transparent 60%)}html.ew-js .modal-backdrop{--bs-backdrop-bg:#062a35;--bs-backdrop-opacity:.6;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}html.ew-js #appMpdal .modal-content{border:0;border-radius:22px;overflow:hidden;box-shadow:0 30px 80px #00000059}html.ew-js #appMpdal .modal-body{position:relative}html.ew-js #appMpdal .modal-dialog{max-height:calc(100dvh - 1rem)}html.ew-js #appMpdal .modal-content{min-height:0;max-height:calc(100dvh - 1rem)}html.ew-js #appMpdal .modal-body{-webkit-overflow-scrolling:touch;overscroll-behavior:contain;flex:auto;min-height:0;overflow-y:auto}html.ew-js #appMpdal .modal-footer{flex:none}html.ew-motion #appMpdal.fade .modal-dialog{opacity:0;transition:transform .55s cubic-bezier(.34,1.56,.64,1),opacity .3s;transform:translateY(40px)scale(.9)}html.ew-motion #appMpdal.show .modal-dialog{opacity:1;transform:none}@font-face{font-family:EwUKIJ;src:url(../fonts/UKIJEkran.ttf)format("truetype");font-display:swap}.ew-app{color:#0f4c5c;text-align:center;background:#fff;flex-direction:column;align-items:center;gap:12px;padding:28px 24px 22px;font-family:EwUKIJ,UKIJ,uyghur,sans-serif;line-height:1.9;display:flex}.ew-app-img{object-fit:cover;border-radius:28px;width:132px;height:132px;box-shadow:0 10px 24px #0f4c5c2e}.ew-app .ew-app-title{color:#0f4c5c;margin:4px 0 0;font-size:22px;font-weight:700;line-height:1.6}.ew-app .ew-app-desc{color:#2b4b55;margin:0;font-size:16px}.ew-app .ew-app-actions{flex-wrap:wrap;justify-content:center;gap:10px;margin-top:6px;display:flex}.ew-app .ew-app-btn{color:#fff;background:#44acbf;border-radius:999px;justify-content:center;align-items:center;padding:10px 22px;font-size:16px;line-height:1.4;text-decoration:none;display:inline-flex}.ew-app .ew-app-btn:hover,.ew-app .ew-app-btn:focus-visible{color:#fff;background:#0f4c5c}.ew-app .ew-app-stores{flex-wrap:wrap;justify-content:center;gap:10px;display:flex}.ew-app .ew-app-stores a{line-height:0;display:block}.ew-app .ew-app-stores img{width:150px;height:auto;display:block}.ew-app .ew-app-web{color:#0f4c5c;font-size:16px;text-decoration:underline}.ew-app .ew-app-share-title{color:#5b7c86;margin:10px 0 -4px;font-size:14px}.ew-app .ew-app-share{flex-wrap:wrap;justify-content:center;gap:14px 10px;margin-top:4px;display:flex}.ew-app .ew-app-sh{width:66px;font:inherit;color:#0f4c5c;cursor:pointer;background:0 0;border:0;flex-direction:column;align-items:center;gap:6px;margin:0;padding:0;font-size:12px;line-height:1.3;text-decoration:none;display:flex}.ew-app .ew-app-sh i{color:#fff;border-radius:50%;justify-content:center;align-items:center;width:46px;height:46px;transition:transform .2s;display:flex;box-shadow:0 4px 10px #0f4c5c38}.ew-app .ew-app-sh svg{width:22px;height:22px;display:block}.ew-app .ew-app-sh span{white-space:nowrap}.ew-app .ew-app-sh:hover i,.ew-app .ew-app-sh:focus-visible i{transform:translateY(-2px)}.ew-app .ew-app-sh:focus-visible{outline-offset:3px;border-radius:8px;outline:2px solid #44acbf}.ew-app .ew-app-status{color:#2a8fa0;min-height:1.4em;margin:0;font-size:14px}html.ew-js .d-lang-trigger{transition:background .2s,border-color .2s}html.ew-js .d-lang-trigger:hover{background:#ffffff47;border-color:#fff9}html.ew-js .d-lang-dropdown{opacity:0;visibility:hidden;transform-origin:0 0;transition:opacity .2s,transform .28s cubic-bezier(.2,.8,.2,1),visibility 0s linear .28s;display:block;transform:translateY(-6px)scale(.97)}html.ew-js .d-lang-picker.open .d-lang-dropdown{opacity:1;visibility:visible;transition-delay:0s;transform:none}html.ew-motion .d-lang-dropdown a{opacity:0;transition:opacity .25s,transform .3s,background .15s;transform:translate(10px)}html.ew-motion .d-lang-picker.open .d-lang-dropdown a{opacity:1;transform:none}html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(2){transition-delay:30ms}html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(3){transition-delay:60ms}html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(4){transition-delay:90ms}html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(5){transition-delay:.12s}html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(6){transition-delay:.15s}html.ew-js .footer-social .social-icon{transition:transform .25s,opacity .2s,box-shadow .25s}html.ew-js .footer-social .social-icon:hover{opacity:1;transform:translateY(-2px)scale(1.06);box-shadow:0 0 0 3px #ffffff4d,0 8px 18px #00000038}html.ew-motion .footer-social .social-icon{opacity:0}html.ew-motion .footer-social .social-icon.ew-in{animation:.6s ease-out forwards ew-rise;animation-delay:calc(var(--i,0) * 60ms)}html.ew-motion .footer-social .social-icon.ew-in.ew-done{opacity:.85;animation:none}html.ew-motion .footer-social .social-icon.ew-in.ew-done:hover{opacity:1}@property --tw-translate-x{syntax:"*";inherits:false;initial-value:0}@property --tw-translate-y{syntax:"*";inherits:false;initial-value:0}@property --tw-translate-z{syntax:"*";inherits:false;initial-value:0}@property --tw-border-style{syntax:"*";inherits:false;initial-value:solid}@property --tw-leading{syntax:"*";inherits:false}@property --tw-font-weight{syntax:"*";inherits:false}@property --tw-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-shadow-color{syntax:"*";inherits:false}@property --tw-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-inset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-shadow-color{syntax:"*";inherits:false}@property --tw-inset-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-ring-color{syntax:"*";inherits:false}@property --tw-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-ring-color{syntax:"*";inherits:false}@property --tw-inset-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-ring-inset{syntax:"*";inherits:false}@property --tw-ring-offset-width{syntax:"<length>";inherits:false;initial-value:0}@property --tw-ring-offset-color{syntax:"*";inherits:false;initial-value:#fff}@property --tw-ring-offset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-backdrop-blur{syntax:"*";inherits:false}@property --tw-backdrop-brightness{syntax:"*";inherits:false}@property --tw-backdrop-contrast{syntax:"*";inherits:false}@property --tw-backdrop-grayscale{syntax:"*";inherits:false}@property --tw-backdrop-hue-rotate{syntax:"*";inherits:false}@property --tw-backdrop-invert{syntax:"*";inherits:false}@property --tw-backdrop-opacity{syntax:"*";inherits:false}@property --tw-backdrop-saturate{syntax:"*";inherits:false}@property --tw-backdrop-sepia{syntax:"*";inherits:false}@property --tw-duration{syntax:"*";inherits:false}@property --tw-ease{syntax:"*";inherits:false}@property --tw-scale-x{syntax:"*";inherits:false;initial-value:1}@property --tw-scale-y{syntax:"*";inherits:false;initial-value:1}@property --tw-scale-z{syntax:"*";inherits:false;initial-value:1}@keyframes ew-spin{to{transform:rotate(360deg)}}@keyframes ew-pulse-soft{0%,to{opacity:.85;filter:drop-shadow(0 0 4px #ffe08a73)}50%{opacity:1;filter:drop-shadow(0 0 10px #ffe08ae6)}}@keyframes ew-ripple{0%{opacity:.7;transform:scale(0)}to{opacity:0;transform:scale(14)}}
+/* ==========================================================================
+   ewlat.org — Animasyon & Etkileşim Katmanı (düz CSS — derleme yok)
+   --------------------------------------------------------------------------
+   • Bu dosya doğrudan düzenlenir ve sunucuya olduğu gibi yüklenir (Node/derleme gerekmez).
+   • Kurallar sınıf seçicilidir ve katmansızdır: sitenin app.css / Bootstrap kurallarıyla
+     (ör. "* { margin:0; padding:0 }", "button { border-radius:0 }") çakışınca sınıf özgüllüğüyle
+     kazanır; site kuralını ezmek gereken yerlerde seçici "html.ew-js …" ile güçlendirilir.
+   • JS'in oluşturduğu öğeler "ew-*" sınıflarını taşır (assets/js/motion.js).
+   • Hareket gerektiren her şey html.ew-motion altında: kullanıcı "hareketi azalt" seçtiyse
+     ya da JS çalışmadıysa sayfa bugünkü gibi kalır.
+   • Renkler: altın #ffe08a · turkuaz #44acbf · koyu #0f4c5c
+   ========================================================================== */
+
+@keyframes ew-spin { to { transform: rotate(360deg); } }
+@keyframes ew-pulse-soft {
+  0%, 100% { opacity: .85; filter: drop-shadow(0 0 4px rgba(255, 224, 138, .45)); }
+  50%      { opacity: 1;   filter: drop-shadow(0 0 10px rgba(255, 224, 138, .9)); }
+}
+@keyframes ew-ripple {
+  from { opacity: .7; transform: scale(0); }
+  to   { opacity: 0;  transform: scale(14); }
+}
+
+/* ---------- Ortak keyframe'ler ---------- */
+@keyframes ew-word-in {
+  from { opacity: 0; filter: blur(10px); transform: translateY(16px) scale(.96); }
+  to   { opacity: 1; filter: none;       transform: none; }
+}
+@keyframes ew-shine {
+  0%        { background-position: 0% 50%; }
+  28%, 100% { background-position: 100% 50%; }
+}
+@keyframes ew-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes ew-pop-in {
+  0%   { opacity: 0; transform: translateY(46px) scale(.6) rotate(-6deg); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes ew-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+
+/* ==========================================================================
+   2. SLOGAN & TARİH
+   ========================================================================== */
+.ew-word { display: inline-block; }
+html.ew-motion .ew-word {
+  opacity: 0;
+  animation: ew-word-in 1s cubic-bezier(.2, .7, .2, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 150ms + 250ms);
+}
+.ew-word-txt { display: inline-block; }
+html.ew-motion .ew-word-txt.ew-shine {
+  background-image: linear-gradient(100deg, #fff 0 42%, #ffe08a 47%, #fffbe9 50%, #ffe08a 53%, #fff 58% 100%);
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: ew-shine 7s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 260ms);
+}
+
+html.ew-motion .chislaDiv > * {
+  animation: ew-rise .9s cubic-bezier(.2, .7, .2, 1) both;
+}
+html.ew-motion .chislaDiv > :nth-child(1) { animation-delay: .75s; }
+html.ew-motion .chislaDiv > :nth-child(2) { animation-delay: .85s; }
+html.ew-motion .chislaDiv > :nth-child(3) { animation-delay: .95s; }
+html.ew-motion .chislaDiv > :nth-child(4) { animation-delay: 1.05s; }
+/* "|" ayırıcısı animasyonsuz: Chrome bu ince karakteri animasyon bittikten sonra çizmeyebiliyor */
+html.ew-motion .chislaDiv > .date-sep { animation: none; }
+
+/* Dar ekranda tarih: 1. satır ay + Hicri, 2. satır Miladi (ortalı); "|" ayırıcı gizli */
+@media (max-width: 1023px) {
+  html.ew-js .chislaDiv {
+    flex-wrap: wrap;
+    justify-content: center;
+    column-gap: 10px;
+    row-gap: 2px;
+  }
+  html.ew-js .chislaDiv .date-sep { display: none; }
+  html.ew-js .chislaDiv .chisla-ug { flex-basis: 100%; text-align: center; }
+}
+
+/* ==========================================================================
+   3. YARIM DAİRE MENÜ — dönme dolap
+   ========================================================================== */
+html.ew-js .menu > img:first-of-type { position: relative; z-index: 2; }   /* yalnızca orijinal menu.png */
+html.ew-js .top { overflow-x: clip; }   /* hero'dan taşan hiçbir şey sayfayı yana genişletmesin */
+/* overflow:clip'i bilmeyen tarayıcılar (ör. Safari < 16): sayfa düzeyinde yatay taşmayı kapat */
+@supports not (overflow: clip) {
+  html.ew-js, html.ew-js body { overflow-x: hidden; }
+}
+
+/* Çarkın yarım dairesi alttaki çizgiye (hero'nun alt kenarı) dayanır. Site, ≤1023px'te .top'a padding-bottom: 10px
+   veriyor; bu çemberle çizgi arasında boşluk bırakıyordu. Menü ve .top altındaki ek boşluklar sıfırlanır. */
+html.ew-js .top.ew-wheel-top { padding-bottom: 0; }
+html.ew-js .top.ew-wheel-top .menu { margin-bottom: 0; }
+html.ew-js .menu.ew-wheel-on > img:first-of-type { display: block; }   /* satır içi resmin alt boşluğu (baseline) olmasın */
+
+/* Çark kurulunca orijinal görselin yerini hub.png (sabit göbek) + legs.png alır */
+html.ew-motion .menu.ew-wheel-on > img.ew-center { opacity: 0; }
+
+/* Çocuğun başı: çoğunlukla kitaba bakar, ara sıra başını kaldırıp yavaşça indirir */
+html.ew-motion .ew-head { animation: ew-head 7s ease-in-out infinite; }
+@keyframes ew-head {
+  0%, 30%   { rotate: 3deg; }      /* kitaba bakıyor */
+  40%, 58%  { rotate: -13deg; }    /* başını belirgin şekilde kaldırıyor */
+  68%, 100% { rotate: 3deg; }      /* tekrar kitaba */
+}
+
+/* Hilalde oturan çocuğun bacakları: dizden belirgin şekilde ileri-geri sallanır */
+html.ew-motion .ew-legs { animation: ew-legs 1.3s ease-in-out infinite alternate; }
+@keyframes ew-legs {
+  from { rotate: -10deg; }
+  to   { rotate: 10deg; }
+}
+
+/* Dönen iskelet */
+.ew-clip { position: absolute; top: 0; z-index: 2; overflow: hidden; opacity: 0; transition: opacity .5s; }
+.ew-clip.ew-ready { opacity: 1; }
+.ew-wheel { position: absolute; top: 0; rotate: var(--ew-a, 0deg); pointer-events: none; }
+/* Çocuğun altındaki yazı (dile göre gerçek metin; konum ve boyut JS'ten) */
+.ew-hubtext {
+  position: absolute;
+  z-index: 2;
+  translate: -50% -50%;
+  white-space: nowrap;
+  text-align: center;
+  line-height: 1.2;
+  font-family: 'EwUKIJ', 'UKIJ', 'uyghur', sans-serif;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 2px 6px rgba(0, 50, 70, .45), 0 0 14px rgba(255, 255, 255, .25);
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.ew-ring-img, .ew-sprite { position: absolute; pointer-events: none; -webkit-user-select: none; user-select: none; }
+.ew-sprite { z-index: 2; }
+/* Üzerine gelinen dilim: koyu örtü (halkayla birlikte döner; logolar ve yazılar üstte kalır) */
+.ew-sector { position: absolute; pointer-events: none; overflow: visible; }
+.ew-sector path { fill: rgba(3, 30, 40, .42); }
+/* Logolar: pime merkezinden takılı, yazının ağırlığıyla dik durur (konum ve açı JS'ten) */
+.ew-cabin {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform;
+}
+.ew-gondola {                         /* görünmez taşıyıcı: yuvarlak ikon + altında yazı */
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+.ew-label {                           /* logonun altındaki yazı: gerçek metin, tek satır */
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+  white-space: nowrap;
+  font-family: 'UKIJ', 'uyghur', sans-serif;
+  line-height: 1.25;
+  color: #fff;
+  text-align: center;
+  pointer-events: none;
+  text-shadow: 0 1px 2px rgba(0, 20, 30, .9), 0 0 8px rgba(0, 30, 45, .6);
+}
+html.ew-js .menu.ew-wheel-on .ew-slice { opacity: 1; box-shadow: 0 0 0 2px rgba(255, 255, 255, .9), 0 6px 14px rgba(0, 0, 0, .3); }
+html.ew-js .menu.ew-wheel-on .mbtn-inactive .ew-slice { filter: none; }
+
+/* Ok düğmeleri ve "Hepsini gör" düğmesi */
+.ew-arrow, .ew-seeall {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, .45);
+  background: rgba(20, 86, 106, .9);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .3);
+  transition: background .2s, border-color .2s, scale .2s;
+}
+.ew-arrow:hover, .ew-seeall:hover { background: #1b6c84; border-color: rgba(255, 255, 255, .8); }
+.ew-arrow:hover { scale: 1.1; }
+.ew-arrow:active, .ew-seeall:active { scale: .95; }
+.ew-seeall { gap: 8px; white-space: nowrap; font-weight: 700; }
+/* Bootstrap'in button { border-radius: 0 } kuralını ezmek için seçici güçlendirilmiş */
+html.ew-js .top .ew-arrow { border-radius: 50%; padding: 0; line-height: 0; outline-offset: 3px; }
+html.ew-js .top .ew-seeall { border-radius: 999px; line-height: 1; font-family: inherit; padding: 0 22px; }
+
+.ew-hubbtn { position: absolute; z-index: 3; padding: 0; border: 0; background: transparent; cursor: pointer; }
+html.ew-js .menu .ew-hubbtn { border-radius: 50%; }
+html.ew-js .menu .ew-hubbtn:focus-visible { outline: 3px solid rgba(255, 224, 138, .9); outline-offset: 4px; }
+
+/* "Hepsini gör" penceresi (siteler kartlarla) */
+.ew-sites {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(6, 42, 53, .6);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity .3s;
+}
+.ew-sites.ew-show { opacity: 1; }
+.ew-sites[hidden] { display: none !important; }
+.ew-sites-panel {
+  position: relative;
+  width: 100%;
+  max-width: 880px;
+  max-height: 88vh;
+  overflow: auto;
+  border-radius: 24px;
+  background: #fff;
+  color: #0f4c5c;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .35);
+  transform: translateY(16px) scale(.97);
+  transition: transform .3s cubic-bezier(.34, 1.56, .64, 1);
+}
+.ew-sites.ew-show .ew-sites-panel { transform: none; }
+.ew-sites-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 20px;
+  background: #fff;
+  border-bottom: 1px solid #e2eef1;
+}
+.ew-sites-title { font-size: 20px; line-height: 28px; font-weight: 700; }
+.ew-sites-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #eef5f7;
+  color: #0f4c5c;
+  cursor: pointer;
+  transition: background .15s;
+}
+.ew-sites-close:hover { background: #dcebef; }
+.ew-sites-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 20px; }
+@media (min-width: 640px) { .ew-sites-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 768px) { .ew-sites-grid { grid-template-columns: repeat(4, 1fr); } }
+.ew-site-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 12px 16px;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid #e2eef1;
+  border-radius: 18px;
+  background: #f7fbfc;
+  transition: transform .2s, box-shadow .2s, border-color .2s;
+}
+a.ew-site-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(15, 76, 92, .18); border-color: #44acbf; }
+.ew-site-card.ew-off { opacity: .6; }
+.ew-site-card:focus-visible { outline: 3px solid #44acbf; outline-offset: 2px; }
+.ew-site-logo { width: 64px; height: 64px; border-radius: 50%; box-shadow: 0 4px 12px rgba(0, 0, 0, .18); }
+.ew-site-name { font-size: 15px; font-weight: 700; line-height: 1.375; color: #0f4c5c; }
+.ew-site-host { font-size: 12px; line-height: 16px; color: #5b7f89; }
+.ew-soon { font-size: 12px; line-height: 16px; font-weight: 700; padding: 2px 10px; border-radius: 999px; background: #ffe08a; color: #6b4e00; }
+html.ew-sites-open, html.ew-sites-open body { overflow: hidden; }
+html.ew-motion .menu.ew-wheel-on {
+  touch-action: pan-y;               /* dokunmatikte yatay kaydırma çarkı çevirir */
+  -webkit-user-select: none;
+  user-select: none;
+}
+html.ew-motion .menu.ew-grabbing,
+html.ew-motion .menu.ew-grabbing * { cursor: grabbing !important; }
+
+/* Daire bağlantılar: eski "karartan" hover yerine dışarı fırlayan ikon */
+html.ew-js .menu .mbtn {
+  z-index: 3;
+  opacity: 1;
+  background: transparent;
+  transition: transform .5s cubic-bezier(.34, 1.56, .64, 1);
+}
+/* Logo üzerinde hover efekti yok (büyüme/küçülme). Vurgu, arkadaki dilim (.ew-sector) ile yapılır.
+   app.css'teki ".mbtn:hover { transform: scale(0.7) }" kuralını da bu yüzden eziyoruz. */
+html.ew-js .menu .mbtn:hover,
+html.ew-js .menu .mbtn:focus-within,
+html.ew-js .menu.ew-grabbing .mbtn { transform: none; }
+html.ew-js .menu .mbtn-inactive {
+  pointer-events: auto;
+  cursor: not-allowed;
+}
+.ew-slice {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease, box-shadow .35s ease;
+}
+.mbtn-inactive .ew-slice { filter: grayscale(.85) brightness(1.05); }
+html.ew-js .menu .mbtn a:focus-visible { outline: none; }
+
+/* Okuyan çocuğun arkasındaki ışık huzmeleri */
+.ew-halo-wrap {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 77%;
+  width: 30%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.5s;
+}
+.ew-halo-wrap.ew-on { opacity: .8; }
+html.ew-motion .ew-halo { animation: ew-spin 48s linear infinite; }
+.ew-halo {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from 0deg,
+      rgba(255, 236, 170, .38) 0deg 5deg,
+      transparent 5deg 15deg);
+  -webkit-mask-image: radial-gradient(circle closest-side, #000 18%, rgba(0, 0, 0, .5) 55%, transparent 100%);
+  mask-image: radial-gradient(circle closest-side, #000 18%, rgba(0, 0, 0, .5) 55%, transparent 100%);
+}
+
+/* ==========================================================================
+   5. UYGULAMALAR
+   ========================================================================== */
+html.ew-js .apps { position: relative; }
+html.ew-js .apps > .item-title,
+html.ew-js .apps > .items { position: relative; z-index: 1; }
+html.ew-js .apps .icon { position: relative; }
+/* Boşluklar: app.css'teki `* { padding: 0 }` sıfırlamasını geçmek için sınıf seçicisi kullanılır.
+   Alt boşluk: etiketler footer bandına yapışmasın. Satır aralığı: iki satıra kırılan etiketler birbirine girmesin. */
+.apps { padding-bottom: 28px; }
+.apps .items { row-gap: 22px; }
+.apps .item-text { line-height: 1.5; padding-top: 2px; }
+
+html.ew-motion .apps .item { opacity: 0; }
+html.ew-motion .apps .item.ew-in {
+  animation: ew-pop-in .9s cubic-bezier(.34, 1.56, .64, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 95ms);
+}
+html.ew-motion .apps .item.ew-in .ew-floater {
+  animation: ew-float 5.5s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * -.8s);
+}
+html.ew-motion .apps .item-title { animation: ew-rise .9s ease-out both; }
+
+/* 3D eğim (JS --rx / --ry değişkenlerini imlece göre ayarlar) */
+html.ew-js .apps .icon.ew-tilt { transition: transform .18s ease-out, filter .2s ease; }
+html.ew-js .apps .icon.ew-tilt:hover {
+  transform: perspective(520px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(1.13) translateY(-6px);
+}
+.ew-floater { position: relative; display: block; }
+.ew-iconmask {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  -webkit-mask-image: var(--ew-mask);
+  mask-image: var(--ew-mask);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+.ew-glare {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity .3s;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 30%),
+      rgba(255, 255, 255, .6), rgba(255, 255, 255, .12) 32%, transparent 60%);
+}
+
+/* ==========================================================================
+   6. MODAL
+   ========================================================================== */
+html.ew-js .modal-backdrop {
+  --bs-backdrop-bg: #062a35;
+  --bs-backdrop-opacity: .6;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+html.ew-js #appMpdal .modal-content {
+  border: 0;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .35);
+}
+html.ew-js #appMpdal .modal-body { position: relative; }
+/* Telefon: modal ekrana sığsın; kaydırma yalnızca gövdede olsun, başlık (yok) ve alt düğme (تاقاش) yerinde kalsın */
+html.ew-js #appMpdal .modal-dialog { max-height: calc(100vh - 1rem); max-height: calc(100dvh - 1rem); }
+html.ew-js #appMpdal .modal-content { max-height: calc(100vh - 1rem); max-height: calc(100dvh - 1rem); min-height: 0; }
+html.ew-js #appMpdal .modal-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+html.ew-js #appMpdal .modal-footer { flex: 0 0 auto; }
+html.ew-motion #appMpdal.fade .modal-dialog {
+  opacity: 0;
+  transform: translateY(40px) scale(.9);
+  transition: transform .55s cubic-bezier(.34, 1.56, .64, 1), opacity .3s ease;
+}
+html.ew-motion #appMpdal.show .modal-dialog { opacity: 1; transform: none; }
+
+/* Uygulama kartı (apps.json): Uygurca metin için UKIJ Ekran (assets/fonts/UKIJEkran.ttf).
+   Not: app.css'teki evrensel "margin:0; padding:0" katmansız olduğu için boşluklar burada verilir. */
+@font-face {
+  font-family: 'EwUKIJ';
+  src: url('../fonts/UKIJEkran.ttf') format('truetype');
+  font-display: swap;
+}
+.ew-app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 28px 24px 22px;
+  background: #fff;
+  color: #0f4c5c;
+  font-family: 'EwUKIJ', 'UKIJ', 'uyghur', sans-serif;
+  text-align: center;
+  line-height: 1.9;
+}
+.ew-app-img { width: 132px; height: 132px; border-radius: 28px; object-fit: cover; box-shadow: 0 10px 24px rgba(15, 76, 92, .18); }
+/* Modal başlığı (uygulama adı + X); gövde kayarken yerinde kalır */
+.ew-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex: 0 0 auto;
+  padding: 12px 16px 12px 20px;
+  background: #fff;
+  color: #0f4c5c;
+  border-bottom: 1px solid #e2eef1;
+  font-family: 'EwUKIJ', 'UKIJ', 'uyghur', sans-serif;
+}
+.ew-modal-title { font-size: 18px; font-weight: 700; line-height: 1.6; }
+.ew-modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #eef5f7;
+  color: #0f4c5c;
+  cursor: pointer;
+  transition: background .15s;
+}
+.ew-modal-close:hover { background: #dcebef; }
+.ew-modal-close:focus-visible { outline: 3px solid #44acbf; outline-offset: 2px; }
+.ew-app .ew-app-desc { margin: 0; font-size: 16px; color: #2b4b55; }
+.ew-app .ew-app-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 6px; }
+.ew-app .ew-app-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 22px; border-radius: 999px;
+  background: #44acbf; color: #fff; text-decoration: none; font-size: 16px; line-height: 1.4;
+}
+.ew-app .ew-app-btn:hover, .ew-app .ew-app-btn:focus-visible { background: #0f4c5c; color: #fff; }
+.ew-app .ew-app-stores { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.ew-app .ew-app-stores a { display: block; line-height: 0; }
+.ew-app .ew-app-stores img { width: 150px; height: auto; display: block; }
+.ew-app .ew-app-web { font-size: 16px; color: #0f4c5c; text-decoration: underline; }
+.ew-app .ew-app-share-title { margin: 10px 0 -4px; font-size: 14px; color: #5b7c86; }
+.ew-app .ew-app-share { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 10px; margin-top: 4px; }
+.ew-app .ew-app-sh {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; width: 66px;
+  margin: 0; padding: 0; border: 0; background: none; font: inherit; font-size: 12px; line-height: 1.3;
+  color: #0f4c5c; text-decoration: none; cursor: pointer;
+}
+.ew-app .ew-app-sh i {
+  display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; border-radius: 50%;
+  color: #fff; box-shadow: 0 4px 10px rgba(15, 76, 92, .22); transition: transform .2s ease;
+}
+.ew-app .ew-app-sh svg { width: 22px; height: 22px; display: block; }
+.ew-app .ew-app-sh span { white-space: nowrap; }
+.ew-app .ew-app-sh:hover i, .ew-app .ew-app-sh:focus-visible i { transform: translateY(-2px); }
+.ew-app .ew-app-sh:focus-visible { outline: 2px solid #44acbf; outline-offset: 3px; border-radius: 8px; }
+.ew-app .ew-app-status { margin: 0; min-height: 1.4em; font-size: 14px; color: #2a8fa0; }
+
+/* ==========================================================================
+   7. DİL SEÇİCİ & FOOTER
+   ========================================================================== */
+html.ew-js .d-lang-trigger { transition: background .2s ease, border-color .2s ease; }
+html.ew-js .d-lang-trigger:hover { background: rgba(255, 255, 255, .28); border-color: rgba(255, 255, 255, .6); }
+html.ew-js .d-lang-dropdown {
+  display: block;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px) scale(.97);
+  transform-origin: top left;
+  transition: opacity .2s ease, transform .28s cubic-bezier(.2, .8, .2, 1), visibility 0s linear .28s;
+}
+html.ew-js .d-lang-picker.open .d-lang-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
+}
+html.ew-motion .d-lang-dropdown a {
+  opacity: 0;
+  transform: translateX(10px);
+  transition: opacity .25s ease, transform .3s ease, background .15s ease;
+}
+html.ew-motion .d-lang-picker.open .d-lang-dropdown a { opacity: 1; transform: none; }
+html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(2) { transition-delay: .03s; }
+html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(3) { transition-delay: .06s; }
+html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(4) { transition-delay: .09s; }
+html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(5) { transition-delay: .12s; }
+html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(6) { transition-delay: .15s; }
+
+html.ew-js .footer-social .social-icon { transition: transform .25s ease, opacity .2s, box-shadow .25s; }
+html.ew-js .footer-social .social-icon:hover {
+  opacity: 1;
+  transform: translateY(-2px) scale(1.06);       /* sakin: hafif kalkma (app.css'teki 1.15 yerine) */
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, .3), 0 8px 18px rgba(0, 0, 0, .22);
+}
+html.ew-motion .footer-social .social-icon { opacity: 0; }
+html.ew-motion .footer-social .social-icon.ew-in {
+  animation: ew-rise .6s ease-out forwards;          /* sade: yukarı kayarak belirme */
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+html.ew-motion .footer-social .social-icon.ew-in.ew-done { animation: none; opacity: .85; }
+html.ew-motion .footer-social .social-icon.ew-in.ew-done:hover { opacity: 1; }
+
+/* ==========================================================================
+   8. KÜÇÜK BİLEŞENLER (JS'in oluşturduğu öğeler)
+   ========================================================================== */
+.ew-moon-wrap { display: inline-flex; flex-shrink: 0; align-items: center; }
+html.ew-motion .ew-moon-wrap { animation: ew-pulse-soft 4s ease-in-out infinite; }
+
+.ew-group:hover .ew-glare { opacity: 1; }
+.ew-ripple-dot {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .7);
+  animation: ew-ripple .75s ease-out forwards;
+}
+.ew-letters { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* Modal yükleniyor göstergesi (iframe yedeği) */
+.ew-loader {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: #fff;
+  color: #0f4c5c;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s;
+}
+.ew-loader.ew-on { opacity: 1; pointer-events: auto; }
+.ew-loader-text { font-size: 16px; line-height: 24px; }
+.ew-spinner { width: 48px; height: 48px; border-radius: 50%; border: 4px solid rgba(68, 172, 191, .25); border-top-color: #44acbf; }
+html.ew-motion .ew-spinner { animation: ew-spin .9s linear infinite; }

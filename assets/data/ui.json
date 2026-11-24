@@ -1,0 +1,442 @@
+{
+  "_doc": "Arayüz verisi. wheel.items: çarktaki öğeler (sıra = menu_item_N). Yeni öğe için sona { label, href, icon } ekleyin (icon: assets/images/wheel/ altında kare PNG). Dilimler ve açılar öğe sayısından hesaplanır. strings: arayüz metinleri; eksik dilde ug kullanılır.",
+  "wheel": {
+    "slotsPerItem": {
+      "normal": 2,
+      "compact": 1
+    },
+    "items": [
+      {
+        "label": {
+          "ug": "دۇئا ۋە زىكرلەر",
+          "ul": "Duaa we zikirler",
+          "uc": "Дуа вә зикирләр",
+          "tr": "Dua ve zikirler",
+          "en": "Prayers & Dhikr",
+          "ar": "الدعاء والذكر"
+        }
+      },
+      {
+        "label": {
+          "ug": "خەتمە قۇرئان",
+          "ul": "Xetme Qur'an",
+          "uc": "Хәтмә Қуръан",
+          "tr": "Hatim Kur'an",
+          "en": "Quran Khatm",
+          "ar": "ختمة القرآن"
+        }
+      },
+      {
+        "label": {
+          "ug": "ئەۋلاد نەشرىياتى",
+          "ul": "Ewlad neshriyati",
+          "uc": "Әвлад нәшрияти",
+          "tr": "Ewlad Yayınevi",
+          "en": "Ewlad Publishing",
+          "ar": "دار نشر أولاد"
+        }
+      },
+      {
+        "label": {
+          "ug": "ئەۋلاد يۇتيۇب",
+          "ul": "Ewlad YouTube",
+          "uc": "Әвлад YouTube",
+          "tr": "Ewlad YouTube",
+          "en": "Ewlad YouTube",
+          "ar": "يوتيوب أولاد"
+        }
+      },
+      {
+        "label": {
+          "ug": "E-Kuran",
+          "ul": "E-Qur'an",
+          "uc": "E-Қуръан",
+          "tr": "E-Kur'an",
+          "en": "E-Quran",
+          "ar": "القرآن الإلكتروني"
+        }
+      },
+      {
+        "label": {
+          "ug": "ئەۋلاد لۇغىتى",
+          "ul": "Ewlad lughiti",
+          "uc": "Әвлад луғити",
+          "tr": "Ewlad Sözlüğü",
+          "en": "Ewlad Dictionary",
+          "ar": "معجم أولاد"
+        }
+      },
+      {
+        "label": {
+          "ug": "ماقالىلەر ئامبىرى",
+          "ul": "Maqaliler ambiri",
+          "uc": "Мақалиләр амбири",
+          "tr": "Makaleler Arşivi",
+          "en": "Articles Archive",
+          "ar": "أرشيف المقالات"
+        }
+      },
+      {
+        "label": {
+          "ug": "ئۇيغۇر كىتاب",
+          "ul": "Uyghur kitab",
+          "uc": "Уйғур китаб",
+          "tr": "Uygur Kitap",
+          "en": "Uyghur Books",
+          "ar": "الكتب الأويغورية"
+        }
+      },
+      {
+        "label": {
+          "ug": "فارابى جەمئىيىتى",
+          "ul": "Farabi jemiyiti",
+          "uc": "Фарабий җәмийити",
+          "tr": "Farabi Derneği",
+          "en": "Farabi Society",
+          "ar": "جمعية الفارابي"
+        }
+      },
+      {
+        "label": {
+          "ug": "سىيرەت ژۇرنىلى",
+          "ul": "Siyret zhurnali",
+          "uc": "Сийрәт журнали",
+          "tr": "Siyer Dergisi",
+          "en": "Siyer Journal",
+          "ar": "مجلة السيرة"
+        }
+      },
+      {
+        "label": {
+          "ug": "قۇرئان كەرىم",
+          "ul": "Qur'an Kerim",
+          "uc": "Қуръан Кәрим",
+          "tr": "Kur'an-ı Kerim",
+          "en": "Holy Quran",
+          "ar": "القرآن الكريم"
+        }
+      },
+      {
+        "label": {
+          "ug": "ئەۋلاد كارتون-فىلىم",
+          "ul": "Ewlad karton-filim",
+          "uc": "Әвлад картун-филим",
+          "tr": "Ewlad Çizgi Film",
+          "en": "Ewlad Cartoons",
+          "ar": "أفلام أولاد الكرتونية"
+        }
+      }
+    ]
+  },
+  "strings": {
+    "soon": {
+      "ug": "يېقىندا",
+      "ul": "Yéqinda",
+      "uc": "Йеқинда",
+      "tr": "Yakında",
+      "en": "Coming soon",
+      "ar": "قريباً"
+    },
+    "seeAll": {
+      "ug": "ھەممىسىنى كۆرۈش",
+      "ul": "Hemmisini körüsh",
+      "uc": "Һәммисини көрүш",
+      "tr": "Hepsini gör",
+      "en": "See all",
+      "ar": "عرض الكل"
+    },
+    "sitesTitle": {
+      "ug": "ئەۋلاد تور بېكەتلىرى",
+      "ul": "Ewlad tor béketliri",
+      "uc": "Әвлад тор бекәтлири",
+      "tr": "Ewlad siteleri",
+      "en": "Ewlad websites",
+      "ar": "مواقع أولاد"
+    },
+    "close": {
+      "ug": "تاقاش",
+      "ul": "Taqash",
+      "uc": "Тақаш",
+      "tr": "Kapat",
+      "en": "Close",
+      "ar": "إغلاق"
+    },
+    "turnLeft": {
+      "ug": "سولغا چۆرۈش",
+      "ul": "Solgha chörüsh",
+      "uc": "Солға чөрүш",
+      "tr": "Sola çevir",
+      "en": "Turn left",
+      "ar": "أدر لليسار"
+    },
+    "turnRight": {
+      "ug": "ئوڭغا چۆرۈش",
+      "ul": "Onggha chörüsh",
+      "uc": "Оңға чөрүш",
+      "tr": "Sağa çevir",
+      "en": "Turn right",
+      "ar": "أدر لليمين"
+    },
+    "loading": {
+      "ug": "يۈكلىنىۋاتىدۇ…",
+      "ul": "Yüklüniwatidu…",
+      "uc": "Йүклиниватиду…",
+      "tr": "Yükleniyor…",
+      "en": "Loading…",
+      "ar": "جارٍ التحميل…"
+    },
+    "copyLink": {
+      "ug": "ئۇلانما كۆچۈرۈش",
+      "ul": "Ulanma köchürüsh",
+      "uc": "Уланма көчүрүш",
+      "tr": "Bağlantıyı kopyala",
+      "en": "Copy link",
+      "ar": "نسخ الرابط"
+    },
+    "copied": {
+      "ug": "ئۇلانما كۆچۈرۈلدى",
+      "ul": "Ulanma köchürüldi",
+      "uc": "Уланма көчүрүлди",
+      "tr": "Bağlantı kopyalandı",
+      "en": "Link copied",
+      "ar": "تم نسخ الرابط"
+    },
+    "copyShort": {
+      "ug": "ئۇلانما",
+      "ul": "Ulanma",
+      "uc": "Уланма",
+      "tr": "Kopyala",
+      "en": "Copy",
+      "ar": "نسخ"
+    },
+    "appsTitle": {
+      "ug": "ئەۋلاد ئەپ دېتاللىرى:",
+      "ul": "Ewlad ep détalliri:",
+      "uc": "Әвлад әп деталлири:",
+      "tr": "Ewlad uygulamaları:",
+      "en": "Ewlad apps:",
+      "ar": "تطبيقات أولاد:"
+    },
+    "shareTitle": {
+      "ug": "ئورتاقلىشىش",
+      "ul": "Ortaqlashish",
+      "uc": "Ортақлишиш",
+      "tr": "Paylaş",
+      "en": "Share",
+      "ar": "مشاركة"
+    },
+    "hubTitle": {
+      "ug": "ئەۋلاد گۇرۇپپىسى",
+      "ul": "Ewlad guruppisi",
+      "uc": "Әвлад гурупписи",
+      "tr": "Ewlad Grubu",
+      "en": "Ewlad Group",
+      "ar": "مجموعة أولاد"
+    }
+  },
+  "calendar": {
+    "_doc": "Tarih satırları (motion.js → dates). Biçimlerde {y} yıl, {m} ay adı, {mn} ay numarası, {d} gün, {w} gün adı. Hicri ay adları 12 öğe (1. = Muharrem). ug/ul/uc Miladi tarihte ay numarası kullanılır; months yalnızca {m} kullanan biçimler için gerekir.",
+    "hijriMonths": {
+      "ug": [
+        "مۇھەررەم",
+        "سەفەر",
+        "رەبىئۇلئەۋۋەل",
+        "رەبىۇلئاخىر",
+        "جەمادىيەلئەۋۋەل",
+        "جەمازىيەل ئاخىر",
+        "رەجەب",
+        "شەئبان",
+        "رامازان",
+        "شەۋۋال",
+        "زىلقەئدە",
+        "زىلھىججە"
+      ],
+      "ul": [
+        "Muherrem",
+        "Sefer",
+        "Rebiulewwel",
+        "Rebiulaxir",
+        "Jemadiyelewwel",
+        "Jemaziyel axir",
+        "Rejeb",
+        "Sheban",
+        "Ramazan",
+        "Shewwal",
+        "Zilqede",
+        "Zilhijje"
+      ],
+      "uc": [
+        "Мухәррәм",
+        "Сәфәр",
+        "Рәбиуләввәл",
+        "Рәбиулахир",
+        "Җәмадийәләввәл",
+        "Җәмазийәл ахир",
+        "Рәҗәб",
+        "Шәбан",
+        "Рамазан",
+        "Шәввал",
+        "Зилқәдә",
+        "Зилһиҗҗә"
+      ],
+      "tr": [
+        "Muharrem",
+        "Safer",
+        "Rebîülevvel",
+        "Rebîülahir",
+        "Cemâziyelevvel",
+        "Cemâziyelahir",
+        "Recep",
+        "Şaban",
+        "Ramazan",
+        "Şevval",
+        "Zilkade",
+        "Zilhicce"
+      ],
+      "en": [
+        "Muharram",
+        "Safar",
+        "Rabi' al-Awwal",
+        "Rabi' al-Thani",
+        "Jumada al-Ula",
+        "Jumada al-Thani",
+        "Rajab",
+        "Sha'ban",
+        "Ramadan",
+        "Shawwal",
+        "Dhu al-Qi'dah",
+        "Dhu al-Hijjah"
+      ],
+      "ar": [
+        "محرم",
+        "صفر",
+        "ربيع الأول",
+        "ربيع الآخر",
+        "جمادى الأولى",
+        "جمادى الآخرة",
+        "رجب",
+        "شعبان",
+        "رمضان",
+        "شوال",
+        "ذو القعدة",
+        "ذو الحجة"
+      ]
+    },
+    "months": {
+      "tr": [
+        "Ocak",
+        "Şubat",
+        "Mart",
+        "Nisan",
+        "Mayıs",
+        "Haziran",
+        "Temmuz",
+        "Ağustos",
+        "Eylül",
+        "Ekim",
+        "Kasım",
+        "Aralık"
+      ],
+      "en": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ],
+      "ar": [
+        "يناير",
+        "فبراير",
+        "مارس",
+        "أبريل",
+        "مايو",
+        "يونيو",
+        "يوليو",
+        "أغسطس",
+        "سبتمبر",
+        "أكتوبر",
+        "نوفمبر",
+        "ديسمبر"
+      ]
+    },
+    "weekdays": {
+      "ug": [
+        "يەكشەنبە",
+        "دۈشەنبە",
+        "سەيشەنبە",
+        "چارشەنبە",
+        "پەيشەنبە",
+        "ئۇلۇغ جۈمە",
+        "شەنبە"
+      ],
+      "ul": [
+        "yekshenbe",
+        "düshenbe",
+        "seyshenbe",
+        "charshenbe",
+        "peyshenbe",
+        "ulugh jüme",
+        "shenbe"
+      ],
+      "uc": [
+        "йәкшәнбә",
+        "дүшәнбә",
+        "сейшәнбә",
+        "чаршәнбә",
+        "пәйшәнбә",
+        "улуғ җүмә",
+        "шәнбә"
+      ],
+      "tr": [
+        "Pazar",
+        "Pazartesi",
+        "Salı",
+        "Çarşamba",
+        "Perşembe",
+        "Cuma",
+        "Cumartesi"
+      ],
+      "en": [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+      ],
+      "ar": [
+        "الأحد",
+        "الاثنين",
+        "الثلاثاء",
+        "الأربعاء",
+        "الخميس",
+        "الجمعة",
+        "السبت"
+      ]
+    },
+    "hijriFormat": {
+      "ug": "{y}-يىلى {m} {d}",
+      "ul": "{y}-yili {m} {d}",
+      "uc": "{y}-йили {m} {d}",
+      "tr": "{d} {m} {y} H.",
+      "en": "{d} {m} {y} AH",
+      "ar": "{d} {m} {y} هـ"
+    },
+    "gregorianFormat": {
+      "ug": "{y}-يىلى {mn}-ئاينىڭ {d}-كۈنى، {w}",
+      "ul": "{y}-yili {mn}-ayning {d}-küni, {w}",
+      "uc": "{y}-йили {mn}-айниң {d}-куни, {w}",
+      "tr": "{w}, {d} {m} {y}",
+      "en": "{w}, {m} {d}, {y}",
+      "ar": "{w}، {d} {m} {y}"
+    }
+  }
+}

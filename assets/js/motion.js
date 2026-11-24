@@ -1,6 +1,6 @@
 /*!
  * ewlat.org — Animasyon & Etkileşim Katmanı
- * Bağımlılık yok (vanilla JS). Stiller: assets/css/motion.css (Tailwind v4, "tw:" önekli).
+ * Bağımlılık yok (vanilla JS). Stiller: assets/css/motion.css (düz CSS, derleme yok).
  * Kurulum: </body> öncesine  <script src="assets/js/motion.js" defer></script>
  *
  * Her modül try/catch içinde çalışır; biri hata verirse site ve diğer modüller etkilenmez.
@@ -28,21 +28,30 @@
   /* Yardımcılar                                                         */
   /* ------------------------------------------------------------------ */
   var LANG = (typeof window.pageLang === 'string' && window.pageLang) || 'ug';
-  var I18N = {
-    soon:    { ug: 'يېقىندا', ul: 'Yéqinda', uc: 'Йеқинда', tr: 'Yakında', en: 'Coming soon', ar: 'قريباً' },
-    seeAll:     { ug: 'ھەممىسىنى كۆرۈش', ul: 'Hemmisini körüsh', uc: 'Һәммисини көрүш', tr: 'Hepsini gör', en: 'See all', ar: 'عرض الكل' },
-    sitesTitle: { ug: 'ئەۋلاد تور بېكەتلىرى', ul: 'Ewlad tor béketliri', uc: 'Әвлад тор бекәтлири', tr: 'Ewlad siteleri', en: 'Ewlad websites', ar: 'مواقع أولاد' },
-    close:      { ug: 'تاقاش', ul: 'Taqash', uc: 'Тақаш', tr: 'Kapat', en: 'Close', ar: 'إغلاق' },
-    turnLeft:  { ug: 'سولغا چۆرۈش', ul: 'Solgha chörüsh', uc: 'Солға чөрүш', tr: 'Sola çevir', en: 'Turn left', ar: 'أدر لليسار' },
-    turnRight: { ug: 'ئوڭغا چۆرۈش', ul: 'Onggha chörüsh', uc: 'Оңға чөрүш', tr: 'Sağa çevir', en: 'Turn right', ar: 'أدر لليمين' },
-    loading: { ug: 'يۈكلىنىۋاتىدۇ…', ul: 'Yüklüniwatidu…', uc: 'Йүклиниватиду…', tr: 'Yükleniyor…', en: 'Loading…', ar: 'جارٍ التحميل…' },
-    copyLink: { ug: 'ئۇلانما كۆچۈرۈش', ul: 'Ulanma köchürüsh', uc: 'Уланма көчүрүш', tr: 'Bağlantıyı kopyala', en: 'Copy link', ar: 'نسخ الرابط' },
-    copied:   { ug: 'ئۇلانما كۆچۈرۈلدى', ul: 'Ulanma köchürüldi', uc: 'Уланма көчүрүлди', tr: 'Bağlantı kopyalandı', en: 'Link copied', ar: 'تم نسخ الرابط' },
-    copyShort: { ug: 'ئۇلانما', ul: 'Ulanma', uc: 'Уланма', tr: 'Kopyala', en: 'Copy', ar: 'نسخ' },
-    appsTitle: { ug: 'ئەۋلاد ئەپ دېتاللىرى:', ul: 'Ewlad ep détalliri:', uc: 'Әвлад әп деталлири:', tr: 'Ewlad uygulamaları:', en: 'Ewlad apps:', ar: 'تطبيقات أولاد:' },
-    shareTitle: { ug: 'ئورتاقلىشىش', ul: 'Ortaqlashish', uc: 'Ортақлишиш', tr: 'Paylaş', en: 'Share', ar: 'مشاركة' }
-  };
-  function t(key) { var m = I18N[key]; return m[LANG] || m.ug; }
+  /* Veri: arayüz metinleri + çark öğeleri → assets/data/ui.json (elle düzenlenir);
+     çark konumları → assets/images/wheel/wheel.json (araçla üretilir). Yüklenemezse çark ve kartlar
+     devreye girmez, site olduğu gibi kalır. */
+  var ASSET_V = '?v=9';        // data/ ve images/wheel/ dosyaları değiştiğinde artırın (önbellek)
+  var UI = null, WHEEL = null;
+  function getJSON(url) {
+    return fetch(url + ASSET_V).then(function (r) {
+      if (!r.ok) throw new Error(r.status + ' ' + url);
+      return r.json();
+    });
+  }
+  var dataReady = (function () {
+    try {
+      return Promise.all([getJSON(SCRIPT_BASE + '../data/ui.json'), getJSON(SCRIPT_BASE + '../images/wheel/wheel.json')])
+        .then(function (r) { UI = r[0]; WHEEL = r[1]; return true; })
+        .catch(function (e) { if (window.console) console.warn('[ewlat-motion] veri yüklenemedi:', e); return false; });
+    } catch (e) { return Promise.resolve(false); }
+  })();
+  /** Veri yüklenince fn çalışır (modül hatası diğerlerini etkilemesin diye safe içinde). */
+  function whenData(fn, name) { dataReady.then(function (ok) { if (ok) safe(name || 'data', fn); }); }
+  function t(key) {
+    var m = UI && UI.strings && UI.strings[key];
+    return m ? (m[LANG] || m.ug || '') : '';
+  }
   /** Dile göre değer: {ug, ul, uc, tr, en, ar} haritası (apps.json) ya da düz değer; eksik dilde ug. */
   function loc(v) { return v && typeof v === 'object' && !Array.isArray(v) ? (v[LANG] || v.ug) : v; }
   var RTL_LANG = LANG === 'ug' || LANG === 'ar';
@@ -62,6 +71,45 @@
     var n = doc.createElementNS('http://www.w3.org/2000/svg', tag);
     if (attrs) for (var k in attrs) n.setAttribute(k, attrs[k]);
     return n;
+  }
+
+  /** Halka dokusu: ring.webp tek bir dilimin gerilmesiyle üretilmiş 24 özdeş dilimdir. Başka dilim sayısında
+      aynı dilim kutupsal olarak çarpıtılıp (açı → dilim genişliği) tuvale çizilir; araç gerekmez.
+      24 dilimde null döner (ring.webp doğrudan kullanılır). inner: iç/dış yarıçap oranı, outPx: tuval boyutu. */
+  function makeRing(src, slots, inner, outPx) {
+    var SRC_SLOTS = 24;
+    if (slots === SRC_SLOTS) return null;
+    try {
+      var sw = src.naturalWidth, S = Math.min(outPx, sw);
+      var c0 = doc.createElement('canvas'); c0.width = c0.height = sw;
+      var x0 = c0.getContext('2d'); x0.drawImage(src, 0, 0);
+      var sd = x0.getImageData(0, 0, sw, sw).data;
+      var cv = doc.createElement('canvas'); cv.width = cv.height = S;
+      var ctx = cv.getContext('2d'), out = ctx.createImageData(S, S), od = out.data;
+      var ro = S / 2, ri = ro * inner, k = sw / S, SLOT = 360 / slots, SRC = 360 / SRC_SLOTS, W0 = 3 * SRC;
+      for (var y = 0; y < S; y++) for (var x = 0; x < S; x++) {
+        var dx = x + .5 - ro, dy = ro - (y + .5), rho = Math.sqrt(dx * dx + dy * dy);
+        if (rho > ro + 1 || rho < ri - 2) continue;
+        var th = Math.atan2(dy, dx) * 180 / Math.PI; if (th < 0) th += 360;
+        var j = Math.floor(th / SLOT); if (j >= slots) j = slots - 1;
+        var a = (W0 + (th - j * SLOT) / SLOT * SRC) * Math.PI / 180;     // kaynak dilimdeki açı
+        var sx = sw / 2 + rho * k * Math.cos(a) - .5, sy = sw / 2 - rho * k * Math.sin(a) - .5;
+        var ix = Math.floor(sx), iy = Math.floor(sy);
+        if (ix < 0 || iy < 0 || ix >= sw - 1 || iy >= sw - 1) continue;
+        var fx = sx - ix, fy = sy - iy, p0 = (iy * sw + ix) * 4, p1 = p0 + 4, p2 = p0 + sw * 4, p3 = p2 + 4;
+        var w0 = (1 - fx) * (1 - fy), w1 = fx * (1 - fy), w2 = (1 - fx) * fy, w3 = fx * fy;
+        var a0 = sd[p0 + 3] * w0, a1 = sd[p1 + 3] * w1, a2 = sd[p2 + 3] * w2, a3 = sd[p3 + 3] * w3, A = a0 + a1 + a2 + a3;
+        if (A < .5) continue;
+        var o = (y * S + x) * 4;                                        // alfa ağırlıklı (kenarda kararma olmasın)
+        od[o]     = (sd[p0] * a0 + sd[p1] * a1 + sd[p2] * a2 + sd[p3] * a3) / A;
+        od[o + 1] = (sd[p0 + 1] * a0 + sd[p1 + 1] * a1 + sd[p2 + 1] * a2 + sd[p3 + 1] * a3) / A;
+        od[o + 2] = (sd[p0 + 2] * a0 + sd[p1 + 2] * a1 + sd[p2 + 2] * a2 + sd[p3 + 2] * a3) / A;
+        od[o + 3] = A;
+      }
+      ctx.putImageData(out, 0, 0);
+      cv.className = 'ew-ring-img';
+      return cv;
+    } catch (e) { return null; }
   }
 
   function safe(name, fn) {
@@ -219,12 +267,47 @@
     var term = waxing ? (k > 0 ? 0 : 1) : (k > 0 ? 1 : 0);
     var lit = 'M14 3 A11 11 0 0 ' + outer + ' 14 25 A' + rx + ' 11 0 0 ' + term + ' 14 3 Z';
 
-    var wrapM = el('span', 'tw:inline-flex tw:shrink-0 tw:items-center tw:motion-safe:animate-ew-pulse-soft', { 'aria-hidden': 'true' });
+    var wrapM = el('span', 'ew-moon-wrap', { 'aria-hidden': 'true' });
     wrapM.innerHTML =
       '<svg width="28" height="28" viewBox="0 0 28 28">' +
       '<circle cx="14" cy="14" r="11" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.35)" stroke-width="1"/>' +
       '<path d="' + lit + '" fill="#ffe9a8"/></svg>';
     ar.parentNode.insertBefore(wrapM, ar);
+  });
+
+  /* ------------------------------------------------------------------ */
+  /* 2c. TARİHLER — Hicri + Miladi, 6 dilde ve 3 Uygur yazısında          */
+  /* ------------------------------------------------------------------ */
+  // Sitenin kendi kodu ul/uc'yi Arap harfli Uygurcaya düşürüyor ve LTR dillerde noktalama ters yöne kayıyor;
+  // bu yüzden iki satır da burada, ui.json → calendar verisiyle yeniden yazılır (Hicri hesap: sitenin UQCal'ı).
+  safe('dates', function () {
+    var ar = $('.chisla-ar'), gr = $('.chisla-ug');
+    if (!ar || !gr) return;
+    function fill(tpl, v) { return tpl.replace(/\{(\w+)\}/g, function (_, k) { return v[k] == null ? '' : v[k]; }); }
+    function render() {
+      var C = UI && UI.calendar;
+      if (!C) return;
+      var d = new Date();
+      var months = loc(C.months) || [], weekdays = loc(C.weekdays) || [];
+      gr.textContent = fill(loc(C.gregorianFormat), {
+        y: d.getFullYear(), mn: d.getMonth() + 1, d: d.getDate(), m: months[d.getMonth()], w: weekdays[d.getDay()]
+      });
+      if (typeof window.UQCal === 'function') {
+        try {
+          var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+          var H = new window.UQCal(d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate())).convert();
+          var hm = loc(C.hijriMonths) || [];
+          if (H && hm[H.Hmonth - 1]) ar.textContent = fill(loc(C.hijriFormat), { y: H.Hyear, m: hm[H.Hmonth - 1], d: H.Hday });
+        } catch (e) { /* hesaplanamazsa sitenin kendi metni kalır */ }
+      }
+      [ar, gr].forEach(function (n) {
+        n.setAttribute('dir', RTL_LANG ? 'rtl' : 'ltr');
+        n.setAttribute('lang', LABEL_LANG[LANG] || 'ug');
+      });
+    }
+    // Sitenin kendi initDates()'i jQuery ready'de çalışır; veri geldikten sonra ve sayfa yüklenince bir kez daha yazılır
+    whenData(render, 'dates-render');
+    window.addEventListener('load', render);
   });
 
   /* ------------------------------------------------------------------ */
@@ -238,94 +321,74 @@
     if (!origBtns.length) return;
     var top = $('.top') || menu.parentNode;
 
-    // tools/build-wheel.mjs çıktısı (assets/images/wheel/wheel.json) — menu.png piksel koordinatları
-    // tools/build-wheel.mjs çıktısı (assets/images/wheel/wheel.json): menu.png'deki ikon daireleri [x, y, r]
-    var WHEEL = {
-      size: [1409, 701], center: [704.5, 704.5], rIn: 397,
-      hub: [310, 310, 790, 391],          // sabit göbek (alt bacakları silinmiş) — hub.png
-      legs: [717, 553, 54, 72], knee: [747, 565],   // alt bacaklar — legs.png, diz = dönme noktası
-      head: [664, 458, 47, 49], neck: [690, 500],   // baş (takke + yüz) — head.png, boyun = dönme noktası
-      icons: [
-        [89.5, 626.5, 55.5], [128.5, 469.4, 55.4], [210.6, 324.5, 55.4], [327.6, 210.5, 55.4],
-        [466.5, 130.4, 55.2], [623.5, 87.5, 55.4], [787.6, 86.5, 55.4], [945.5, 126.5, 55.4],
-        [1083.5, 209.5, 55.3], [1200.7, 325.6, 55.2], [1281.5, 465.5, 55.3], [1320.5, 623.6, 53.6]
-      ]
-    };
-    // Logo altı yazıları: sabit metin (menu_item_0 … 11 sırasıyla), dile göre. Dil = sayfanın dili (pageLang).
-    // Yeni dil eklemek için her dilde 12 öğe yazın; eksik dilde ug kullanılır.
-    var LABELS = {
-      ug: ['دۇئا ۋە زىكرلەر', 'خەتمە قۇرئان', 'ئەۋلاد نەشرىياتى', 'ئەۋلاد يۇتيۇب', 'E-Kuran', 'ئەۋلاد لۇغىتى',
-           'ماقالىلەر ئامبىرى', 'ئۇيغۇر كىتاب', 'فارابى جەمئىيىتى', 'سىيرەت ژۇرنىلى', 'قۇرئان كەرىم', 'ئەۋلاد كارتون-فىلىم'],
-      ul: ['Duaa we zikirler', 'Xetme Qur\'an', 'Ewlad neshriyati', 'Ewlad YouTube', 'E-Qur\'an', 'Ewlad lughiti',
-           'Maqaliler ambiri', 'Uyghur kitab', 'Farabi jemiyiti', 'Siyret zhurnali', 'Qur\'an Kerim', 'Ewlad karton-filim'],
-      uc: ['Дуа вә зикирләр', 'Хәтмә Қуръан', 'Әвлад нәшрияти', 'Әвлад YouTube', 'E-Қуръан', 'Әвлад луғити',
-           'Мақалиләр амбири', 'Уйғур китаб', 'Фарабий җәмийити', 'Сийрәт журнали', 'Қуръан Кәрим', 'Әвлад картун-филим'],
-      tr: ['Dua ve zikirler', 'Hatim Kur\'an', 'Ewlad Yayınevi', 'Ewlad YouTube', 'E-Kur\'an', 'Ewlad Sözlüğü',
-           'Makaleler Arşivi', 'Uygur Kitap', 'Farabi Derneği', 'Siyer Dergisi', 'Kur\'an-ı Kerim', 'Ewlad Çizgi Film'],
-      en: ['Prayers & Dhikr', 'Quran Khatm', 'Ewlad Publishing', 'Ewlad YouTube', 'E-Quran', 'Ewlad Dictionary',
-           'Articles Archive', 'Uyghur Books', 'Farabi Society', 'Siyer Journal', 'Holy Quran', 'Ewlad Cartoons'],
-      ar: ['الدعاء والذكر', 'ختمة القرآن', 'دار نشر أولاد', 'يوتيوب أولاد', 'القرآن الإلكتروني', 'معجم أولاد',
-           'أرشيف المقالات', 'الكتب الأويغورية', 'جمعية الفارابي', 'مجلة السيرة', 'القرآن الكريم', 'أفلام أولاد الكرتونية']
-    };
-    function wheelLabel(i) { return (LABELS[LANG] || LABELS.ug)[i]; }
+    whenData(function () {   // ui.json + wheel.json yüklenince kurulur (sonu: modülün sonundaki "}, 'menu');")
+    var ITEMS = UI.wheel.items, N = ITEMS.length;
+    // Öğe sayısı, dilim sayısı ve açılar ITEMS.length'ten hesaplanır. Logo altı yazısı: items[i].label (dile göre).
+    // Simge: ilk 12 öğe için icon-N.png (menu.png'den kesilmiş; daire koordinatı WHEEL.icons'ta), yeni öğeler için items[i].icon (kare PNG).
+    function wheelLabel(i) { return loc(ITEMS[i].label); }
+    function iconFile(i) { return ITEMS[i].icon || ('icon-' + i + '.png'); }
     var BASE = SCRIPT_BASE + '../images/wheel/';
-    var ASSET_V = '?v=7';                 // wheel/ dosyaları her değiştiğinde artırın
     function asset(name) { return BASE + name + ASSET_V; }
 
-    origBtns.forEach(function (b) {
+    // Her öğenin bağlantı düğmesi: sitenin kendi .mbtn öğesi; sitede karşılığı olmayan yeni öğeler için oluşturulur
+    function createBtn(i) {
+      var it = ITEMS[i];
+      var b = el('div', 'mbtn ' + (it.href ? 'mbtn-active' : 'mbtn-inactive'));
+      b.style.position = 'absolute';
+      b.style.borderRadius = '50%';
+      if (it.href) {
+        var a = el('a', null, { href: it.href, target: '_blank', rel: 'noopener' });
+        a.textContent = it.href;
+        b.appendChild(a);
+      }
+      return b;
+    }
+    var btns = [];
+    for (var bi = 0; bi < N; bi++) btns.push(origBtns[bi] || createBtn(bi));
+    btns.forEach(function (b) {
       b.insertBefore(el('span', 'ew-slice', { 'aria-hidden': 'true' }), b.firstChild);
+      $$('a', b).forEach(function (a) { a.setAttribute('draggable', 'false'); });
     });
-    $$('a', menu).forEach(function (a) { a.setAttribute('draggable', 'false'); });
     img.setAttribute('draggable', 'false');
 
     // ---- Okuyan çocuğun arkasında dönen ışık huzmeleri (sabit merkezde) ----
-    var haloWrap = el('div',
-      'tw:absolute tw:z-[1] tw:pointer-events-none tw:left-1/2 tw:top-[77%] tw:w-[30%] tw:aspect-square ' +
-      'tw:-translate-x-1/2 tw:-translate-y-1/2 tw:opacity-0 tw:transition-opacity tw:duration-[1500ms]',
-      { 'aria-hidden': 'true' });
+    var haloWrap = el('div', 'ew-halo-wrap', { 'aria-hidden': 'true' });
     haloWrap.style.clipPath = 'inset(0 0 12.5% 0)';   // huzmeler hero'nun alt kenarından aşağı taşmasın
-    haloWrap.appendChild(el('div', 'ew-halo tw:size-full tw:rounded-full tw:motion-safe:animate-ew-spin-slow'));
+    haloWrap.appendChild(el('div', 'ew-halo'));
     menu.insertBefore(haloWrap, img);
-    function showHalo() { haloWrap.classList.remove('tw:opacity-0'); haloWrap.classList.add('tw:opacity-80'); }
+    function showHalo() { haloWrap.classList.add('ew-on'); }
 
     // ---- "Hepsini gör": tüm siteler kartlarla bir pencerede (düğme + çocuğa tıklama) ----
     var sites = null;
     var hubShift = 0;                     // tam daire modunda göbeğin (çocuk + hilal) aşağı kayması (menu.png pikseli)
     function buildSites() {
-      var overlay = el('div',
-        'ew-sites tw:fixed tw:inset-0 tw:z-[2000] tw:flex tw:items-center tw:justify-center tw:p-4 ' +
-        'tw:bg-[#062a35]/60 tw:backdrop-blur-sm tw:opacity-0 tw:transition-opacity tw:duration-300',
+      var overlay = el('div', 'ew-sites',
         { role: 'dialog', 'aria-modal': 'true', 'aria-label': t('sitesTitle'), hidden: '' });
-      var panel = el('div',
-        'ew-sites-panel tw:relative tw:w-full tw:max-w-[880px] tw:max-h-[88vh] tw:overflow-auto tw:bg-white tw:text-ew-deep ' +
-        'tw:shadow-[0_30px_80px_rgba(0,0,0,.35)] tw:translate-y-4 tw:scale-[.97] tw:transition-transform tw:duration-300 tw:ease-ew-spring');
-      var head = el('div', 'ew-sites-head tw:sticky tw:top-0 tw:z-[1] tw:flex tw:items-center tw:justify-between tw:gap-3 tw:px-5 tw:py-4 tw:bg-white tw:border-b tw:border-[#e2eef1]');
-      var title = el('div', 'tw:text-xl tw:font-bold');
+      var panel = el('div', 'ew-sites-panel');
+      var head = el('div', 'ew-sites-head');
+      var title = el('div', 'ew-sites-title');
       title.textContent = t('sitesTitle');
-      var close = el('button', 'ew-sites-close tw:flex tw:items-center tw:justify-center tw:size-10 tw:p-0 tw:shrink-0 tw:cursor-pointer tw:border-0 tw:bg-[#eef5f7] tw:text-ew-deep tw:transition tw:hover:bg-[#dcebef]',
-        { type: 'button', 'aria-label': t('close') });
+      var close = el('button', 'ew-sites-close', { type: 'button', 'aria-label': t('close') });
       close.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>';
       head.appendChild(title); head.appendChild(close);
-      var grid = el('div', 'ew-sites-grid tw:grid tw:grid-cols-2 tw:sm:grid-cols-3 tw:md:grid-cols-4 tw:gap-3 tw:p-5');
-      // Çarktaki sırayla (sağdan sola): menu_item_11 … 0
-      for (var i = origBtns.length - 1; i >= 0; i--) {
-        var a = $('a', origBtns[i]);
+      var grid = el('div', 'ew-sites-grid');
+      // Çarktaki sırayla (sağdan sola): son öğe … 0
+      for (var i = N - 1; i >= 0; i--) {
+        var a = $('a', btns[i]);
         var href = a && a.getAttribute('href');
-        var card = el(href ? 'a' : 'div',
-          'ew-site-card tw:relative tw:flex tw:flex-col tw:items-center tw:gap-2 tw:p-4 tw:text-center tw:border tw:border-[#e2eef1] ' +
-          'tw:bg-[#f7fbfc] tw:transition tw:duration-200 ' + (href ? 'tw:hover:-translate-y-1 tw:hover:shadow-[0_12px_28px_rgba(15,76,92,.18)] tw:hover:border-ew-teal' : 'tw:opacity-60'),
+        var card = el(href ? 'a' : 'div', 'ew-site-card' + (href ? '' : ' ew-off'),
           href ? { href: href, target: '_blank', rel: 'noopener' } : { 'aria-disabled': 'true' });
-        var logo = el('img', 'tw:size-16 tw:rounded-full tw:shadow-[0_4px_12px_rgba(0,0,0,.18)]', { src: asset('icon-' + i + '.png'), alt: '', loading: 'lazy' });
+        var logo = el('img', 'ew-site-logo', { src: asset('icon-' + i + '.png'), alt: '', loading: 'lazy' });
         logo.onerror = function () { this.style.visibility = 'hidden'; };
-        var name = el('span', 'tw:text-[15px] tw:font-bold tw:text-ew-deep tw:leading-snug', { dir: 'auto' });
+        var name = el('span', 'ew-site-name', { dir: 'auto' });
         name.textContent = wheelLabel(i);
         card.appendChild(logo); card.appendChild(name);
         if (href) {
-          var host = el('span', 'tw:text-xs tw:text-[#5b7f89]', { dir: 'ltr' });
+          var host = el('span', 'ew-site-host', { dir: 'ltr' });
           try { host.textContent = new URL(href, location.href).hostname.replace(/^www\./, ''); } catch (e) { host.textContent = href; }
           card.appendChild(host);
         } else {
-          var soon = el('span', 'ew-soon tw:text-xs tw:font-bold tw:px-2 tw:py-0.5 tw:rounded-full tw:bg-[#ffe08a] tw:text-[#6b4e00]');
+          var soon = el('span', 'ew-soon');
           soon.textContent = t('soon');
           card.appendChild(soon);
         }
@@ -340,15 +403,11 @@
         lastFocus = doc.activeElement;
         overlay.hidden = false;
         doc.documentElement.classList.add('ew-sites-open');
-        requestAnimationFrame(function () {
-          overlay.classList.remove('tw:opacity-0');
-          panel.classList.remove('tw:translate-y-4', 'tw:scale-[.97]');
-        });
+        requestAnimationFrame(function () { overlay.classList.add('ew-show'); });
         close.focus();
       }
       function hide() {
-        overlay.classList.add('tw:opacity-0');
-        panel.classList.add('tw:translate-y-4', 'tw:scale-[.97]');
+        overlay.classList.remove('ew-show');
         doc.documentElement.classList.remove('ew-sites-open');
         setTimeout(function () { overlay.hidden = true; }, MOTION ? 300 : 0);
         if (lastFocus && lastFocus.focus) lastFocus.focus();
@@ -360,19 +419,14 @@
     }
     function openSites() { (sites = sites || buildSites()).open(); }
 
-    var seeAll = el('button',
-      'ew-seeall tw:absolute tw:z-[4] tw:flex tw:items-center tw:justify-center tw:gap-2 tw:px-5 tw:cursor-pointer tw:whitespace-nowrap ' +
-      'tw:border-2 tw:border-white/45 tw:bg-[#14566a]/90 tw:text-white tw:font-bold tw:shadow-[0_6px_16px_rgba(0,0,0,.3)] ' +
-      'tw:transition tw:duration-200 tw:hover:bg-[#1b6c84] tw:hover:border-white/80 tw:active:scale-95',
-      { type: 'button' });
+    var seeAll = el('button', 'ew-seeall', { type: 'button' });
     seeAll.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span></span>';
     seeAll.lastChild.textContent = t('seeAll');
     seeAll.addEventListener('click', openSites);
     top.appendChild(seeAll);
 
     // Çocuğa (hilal + çocuk) tıklayınca da aynı pencere
-    var hubBtn = el('button', 'ew-hubbtn tw:absolute tw:z-[3] tw:p-0 tw:border-0 tw:bg-transparent tw:cursor-pointer',
-      { type: 'button', 'aria-label': t('seeAll'), title: t('seeAll') });
+    var hubBtn = el('button', 'ew-hubbtn', { type: 'button', 'aria-label': t('seeAll'), title: t('seeAll') });
     hubBtn.addEventListener('click', openSites);
     menu.appendChild(hubBtn);
 
@@ -398,33 +452,22 @@
     var wheelOn = false;
     function staticMode() {
       if (wheelOn) return;
-      var lay = function () {
-        var W = img.clientWidth, H = img.clientHeight, src = img.currentSrc || img.src;
-        origBtns.forEach(function (b) {
-          var s = $('.ew-slice', b);
-          s.style.backgroundImage = 'url("' + src + '")';
-          s.style.backgroundSize = W + 'px ' + H + 'px';
-          s.style.backgroundPosition = (-b.offsetLeft) + 'px ' + (-b.offsetTop) + 'px';
-        });
-      };
-      if (img.complete && img.naturalWidth) lay(); else img.addEventListener('load', lay, { once: true });
-      window.addEventListener('resize', debounce(lay, 150));
-      showHalo();
+      showHalo();                  // çark yok: sitenin kendi menüsü (menu.png) olduğu gibi kalır
     }
     if (!MOTION) { staticMode(); return; }
 
     // ---- Çark parçalarını önceden yükle ----
-    // Dar ekran (telefon): 12 dilimli halka ve 12 logo; geniş ekran: 24 dilim / 24 logo
+    // Dar ekran (telefon): her öğe bir kez; geniş ekran: her öğe karşılıklı iki kez (ui.json → slotsPerItem)
     var COMPACT = (menu.clientWidth || img.clientWidth) < 700;
     // FULL: çarkın tamamı (tam daire) mı, yoksa üst yarısı mı gösterilsin. Telefonda da yarım daire
     // gösteriliyor; true yapılırsa tam daire açılır ve göbek (çocuk + hilal + yazı) dairenin merkezine kayar.
     var FULL = false, HUB_DY = FULL ? 150 : 0;
-    var RING_FILE = COMPACT ? 'ring-12.webp' : 'ring.webp';
-    var urls = [asset(RING_FILE), asset('hub.png'), asset('legs.png'), asset('head.png')];
-    WHEEL.icons.forEach(function (_, i) { urls.push(asset('icon-' + i + '.png')); });
-    var pending = urls.length, failed = false;
-    urls.forEach(function (u) {
+    var urls = [asset('ring.webp'), asset('hub.png'), asset('legs.png'), asset('head.png')];
+    for (var ui = 0; ui < N; ui++) urls.push(asset(iconFile(ui)));
+    var ringSrc = null, pending = urls.length, failed = false;
+    urls.forEach(function (u, idx) {
       var im = new Image();
+      if (idx === 0) ringSrc = im;
       im.onload = function () { if (--pending === 0 && !failed) whenReady(img, buildWheel); };
       im.onerror = function () { if (!failed) { failed = true; staticMode(); } };
       im.src = u;
@@ -440,11 +483,11 @@
                  altındaki yazının ağırlığıyla dik durur ve çarkın ivmesine göre hafifçe sallanır.
        Ortadaki ay + kitap okuyan çocuk (orijinal görselin merkezi) sabit göbektir. */
     function buildWheel() {
-      // Çarkın bandı: iç kenar (sabit göbek) → dış kenar. tools/build-wheel.mjs'teki RING_INNER / RING_OUTER ile aynı.
-      var R_HUB = 316, R_EDGE = 520;
+      // Çarkın bandı: iç kenar (sabit göbek) → dış kenar (wheel.json → ring; araçtaki RING_INNER / RING_OUTER).
+      var R_HUB = WHEEL.ring.inner, R_EDGE = WHEEL.ring.outer;
       // Dar ekranda (telefon): her logo bir kez (12 yer, 30° arayla), logolar/yazılar ~1.55 kat büyük →
-      // okunur ve parmakla basılabilir. Geniş ekranda: 24 yer (her logo karşılıklı iki kez, 15° arayla).
-      var SLOTS = COMPACT ? 12 : 24, SLOT_DEG = 360 / SLOTS, Z = COMPACT ? 1.55 : 1;
+      // okunur ve parmakla basılabilir. Geniş ekranda: her logo karşılıklı iki kez (24 yer, 15° arayla).
+      var PER = UI.wheel.slotsPerItem, SLOTS = N * (COMPACT ? PER.compact : PER.normal), SLOT_DEG = 360 / SLOTS, Z = COMPACT ? 1.55 : 1;
       var GW = 120 * Z, GH = 94 * Z, ICON = 72 * Z, FONT = 13.5 * (COMPACT ? 1.9 : 1);
       // RP: logo merkezlerinin yarıçapı. Logo + altındaki yazı (grup) bandın içinde ortalanır:
       // grubun üstü dış çembere, altı iç çembere eşit uzaklıkta. (Masaüstündeki değer ≈ 436.)
@@ -452,11 +495,11 @@
       var RP = (R_HUB + R_EDGE) / 2 + GROUP / 2 - ICON / 2 + (COMPACT ? 0 : 8);
       var DEG = Math.PI / 180;
 
-      var clip = el('div', 'tw:absolute tw:top-0 tw:z-[2] tw:overflow-hidden tw:opacity-0 tw:transition-opacity tw:duration-500');
-      var wheel = el('div', 'ew-wheel tw:absolute tw:top-0', { 'aria-hidden': 'true' });
-      // orijinal dilimlerden üretilmiş temiz halka (ikon/yazısız, 24 dilim, kenar çizgisi yok)
-      var ringImg = el('img', 'tw:absolute tw:pointer-events-none tw:select-none',
-        { src: asset(RING_FILE), alt: '', draggable: 'false' });
+      var clip = el('div', 'ew-clip');
+      var wheel = el('div', 'ew-wheel', { 'aria-hidden': 'true' });
+      // Halka dokusu: 24 dilimde ring.webp doğrudan; başka dilim sayısında aynı dilim tuvale çarpıtılarak çizilir
+      var ringImg = (ringSrc && makeRing(ringSrc, SLOTS, R_HUB / R_EDGE, COMPACT ? 1024 : 1440)) ||
+        el('img', 'ew-ring-img', { src: asset('ring.webp'), alt: '', draggable: 'false' });
       wheel.appendChild(ringImg);
       // Üzerine gelinen dilim (sektör): halkayla birlikte döner, koyu bir örtüyle vurgulanır.
       // Yolu (SVG, halka koordinatlarında) önceden hesaplanır; her dilim için bir kez.
@@ -478,10 +521,10 @@
       // Kabinler
       var cabins = [];
       for (var j = 0; j < SLOTS; j++) {
-        var i = 11 - (j % 12);                 // dilim j ↔ menu_item_(11-j) (sağdan sola)
-        var dup = j >= 12;
-        var icon = WHEEL.icons[i];
-        var b = dup ? origBtns[i].cloneNode(true) : origBtns[i];
+        var i = N - 1 - (j % N);               // dilim j ↔ menu_item_(N-1-j) (sağdan sola)
+        var dup = j >= N;                      // ikinci tur: karşılıklı kopya (aria-hidden)
+        var icon = WHEEL.icons[i];             // yalnızca menu.png'den kesilen ilk 12'de var; yeni öğelerde undefined
+        var b = dup ? btns[i].cloneNode(true) : btns[i];
         if (dup) $$('a', b).forEach(function (a) { a.tabIndex = -1; });
         var cab = el('div', 'ew-cabin', dup ? { 'aria-hidden': 'true' } : null);
         var gondola = el('div', 'ew-gondola');
@@ -490,7 +533,7 @@
         if (dup) lab.setAttribute('aria-hidden', 'true');
         lab.textContent = txt;
         var slice = $('.ew-slice', b);
-        slice.style.backgroundImage = 'url("' + asset('icon-' + i + '.png') + '")';
+        slice.style.backgroundImage = 'url("' + asset(iconFile(i)) + '")';
         gondola.appendChild(b);
         gondola.appendChild(lab);
         cab.appendChild(gondola);
@@ -504,24 +547,24 @@
 
       menu.appendChild(clip);
       // Sabit göbek + dizden sallanan bacaklar + boyundan kalkıp inen baş (hilalde oturan çocuk)
-      var hub = el('img', 'tw:absolute tw:z-[2] tw:pointer-events-none tw:select-none',
+      var hub = el('img', 'ew-sprite',
         { src: asset('hub.png'), alt: '', draggable: 'false', 'aria-hidden': 'true' });
-      var legs = el('img', 'ew-legs tw:absolute tw:z-[2] tw:pointer-events-none tw:select-none',
+      var legs = el('img', 'ew-legs ew-sprite',
         { src: asset('legs.png'), alt: '', draggable: 'false', 'aria-hidden': 'true' });
-      var head = el('img', 'ew-head tw:absolute tw:z-[2] tw:pointer-events-none tw:select-none',
+      var head = el('img', 'ew-head ew-sprite',
         { src: asset('head.png'), alt: '', draggable: 'false', 'aria-hidden': 'true' });
       menu.appendChild(hub);
       menu.appendChild(legs);
       menu.appendChild(head);
+      // Çocuğun altındaki yazı: hub.png'den silindi, dile göre gerçek metin olarak çizilir (ui.json → strings.hubTitle)
+      var hubText = el('div', 'ew-hubtext', { 'aria-hidden': 'true', lang: LABEL_LANG[LANG] || 'ug', dir: RTL_LANG ? 'rtl' : 'ltr' });
+      hubText.textContent = t('hubTitle');
+      menu.appendChild(hubText);
 
       // Ok düğmeleri: dış çemberin sol-alt ve sağ-alt ucunda. Üzerine gelince çark o yöne döner,
       // tıklayınca o yöne bir itme verir. (dir −1: saat yönünün tersi → öğeler sola akar)
       var arrows = [-1, 1].map(function (dir) {
-        var btn = el('button',
-          'ew-arrow tw:absolute tw:z-[4] tw:flex tw:items-center tw:justify-center tw:rounded-full tw:p-0 tw:cursor-pointer ' +
-          'tw:border-2 tw:border-white/45 tw:bg-[#14566a]/90 tw:text-white tw:shadow-[0_6px_16px_rgba(0,0,0,.3)] ' +
-          'tw:transition tw:duration-200 tw:hover:scale-110 tw:hover:bg-[#1b6c84] tw:hover:border-white/80 tw:active:scale-95',
-          { type: 'button', 'aria-label': t(dir < 0 ? 'turnLeft' : 'turnRight') });
+        var btn = el('button', 'ew-arrow', { type: 'button', 'aria-label': t(dir < 0 ? 'turnLeft' : 'turnRight') });
         btn.innerHTML = '<svg width="55%" height="55%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">' +
           (dir < 0 ? '<path d="M15 5l-7 7 7 7"/>' : '<path d="M9 5l7 7-7 7"/>') + '</svg>';
         btn.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') steer = dir; });
@@ -531,12 +574,15 @@
         return { el: btn, dir: dir };
       });
       menu.classList.add('ew-wheel-on');
+      top.classList.add('ew-wheel-top');         // çemberin altı ile çizgi arasındaki boşluğu kapatır (CSS)
       img.classList.add('ew-center');            // orijinal görsel yalnızca sabit merkezi göstersin
       wheelOn = true;
 
       var geo = { W: 0, H: 0, s: 1, M: 0, cx: 0, cy: 0, rin: 0, rout: 0 };
       function layout() {
-        var W = img.clientWidth, H = img.clientHeight;
+        // H: kırpma yüksekliği. Kesirli piksellerde (ör. 712.5) clientHeight aşağı yuvarlar ve çemberle çizgi arasında
+        // ince bir aralık kalır; bu yüzden gerçek yüksekliği yukarı yuvarlıyoruz.
+        var W = img.clientWidth, H = Math.ceil(img.getBoundingClientRect().height - .01);
         if (!W || !H) return;
         // M: kırpma kutusunun yan payı. 0 olmalı — pay, overflow:clip desteklemeyen tarayıcılarda
         // (ör. Safari < 16) sayfayı yana taşırıyor. Logolar menü genişliğinin içinde kalıyor.
@@ -565,6 +611,14 @@
           haloWrap.style.top = (540 + HUB_DY) * k + 'px';
           haloWrap.style.clipPath = 'none';
         }
+        var ht = WHEEL.hubText;                  // [merkez x, merkez y, en geniş genişlik] (menu.png px)
+        if (ht) {
+          hubText.style.left = ht[0] * k + 'px';
+          hubText.style.top = ht[1] * k + dy + 'px';
+          hubText.style.fontSize = 40 * k + 'px';
+          var tw = hubText.scrollWidth, maxW = ht[2] * k;
+          if (tw > maxW) hubText.style.fontSize = (40 * k * maxW / tw) + 'px';   // uzun metin sığsın
+        }
         var hd = WHEEL.head;
         head.style.left = hd[0] * k + 'px'; head.style.top = hd[1] * k + dy + 'px';
         head.style.width = hd[2] * k + 'px'; head.style.height = hd[3] * k + 'px';
@@ -577,8 +631,6 @@
           a.el.style.left = (menu.offsetLeft + W / 2 + a.dir * (R_HUB + R_EDGE) / 2 * s - ab / 2) + 'px';
           a.el.style.top = (top.offsetHeight + 8 * s) + 'px';
         });
-        menu.style.setProperty('--ew-rin', (WHEEL.rIn - 3) * (W / WHEEL.size[0]) + 'px');
-        menu.style.setProperty('--ew-cdy', (WHEEL.center[1] - WHEEL.size[1]) * (W / WHEEL.size[0]) + 'px');
         cabins.forEach(function (c) {
           var gw = GW * s, gh = GH * s, d = ICON * s;
           c.el.style.width = gw + 'px';
@@ -587,13 +639,19 @@
           c.gondola.style.top = '0px';
           c.gondola.style.height = gh + 'px';
           // yuvarlak logo (bağlantı) — merkezi pime takılı
-          var ic = c.icon, R = ic[2], f = d / (2 * R);
-          var x0 = Math.floor(ic[0] - R - 1), y0 = Math.floor(ic[1] - R - 1), sz = Math.ceil(2 * R + 3);
           c.btn.style.left = (gw - d) / 2 + 'px';
           c.btn.style.top = '0px';
           c.btn.style.width = c.btn.style.height = d + 'px';
-          c.slice.style.backgroundSize = sz * f + 'px ' + sz * f + 'px';
-          c.slice.style.backgroundPosition = (x0 - (ic[0] - R)) * f + 'px ' + (y0 - (ic[1] - R)) * f + 'px';
+          var ic = c.icon;
+          if (ic) {                              // menu.png'den kesilmiş logo: daire koordinatına göre ölçeklenir
+            var R = ic[2], f = d / (2 * R);
+            var x0 = Math.floor(ic[0] - R - 1), y0 = Math.floor(ic[1] - R - 1), sz = Math.ceil(2 * R + 3);
+            c.slice.style.backgroundSize = sz * f + 'px ' + sz * f + 'px';
+            c.slice.style.backgroundPosition = (x0 - (ic[0] - R)) * f + 'px ' + (y0 - (ic[1] - R)) * f + 'px';
+          } else {                               // yeni öğe: kare PNG, daireyi doldurur
+            c.slice.style.backgroundSize = 'cover';
+            c.slice.style.backgroundPosition = 'center';
+          }
           // yazı — logonun hemen altında tek satır, onunla birlikte asılı
           c.label.style.top = (ICON + 3) * s + 'px';
           c.label.style.fontSize = FONT * s + 'px';
@@ -601,6 +659,7 @@
       }
       hubShift = HUB_DY;
       layout();
+      if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(layout);   // yazı tipi yüklenince hub yazısı yeniden sığdırılır
       window.addEventListener('resize', debounce(layout, 150));
       placeExtras();
       // hero yüksekliği font yüklenince / tarih satırı kırılınca değişebilir → okları yeniden yerleştir
@@ -676,7 +735,7 @@
       var G = 3000, INERTIA = .35, DAMP = 2.4, WIND = 55, MAXPHI = .7;   // MAXPHI ≈ 40°: kabin tamponu
       var prevAngle = 0, wS = 0, aS = 0, clock = 0;
 
-      clip.classList.remove('tw:opacity-0');
+      clip.classList.add('ew-ready');
       showHalo();
       runWhileVisible(top, function (dtMs) {
         var dt = Math.min(.05, dtMs / 1000);
@@ -739,6 +798,7 @@
       });
 
     }
+    }, 'menu');
   });
 
   /* ------------------------------------------------------------------ */
@@ -755,16 +815,16 @@
       if (!img) return;
 
       // Görsel + parlama katmanı aynı kapta süzülsün diye sarmalanır
-      var floater = el('span', 'ew-floater tw:relative tw:block');
+      var floater = el('span', 'ew-floater');
       icon.insertBefore(floater, img);
       floater.appendChild(img);
 
-      var mask = el('span', 'ew-iconmask tw:absolute tw:inset-0 tw:pointer-events-none tw:overflow-hidden', { 'aria-hidden': 'true' });
+      var mask = el('span', 'ew-iconmask', { 'aria-hidden': 'true' });
       mask.style.setProperty('--ew-mask', 'url("' + (img.currentSrc || img.src) + '")');
-      var glare = el('span', 'ew-glare tw:absolute tw:inset-0 tw:opacity-0 tw:transition-opacity tw:duration-300 tw:group-hover:opacity-100');
+      var glare = el('span', 'ew-glare');
       mask.appendChild(glare);
       floater.appendChild(mask);
-      icon.classList.add('tw:group');
+      icon.classList.add('ew-group');
 
       if (FINE) {
         if (MOTION) icon.classList.add('ew-tilt');
@@ -785,7 +845,7 @@
       if (MOTION) {
         it.addEventListener('pointerdown', function (e) {
           var r = mask.getBoundingClientRect();
-          var dot = el('span', 'tw:absolute tw:size-5 tw:-ml-2.5 tw:-mt-2.5 tw:rounded-full tw:bg-white/70 tw:animate-ew-ripple');
+          var dot = el('span', 'ew-ripple-dot');
           dot.style.left = (e.clientX - r.left) + 'px';
           dot.style.top = (e.clientY - r.top) + 'px';
           mask.appendChild(dot);
@@ -799,7 +859,7 @@
 
     // Arka planda yükselen Uygur harfleri — "harfler nesilden nesile"
     var LETTERS = 'ئا ئە ب پ ت ج چ خ د ر ز ژ س ش غ ف ق ك گ ڭ ل م ن ھ ئو ئۇ ئۆ ئۈ ۋ ئې ئى ي'.split(' ');
-    var cv = el('canvas', 'tw:absolute tw:inset-0 tw:size-full tw:pointer-events-none', { 'aria-hidden': 'true' });
+    var cv = el('canvas', 'ew-letters', { 'aria-hidden': 'true' });
     apps.insertBefore(cv, apps.firstChild);
     var size = fitCanvas(cv), parts = [];
 
@@ -852,26 +912,22 @@
     var body = modal && $('.modal-body', modal);
     if (!frame || !body) return;
 
-    var loader = el('div',
-      'tw:absolute tw:inset-0 tw:z-10 tw:flex tw:flex-col tw:items-center tw:justify-center tw:gap-4 ' +
-      'tw:bg-white tw:text-ew-deep tw:transition-opacity tw:duration-300 tw:opacity-0 tw:pointer-events-none',
-      { 'aria-live': 'polite' });
-    var spinner = el('div', 'tw:size-12 tw:rounded-full tw:border-4 tw:border-ew-teal/25 tw:border-t-ew-teal tw:motion-safe:animate-ew-spin');
-    var txt = el('div', 'tw:text-base');
-    txt.textContent = t('loading');
+    var loader = el('div', 'ew-loader', { 'aria-live': 'polite' });
+    var spinner = el('div', 'ew-spinner');
+    var txt = el('div', 'ew-loader-text');
     loader.appendChild(spinner);
     loader.appendChild(txt);
     body.appendChild(loader);
 
     var timer;
     function show() {
-      loader.classList.remove('tw:opacity-0', 'tw:pointer-events-none');
+      loader.classList.add('ew-on');
       clearTimeout(timer);
       timer = setTimeout(hide, 10000);
     }
     function hide() {
       clearTimeout(timer);
-      loader.classList.add('tw:opacity-0', 'tw:pointer-events-none');
+      loader.classList.remove('ew-on');
     }
     // iframe yüksekliğini içeriğe uydur: sitenin iframe'i 440px'e sabit, popup.php içeriği ise ~600–700px →
     // mağaza düğmeleri ve paylaşım bölümü kesiliyordu. Pencere ekrana sığacak kadar; fazlası iframe içinde kayar.
@@ -900,13 +956,13 @@
     /* ---- Uygulama kartları: iframe yerine assets/data/apps.json'dan çizilir ----
        popup.php içeriğinin (görsel, açıklama, indirme/mağaza bağlantıları, paylaşım) verisi JSON'da tutulur.
        Veri yüklenemezse ya da kimlik bulunamazsa eski iframe akışı (popup.php) aynen çalışır. */
-    var DATA = null, card = null, native = false;
+    var DATA = null, card = null, head = null, headTitle = null, native = false;
     var DATA_URL = SCRIPT_BASE + '../data/apps.json';
     var ASSET_ROOT = SCRIPT_BASE + '../';            // …/assets/ (görseller: images/apps/…)
     // Ug dışındaki dillerde: "ئەۋلاد ئەپ دېتاللىرى:" başlığı, "تاقاش" düğmesi ve simge altı uygulama adları
-    // (canlı site bunları çevirmiyor; metinler I18N ve apps.json içinde)
+    // (canlı site bunları çevirmiyor; metinler ui.json ve apps.json içinde)
     function applyAppTexts() {
-      if (LANG === 'ug') return;
+      if (LANG === 'ug' || !UI) return;
       var closeBtn = $('.modal-footer button', modal);
       if (closeBtn) closeBtn.textContent = t('close');
       var appsTitle = $('.apps .item-title');
@@ -920,11 +976,9 @@
         if (im) im.setAttribute('alt', name);
       });
     }
-    applyAppTexts();
+    whenData(function () { txt.textContent = t('loading'); applyAppTexts(); }, 'modal-i18n');
     try {
-      fetch(DATA_URL).then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (d) { DATA = d && d.apps ? d : null; applyAppTexts(); })
-        .catch(function () {});
+      getJSON(DATA_URL).then(function (d) { DATA = d && d.apps ? d : null; applyAppTexts(); }).catch(function () {});
     } catch (e) {}
 
     function findApp(id) {
@@ -955,7 +1009,6 @@
       card.textContent = '';
 
       card.appendChild(el('img', 'ew-app-img', { src: ASSET_ROOT + app.image, alt: '', width: '132', height: '132' }));
-      card.appendChild(textEl('h4', 'ew-app-title', loc(app.title)));
       loc(app.description).forEach(function (p) { card.appendChild(textEl('p', 'ew-app-desc', p)); });
 
       var acts = el('div', 'ew-app-actions');
@@ -1017,6 +1070,20 @@
         card = el('div', 'ew-app', { lang: LABEL_LANG[LANG] || 'ug', dir: RTL_LANG ? 'rtl' : 'ltr' });
         body.insertBefore(card, body.firstChild);
       }
+      // Başlık: uygulamanın adı + X düğmesi. Sitenin modalında başlık yok; gövde kayarken yerinde kalır.
+      if (!head) {
+        head = el('div', 'ew-modal-head');
+        headTitle = el('div', 'ew-modal-title');
+        var x = el('button', 'ew-modal-close', { type: 'button', 'data-bs-dismiss': 'modal', 'aria-label': t('close') });
+        x.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+        head.appendChild(headTitle);
+        head.appendChild(x);
+        body.parentNode.insertBefore(head, body);
+      }
+      head.setAttribute('dir', RTL_LANG ? 'rtl' : 'ltr');
+      head.setAttribute('lang', LABEL_LANG[LANG] || 'ug');
+      headTitle.textContent = loc(app.title);
+      head.style.display = '';
       renderApp(app);
       native = true;
       frame.style.display = 'none';
@@ -1040,6 +1107,7 @@
       if (native) return;                            // kart açılıyor: iframe/yükleyici yok
       frame.style.display = '';
       if (card) card.style.display = 'none';
+      if (head) head.style.display = 'none';
       frame.style.height = BASE_H + 'px';
       show();
     });

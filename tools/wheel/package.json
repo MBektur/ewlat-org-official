@@ -1,0 +1,10 @@
+{
+  "name": "ewlat-wheel-tool",
+  "private": true,
+  "description": "Yalnızca menu.png değişirse çark görsellerini yeniden üretmek için (siteyi çalıştırmak için gerekmez)",
+  "type": "module",
+  "dependencies": {
+    "pngjs": "^7.0.0",
+    "sharp": "^0.33.5"
+  }
+}

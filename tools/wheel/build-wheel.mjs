@@ -2,18 +2,22 @@
 /**
  * menu.png → dönme dolap parçaları
  *
- *   node tools/build-wheel.mjs [kaynak menu.png] [çıktı klasörü]
+ *   (bir kez)  cd tools/wheel && npm install
+ *   (kökten)   node tools/wheel/build-wheel.mjs [kaynak menu.png] [çıktı klasörü]
  *   (varsayılan: preview/assets/images/menu.png → assets/images/wheel)
  *
+ * Siteyi çalıştırmak/geliştirmek için GEREKMEZ: çıktılar commit'lidir. Yalnızca menu.png değişirse çalıştırın.
+ *
  * Üretilenler:
- *   ring.webp    Çarkın dönen dilim halkası: orijinal bir dilimden (ikon/yazı temizlenmiş), 24 özdeş dilim, 360°
+ *   ring.webp    Çarkın dönen dilim halkası: orijinal bir dilimden (ikon/yazı temizlenmiş), 24 özdeş dilim, 360°.
+ *                Başka dilim sayıları (12 ya da yeni öğeler) tarayıcıda bu dosyadan üretilir (motion.js → makeRing).
  *   icon-N.png   N. bağlantının (menu_item_N) yuvarlak logosu — saydam, yumuşak kenarlı
- *   hub.png      Sabit göbek: hilal + kitap okuyan çocuk + "ئەۋلاد گۇرۇپپىسى" (alt bacakları ve başı silinmiş)
+ *   hub.png      Sabit göbek: hilal + kitap okuyan çocuk (alt bacakları, başı ve alttaki yazı silinmiş; yazı dile göre JS ile çizilir)
  *   legs.png     Çocuğun alt bacakları (dizden aşağı) — dizden sallanır
  *   head.png     Çocuğun başı (takke + yüz) — boyundan hafifçe kalkıp iner
- *   wheel.json   Konumlar (menu.png pikselleri) — motion.js'deki WHEEL sabitine kopyalanır
+ *   wheel.json   Konumlar (menu.png pikselleri) ve halka yarıçapları — motion.js doğrudan okur (elle kopyalama yok)
  *
- * Yazılar resim değil, gerçek metindir (motion.js → WHEEL.labels).
+ * Yazılar resim değil, gerçek metindir (assets/data/ui.json → wheel.items[].label).
  * menu.png değişirse bu aracı yeniden çalıştırın.
  */
 import fs from 'node:fs';
@@ -205,8 +209,12 @@ writePNG('head.png', ex1 - ex0 + 1, ey1 - ey0 + 1, (x, y) => headSprite[(ey0 + y
 
 /* ---------- 3. Sabit göbek (alt bacaklar ve baş silinmiş) ---------- */
 const hx0 = Math.floor(CX - R_HUB), hy0 = Math.floor(CY - R_HUB), hx1 = Math.ceil(CX + R_HUB), hy1 = H - 1;
+// Çocuğun altındaki "ئەۋلاد گۇرۇپپىسى" yazısı (menu.png'de Y ≥ 628) göbekten silinir: motion.js onu dile göre
+// gerçek metin olarak çizer (ui.json → strings.hubTitle). hubText = yazının [merkez x, merkez y, genişlik] (menu.png px).
+const HUB_TEXT_Y = 628, HUB_TEXT = [698.5, 656, 314];
 writePNG('hub.png', hx1 - hx0 + 1, hy1 - hy0 + 1, (x, y) => {
   const X = hx0 + x, Y = hy0 + y;
+  if (Y >= HUB_TEXT_Y) return null;
   const r = Math.hypot(X + .5 - CX, Y + .5 - CY);
   if (r > R_HUB) return null;
   if (head[Y * W + X]) return behind(X, Y);
@@ -277,15 +285,13 @@ function texSample(k, row, u) {
   return o;
 }
 // Çıktı: kare, dış kenar = RING_SIZE/2. Bant (orijinalde 393→704) iç/dış oranı korunarak sıkıştırılır:
-// iç kenar = RING_INNER (menü 1120px ölçeğinde 316), dış kenar = RING_OUTER — motion.js R_HUB / R_EDGE ile aynı olmalı.
+// iç kenar = RING_INNER (menü 1120px ölçeğinde 316), dış kenar = RING_OUTER — wheel.json → ring olarak yazılır, motion.js okur.
 const RING_SIZE = 1440, RING_INNER = 316, RING_OUTER = 520;
 const RING_BORDER = 3;                                      // kenar çizgisi kalınlığı (halka görselinin pikseli; 3 ≈ 2px ekranda)
 const RING_WEDGE = 5;                                       // örnek alınan orijinal dilim (0 = sağ, 11 = sol)
 const ro = RING_SIZE / 2, ri = ro * RING_INNER / RING_OUTER;
-// Dilim sayısı motion.js'teki SLOTS ile aynı olmalı (logo = dilim ortası):
-//   ring.webp    → 24 dilim (geniş ekran, her logo karşılıklı iki kez)
-//   ring-12.webp → 12 dilim (dar ekran / COMPACT, her logo bir kez)
-for (const [SLOTS, FILE] of [[24, 'ring.webp'], [12, 'ring-12.webp']]) {
+// Kaynak halka 24 dilimli (motion.js makeRing bu sayıya göre çarpıtır; değiştirmeyin).
+for (const [SLOTS, FILE] of [[24, 'ring.webp']]) {
 const SLOT = 360 / SLOTS;
 const ring = Buffer.alloc(RING_SIZE * RING_SIZE * 4);
 for (let y = 0; y < RING_SIZE; y++) for (let x = 0; x < RING_SIZE; x++) {
@@ -317,7 +323,7 @@ await sharp(ring, { raw: { width: RING_SIZE, height: RING_SIZE, channels: 4 } })
 
 const data = {
   size: [W, H], icons, ring: { inner: RING_INNER, outer: RING_OUTER },
-  hub: [hx0, hy0, hx1 - hx0 + 1, hy1 - hy0 + 1],
+  hub: [hx0, hy0, hx1 - hx0 + 1, hy1 - hy0 + 1], hubText: HUB_TEXT,
   legs: [lx0, ly0, lx1 - lx0 + 1, ly1 - ly0 + 1], knee: KNEE,
   head: [ex0, ey0, ex1 - ex0 + 1, ey1 - ey0 + 1], neck: NECK
 };
