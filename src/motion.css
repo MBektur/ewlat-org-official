@@ -260,6 +260,11 @@ html.ew-js .apps { position: relative; }
 html.ew-js .apps > .item-title,
 html.ew-js .apps > .items { position: relative; z-index: 1; }
 html.ew-js .apps .icon { position: relative; }
+/* Boşluklar: app.css'teki `* { padding: 0 }` sıfırlamasını geçmek için sınıf seçicisi kullanılır.
+   Alt boşluk: etiketler footer bandına yapışmasın. Satır aralığı: iki satıra kırılan etiketler birbirine girmesin. */
+.apps { padding-bottom: 28px; }
+.apps .items { row-gap: 22px; }
+.apps .item-text { line-height: 1.5; padding-top: 2px; }
 
 html.ew-motion .apps .item { opacity: 0; }
 html.ew-motion .apps .item.ew-in {
