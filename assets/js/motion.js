@@ -170,8 +170,8 @@
     nodes.forEach(function (n) { io.observe(n); });
   }
 
-  /* Çark tıkırtısı: hızlı dönüşte her dilim geçişinde çevirmeli telefon tarzı bir "tık" (Web Audio, ses dosyası yok).
-     AudioContext, sayfadaki ilk tıklamada oluşturulur (tarayıcılar ses için kullanıcı hareketi ister). */
+  /* Çark tıkırtısı: boşta dönerken ve hızlı çevirmede her dilim geçişinde çevirmeli telefon tarzı bir "tık" (Web Audio, ses dosyası yok).
+     AudioContext, sayfadaki ilk kullanıcı etkileşiminde oluşturulur/açılır (tarayıcılar ses için kullanıcı hareketi ister). */
   var ratchet = (function () {
     var ctx = null, noise = null;
     function unlock() {
@@ -185,7 +185,9 @@
           for (var i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 6);
           noise = buf;
         }
-        if (ctx.state === 'suspended') ctx.resume();
+        if (ctx.state === 'suspended') {
+          ctx.resume().catch(function () {});
+        }
       } catch (e) { /* ses yoksa sessiz devam */ }
     }
     // Çevirmeli telefonun numara çevirme diski gibi: mekanik vuruş + metalik çınlama + kontak tıkı
@@ -213,8 +215,42 @@
         src.connect(bp); bp.connect(out); src.start(t);
       } catch (e) { /* yoksay */ }
     }
-    document.addEventListener('pointerdown', unlock, true);
-    return { click: click };
+    var lastHoverT = 0;
+    // Hover sesi: menü dilimlerine veya etkileşimli öğelere fareyle gelindiğinde hafif, zarif dokunsal "tık"
+    function hover(vol) {
+      if (!ctx || ctx.state !== 'running') return;
+      try {
+        var t = ctx.currentTime;
+        if (t - lastHoverT < .035) return;
+        lastHoverT = t;
+        var out = ctx.createGain(); out.gain.value = vol || .025; out.connect(ctx.destination);
+        // 1) hafif ve daha tiz mekanik vuruş (480Hz → 300Hz)
+        var o = ctx.createOscillator(), e = ctx.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(480, t); o.frequency.exponentialRampToValueAtTime(300, t + .016);
+        e.gain.setValueAtTime(.4, t); e.gain.exponentialRampToValueAtTime(.001, t + .018);
+        o.connect(e); e.connect(out); o.start(t); o.stop(t + .02);
+        // 2) zarif çınlama
+        var o2 = ctx.createOscillator(), e2 = ctx.createGain();
+        o2.type = 'sine'; o2.frequency.value = 2400;
+        e2.gain.setValueAtTime(.15, t); e2.gain.exponentialRampToValueAtTime(.001, t + .022);
+        o2.connect(e2); e2.connect(out); o2.start(t); o2.stop(t + .025);
+        // 3) kontak çıtırtısı
+        if (noise) {
+          var src = ctx.createBufferSource(); src.buffer = noise;
+          var bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 4200; bp.Q.value = 3.5;
+          var ng = ctx.createGain(); ng.gain.setValueAtTime(.2, t); ng.gain.exponentialRampToValueAtTime(.001, t + .015);
+          src.connect(bp); bp.connect(ng); ng.connect(out);
+          src.start(t);
+        }
+      } catch (e) { /* yoksay */ }
+    }
+    var unlockEvents = ['pointerdown', 'touchstart', 'click', 'keydown', 'wheel', 'scroll'];
+    unlockEvents.forEach(function (ev) {
+      window.addEventListener(ev, unlock, { capture: true, passive: true });
+    });
+    try { unlock(); } catch (e) {}
+    return { click: click, hover: hover, unlock: unlock };
   })();
 
   /* ------------------------------------------------------------------ */
@@ -423,6 +459,7 @@
     seeAll.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span></span>';
     seeAll.lastChild.textContent = t('seeAll');
     seeAll.addEventListener('click', openSites);
+    seeAll.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') ratchet.hover(); });
     top.appendChild(seeAll);
 
     // Çocuğa (hilal + çocuk) tıklayınca da aynı pencere
@@ -567,7 +604,9 @@
         var btn = el('button', 'ew-arrow', { type: 'button', 'aria-label': t(dir < 0 ? 'turnLeft' : 'turnRight') });
         btn.innerHTML = '<svg width="55%" height="55%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">' +
           (dir < 0 ? '<path d="M15 5l-7 7 7 7"/>' : '<path d="M9 5l7 7-7 7"/>') + '</svg>';
-        btn.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') steer = dir; });
+        btn.addEventListener('pointerenter', function (e) {
+          if (e.pointerType === 'mouse') { steer = dir; ratchet.hover(); }
+        });
         btn.addEventListener('pointerleave', function () { steer = 0; });
         btn.addEventListener('click', function () { omega = dir * KICK; });
         top.appendChild(btn);
@@ -666,7 +705,7 @@
       if ('ResizeObserver' in window) new ResizeObserver(debounce(layout, 50)).observe(top);
 
       // ---- Dönüş: açılışta çevirme → yavaş, sürekli dönüş ----
-      var SOUND_MIN = 60, travel = 0;   // deg/s: bunun üzerinde dilim geçtikçe tık sesi (yavaş dönüşte sessiz)
+      var SOUND_MIN = 0.5, travel = 0;  // deg/s: çark dönerken (boşta yavaş dönüş dahil) her dilim geçişinde tık sesi
       var AUTO = 3.2;              // derece/sn (pozitif = saat yönü: kabinler soldan sağa akar)
       var angle = 0, omega = 150;
       var hover = false, drag = null, steer = 0, STEER_SPEED = 40, KICK = 150;
@@ -685,6 +724,7 @@
       // Fare çarkın üzerindeyken yavaşlayıp durur → bağlantılara rahat tıklanır
       // ptr: sektör vurgusu için son fare konumu (yalnızca halkanın üzerindeyken)
       var ptr = null;
+      menu.addEventListener('pointerenter', ratchet.unlock);
       menu.addEventListener('pointermove', function (e) {
         if (e.pointerType !== 'mouse') return;
         var on = inRing(polar(e));
@@ -751,11 +791,11 @@
         var wPrev = wS;
         wS += (wNow - wS) * .35;
         aS += (clamp((wS - wPrev) / dt, -6, 6) - aS) * .25;
-        // Tık sesi: yeterince hızlı dönüşte her SLOT_DEG kadar yol bir dilim geçişi sayılır
+        // Tık sesi: boşta dönerken ve hızlı dönüşte her SLOT_DEG kadar yol bir dilim geçişi sayılır
         var spd = Math.abs(wS) / DEG;                          // deg/s (yumuşatılmış)
         if (spd > SOUND_MIN) {
           travel += spd * dt;
-          var vol = clamp((spd - SOUND_MIN) / 120, .02, 1) * .05;   // hız arttıkça sesi yükselt (çok ince, kısık tık)
+          var vol = 0.035 + clamp(spd / 120, 0, 1) * .025;     // boşta zarif/kısık tık (~0.035), hızlandıkça toklaşır (~0.06)
           while (travel >= SLOT_DEG) { travel -= SLOT_DEG; ratchet.click(vol); }
         } else {
           travel = 0;
@@ -771,6 +811,7 @@
         if (sec !== lastSector) {
           lastSector = sec;
           sectorPath.setAttribute('d', sec < 0 ? '' : sectorPaths[sec]);
+          if (sec >= 0) ratchet.hover();
         }
 
         var s = geo.s, Rp = RP * s, L = 45 * s, g = G * s, A = angle * DEG;   // L: pim → ağırlık merkezi (yazı tarafında)
@@ -828,6 +869,9 @@
 
       if (FINE) {
         if (MOTION) icon.classList.add('ew-tilt');
+        it.addEventListener('pointerenter', function (e) {
+          if (e.pointerType === 'mouse') ratchet.hover();
+        });
         icon.addEventListener('mousemove', function (e) {
           var r = icon.getBoundingClientRect();
           var px = clamp((e.clientX - r.left) / r.width, 0, 1), py = clamp((e.clientY - r.top) / r.height, 0, 1);
