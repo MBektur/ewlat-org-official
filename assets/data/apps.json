@@ -39,27 +39,90 @@
   "apps": [
     {
       "id": 1,
-      "title": "«ئەۋلاد ئىملا» ىۇمشاق دېتالى",
+      "title": {
+        "ug": "«ئەۋلاد ئىملا» ىۇمشاق دېتالى",
+        "ul": "«Ewlad Imla» yumshaq détali",
+        "uc": "«Әвлад Имла» юмшақ детали",
+        "tr": "«Ewlad İmla» Yazılımı",
+        "en": "\"Ewlad Spelling\" Software",
+        "ar": "برنامج «إملاء أولاد»"
+      },
       "image": "images/apps/1.png",
-      "description": [
-        "«ئەۋلاد ئىملا» ىۇمشاق دېتالى «مىكروسوفت ئوفىس ۋورد» مۇھىتىدا ئۇىغۇرچە ئىملا تەكشۈرىدىغان كوررېكتور بولۇپ، ئىملا تەكشۈرۈش، ئىملا توغرىلاش، ىېڭى سۆز قوشۇش ۋە كونا ىېزىق، ىېڭى ىېزىق، سىلاۋىىان ىېزىقلىرىنى ئۆزئارا ئالماشتۇرۇش، كونا خەت نۇسخىلىرىنى ىۇنىكودقا ئۆزگەرتىش قاتارلىق ئىقتىدارلارغا ئىگە. 2019 - ىىلى 10 – ئاىدا ھەقسىز تارقىتىلدى."
-      ],
+      "description": {
+        "ug": [
+          "«ئەۋلاد ئىملا» ىۇمشاق دېتالى «مىكروسوفت ئوفىس ۋورد» مۇھىتىدا ئۇىغۇرچە ئىملا تەكشۈرىدىغان كوررېكتور بولۇپ، ئىملا تەكشۈرۈش، ئىملا توغرىلاش، ىېڭى سۆز قوشۇش ۋە كونا ىېزىق، ىېڭى ىېزىق، سىلاۋىىان ىېزىقلىرىنى ئۆزئارا ئالماشتۇرۇش، كونا خەت نۇسخىلىرىنى ىۇنىكودقا ئۆزگەرتىش قاتارلىق ئىقتىدارلارغا ئىگە. 2019 - ىىلى 10 – ئاىدا ھەقسىز تارقىتىلدى."
+        ],
+        "ul": [
+          "«Ewlad Imla» yumshaq détali «Mikrosoft Ofis Word» muhitida Uyghurche imla tekshüridighan korrektor bolup, imla tekshürüsh, imla toghrilash, yéngi söz qoshush we kona yéziq, yéngi yéziq, slawyan yéziqlirini özara almashturush, kona xet nusxilirini unikodqa özgertish qatarliq iqtidarlargha ige. 2019-yili 10-ayda heqsiz tarqitildi."
+        ],
+        "uc": [
+          "«Әвлад Имла» юмшақ детали «Майкрософт Офис Ворд» муһитида Уйғурчә имла тәкшүридиған корректор болуп, имла тәкшүрүш, имла тоғрилаш, йеңи сөз қошуш вә кона йезиқ, йеңи йезиқ, славян йезиқлирини өзара алмаштуруш, кона хәт нусхилирини юникодқа өзгәртиш қатарлиқ иқтидарларға игә. 2019-йили 10-айда һәқсиз тарқитилди."
+        ],
+        "tr": [
+          "«Ewlad İmla» yazılımı, Microsoft Office Word ortamında Uygurca yazım denetimi yapan bir düzeltici olup yazım denetimi, yazım düzeltme, yeni sözcük ekleme ile eski yazı, yeni yazı ve Slav (Kiril) yazılarını birbirine dönüştürme, eski yazı biçimlerini Unicode’a çevirme gibi işlevlere sahiptir. Ekim 2019’da ücretsiz olarak yayımlandı."
+        ],
+        "en": [
+          "The \"Ewlad Spelling\" software is a proofreader that checks Uyghur spelling inside Microsoft Office Word. It offers spell checking, spelling correction, adding new words, converting between the old script, the new script and Slavic (Cyrillic) scripts, and converting legacy font encodings to Unicode. It was released free of charge in October 2019."
+        ],
+        "ar": [
+          "برنامج «إملاء أولاد» مدقق إملائي للغة الأويغورية يعمل داخل «مايكروسوفت أوفيس وورد»، ويوفّر التدقيق الإملائي وتصحيح الإملاء وإضافة كلمات جديدة والتحويل بين الكتابة القديمة والحديثة والسلافية (السيريلية)، وتحويل نسخ الخطوط القديمة إلى يونيكود. صدر مجانًا في أكتوبر 2019."
+        ]
+      },
       "downloads": [
         {
-          "label": "چۈشۈرۈش",
+          "label": {
+            "ug": "چۈشۈرۈش",
+            "ul": "Chüshürüsh",
+            "uc": "Чүшүрүш",
+            "tr": "İndir",
+            "en": "Download",
+            "ar": "تنزيل"
+          },
           "url": "https://www.uyghurkitap.com/book.php?id=fb2cfc113d09fc7504f87030395b5334"
         }
       ],
       "stores": [],
-      "website": null
+      "website": null,
+      "name": {
+        "ug": "ئەۋلاد ئىملا",
+        "ul": "Ewlad Imla",
+        "uc": "Әвлад Имла",
+        "tr": "Ewlad İmla",
+        "en": "Ewlad Spelling",
+        "ar": "إملاء أولاد"
+      }
     },
     {
       "id": 2,
-      "title": "«ئاۋازلىق (دىنىى) ئەسەرلەر» ئەپ دېتالى",
+      "title": {
+        "ug": "«ئاۋازلىق (دىنىى) ئەسەرلەر» ئەپ دېتالى",
+        "ul": "«Awazliq (Diniy) Eserler» ep détali",
+        "uc": "«Авазлиқ (Диний) Әсәрләр» әп детали",
+        "tr": "«Sesli (Dinî) Eserler» Uygulaması",
+        "en": "\"Audio (Religious) Works\" App",
+        "ar": "تطبيق «الأعمال الصوتية (الدينية)»"
+      },
       "image": "images/apps/2.png",
-      "description": [
-        "«ئاۋازلىق (دىنىى) ئەسەرلەر» ئەپ دېتالى 2018 – ىىلى تارقىتىلغان بولۇپ، ئۇىغۇرچە ئاۋازلىق دىنىى ئەسەرلەر جەمگاھى ھېسابلىنىدۇ. ھازىرغىچە 50 پارچىدەك ئەسەر كىرگۈزۈلدى، تۈرلۈك دىنىى ئەسەرلەر ئاۋازغا ئېلىنىپ داۋاملىق تولۇقلىنىدۇ."
-      ],
+      "description": {
+        "ug": [
+          "«ئاۋازلىق (دىنىى) ئەسەرلەر» ئەپ دېتالى 2018 – ىىلى تارقىتىلغان بولۇپ، ئۇىغۇرچە ئاۋازلىق دىنىى ئەسەرلەر جەمگاھى ھېسابلىنىدۇ. ھازىرغىچە 50 پارچىدەك ئەسەر كىرگۈزۈلدى، تۈرلۈك دىنىى ئەسەرلەر ئاۋازغا ئېلىنىپ داۋاملىق تولۇقلىنىدۇ."
+        ],
+        "ul": [
+          "«Awazliq (Diniy) Eserler» ep détali 2018-yili tarqitilghan bolup, Uyghurche awazliq diniy eserler jemgahi hésablinidu. Hazirghiche 50 parchidek eser kirgüzüldi, türlük diniy eserler awazgha élinip dawamliq toluqlinidu."
+        ],
+        "uc": [
+          "«Авазлиқ (Диний) Әсәрләр» әп детали 2018-йили тарқитилған болуп, Уйғурчә авазлиқ диний әсәрләр җәмгаһи һесаблиниду. Һазирғичә 50 парчидәк әсәр киргүзүлди, түрлүк диний әсәрләр авазға елинип давамлиқ толуқлиниду."
+        ],
+        "tr": [
+          "«Sesli (Dinî) Eserler» uygulaması 2018 yılında yayımlanmış olup Uygurca sesli dinî eserlerin buluşma noktasıdır. Şimdiye kadar yaklaşık 50 eser eklendi; çeşitli dinî eserler seslendirilerek sürekli ekleniyor."
+        ],
+        "en": [
+          "The \"Audio (Religious) Works\" app was released in 2018 and is a home for Uyghur audio religious works. About 50 works have been added so far, and more religious works are recorded and added continually."
+        ],
+        "ar": [
+          "صدر تطبيق «الأعمال الصوتية (الدينية)» عام 2018، وهو منصة للأعمال الدينية الصوتية بالأويغورية. أُضيف حتى الآن نحو 50 عملًا، وتُسجَّل أعمال دينية متنوعة وتُضاف باستمرار."
+        ]
+      },
       "downloads": [],
       "stores": [
         {
@@ -71,15 +134,47 @@
           "url": "https://play.google.com/store/apps/details?id=com.ewlat.eserler&hl=tr&gl=US"
         }
       ],
-      "website": null
+      "website": null,
+      "name": {
+        "ug": "ئاۋازلىق ئەسەرلەر",
+        "ul": "Awazliq Eserler",
+        "uc": "Авазлиқ Әсәрләр",
+        "tr": "Sesli Eserler",
+        "en": "Audio Works",
+        "ar": "الأعمال الصوتية"
+      }
     },
     {
       "id": 3,
-      "title": "كۆپ تىللىق ئەۋلاد لۇغىتى",
+      "title": {
+        "ug": "كۆپ تىللىق ئەۋلاد لۇغىتى",
+        "ul": "Köp tilliq Ewlad lughiti",
+        "uc": "Көп тиллиқ Әвлад луғити",
+        "tr": "Çok Dilli Ewlad Sözlüğü",
+        "en": "Multilingual Ewlad Dictionary",
+        "ar": "قاموس أولاد متعدد اللغات"
+      },
       "image": "images/apps/3.png",
-      "description": [
-        "بۇ كۆپ تىللىق لۇغەتكە ئۇىغۇرچە، چاغاتاىچە، تۈركچە، ئەرەبچە، ئىنگلىزچە، ىاپونچە، رۇسچە، نورۋېگچە، قازاقچە، خەنزۇچەبۇ كۆپ تىللىق لۇغەتكە ئۇىغۇرچە، تۈركچە، ئەرەبچە، ئىنگلىزچە، چاغاتاىچە، ىاپونچە، رۇسچە، قازاقچە، خىتاىچە قاتارلىق ئوندىن ئارتۇق تىل كىرگۈزۈلگەن بولۇپ، سۆزلۈك زاپىسى ئىنتاىىن مول. لۇغەتلەرنىڭ كۆپ قىسمى تاق ۋە قوش ىۆنىلىشلىك. بۇنىڭدىن سىرت ھەرقاىسى تىللارنىڭ ئىزاھلىق لۇغەتلىرى، ئۇىغۇرچە ماقال - تەمسىللەر، تۇراقلىق ئىبارىلەر، ئىدىىوملار، ىەر – جاى ناملىرى، دىنىى ئاتالغۇلار، كىشى ئىسىملىرى ۋە ھەر خىل كەسپىى لۇغەتلەر مەۋجۇت. ئومۇمىى لۇغەت سانى 80 خىلغا ىېتىدۇ. 2019 - ىىلى 10 – ئاىدا ھەقسىز تارقىتىلدى. ئەۋلاد لۇغىتىدىن توردا پاىدىلىنىدىغانلار ئۈچۈن تور بېتىمۇ مەۋجۇت:"
-      ],
+      "description": {
+        "ug": [
+          "بۇ كۆپ تىللىق لۇغەتكە ئۇىغۇرچە، چاغاتاىچە، تۈركچە، ئەرەبچە، ئىنگلىزچە، ىاپونچە، رۇسچە، نورۋېگچە، قازاقچە، خەنزۇچەبۇ كۆپ تىللىق لۇغەتكە ئۇىغۇرچە، تۈركچە، ئەرەبچە، ئىنگلىزچە، چاغاتاىچە، ىاپونچە، رۇسچە، قازاقچە، خىتاىچە قاتارلىق ئوندىن ئارتۇق تىل كىرگۈزۈلگەن بولۇپ، سۆزلۈك زاپىسى ئىنتاىىن مول. لۇغەتلەرنىڭ كۆپ قىسمى تاق ۋە قوش ىۆنىلىشلىك. بۇنىڭدىن سىرت ھەرقاىسى تىللارنىڭ ئىزاھلىق لۇغەتلىرى، ئۇىغۇرچە ماقال - تەمسىللەر، تۇراقلىق ئىبارىلەر، ئىدىىوملار، ىەر – جاى ناملىرى، دىنىى ئاتالغۇلار، كىشى ئىسىملىرى ۋە ھەر خىل كەسپىى لۇغەتلەر مەۋجۇت. ئومۇمىى لۇغەت سانى 80 خىلغا ىېتىدۇ. 2019 - ىىلى 10 – ئاىدا ھەقسىز تارقىتىلدى. ئەۋلاد لۇغىتىدىن توردا پاىدىلىنىدىغانلار ئۈچۈن تور بېتىمۇ مەۋجۇت:"
+        ],
+        "ul": [
+          "Bu köp tilliq lughetke Uyghurche, Chaghataiche, Türkche, Erebche, Ingilizche, Yaponche, Rusche, Norwégche, Qazaqche, Xenzuche qatarliq ondin artuq til kirgüzülgen bolup, sözlük zapisi intayin mol. Lughetlerning köp qismi taq we qosh yönilishlik. Buningdin sirt herqaysi tillarning izahliq lughetliri, Uyghurche maqal-temsiller, turaqliq ibariler, idiyomlar, yer-jay namliri, diniy atalghular, kishi isimliri we her xil kespiy lughetler mewjut. Omumiy lughet sani 80 xilgha yétidu. 2019-yili 10-ayda heqsiz tarqitildi. Ewlad lughitidin torda paydilinidighanlar üchün tor bétimu mewjut:"
+        ],
+        "uc": [
+          "Бу көп тиллиқ луғәткә Уйғурчә, Чағатайчә, Түркчә, Әрәбчә, Инглизчә, Япончә, Русчә, Норвегчә, Қазақчә, Хәнзучә қатарлиқ он дин артуқ тил киргүзүлгән болуп, сөзлүк записи интайин мол. Луғәтләрниң көп қисми тақ вә қош йөнилишлик. Бундин сирт һәрқайси тилларниң изаһлиқ луғәтлири, Уйғурчә мақал-тәмсилләр, туралиқ ибарилар, идиомилар, йәр-җай намлири, диний аталғулар, киши исимлири вә һәр хил кәспий луғәтләр мәвҗут. Умумий луғәт сани 80 хилға йетиду. 2019-йили 10-айда һәқсиз тарқитилди. Әвлад луғитидин торда пайдилинидиғанлар үчүн тор бети му мәвҗут:"
+        ],
+        "tr": [
+          "Bu çok dilli sözlükte Uygurca, Çağatayca, Türkçe, Arapça, İngilizce, Japonca, Rusça, Norveççe, Kazakça, Çince gibi on’dan fazla dil yer alır ve kelime hazinesi oldukça zengindir. Sözlüklerin çoğu çift yönlüdür. Bunun dışında çeşitli dillerin açıklamalı sözlükleri, Uygurca atasözleri, deyimler, kalıp ifadeler, yer adları, dinî terimler, kişi adları ve çeşitli alan sözlükleri bulunur. Toplam sözlük sayısı 80’e ulaşır. Ekim 2019’da ücretsiz olarak yayımlandı. Ewlad Sözlüğü’nü çevrimiçi kullanmak isteyenler için web sitesi de mevcuttur:"
+        ],
+        "en": [
+          "This multilingual dictionary covers more than ten languages, including Uyghur, Chagatai, Turkish, Arabic, English, Japanese, Russian, Norwegian, Kazakh and Chinese, and its vocabulary is very rich. Most dictionaries work in both directions. It also includes explanatory dictionaries of various languages, Uyghur proverbs, idioms, set phrases, place names, religious terms, personal names and many specialist dictionaries — about 80 in total. It was released free of charge in October 2019. A website is also available for those who want to use the Ewlad Dictionary online:"
+        ],
+        "ar": [
+          "يضم هذا القاموس متعدد اللغات أكثر من عشر لغات، منها الأويغورية والتشاغتائية والتركية والعربية والإنجليزية واليابانية والروسية والنرويجية والكازاخية والصينية، وثروته اللغوية غنية جدًا، ومعظم معاجمه ثنائية الاتجاه. كما يضم معاجم تفسيرية لمختلف اللغات وأمثالًا أويغورية وتعابير ثابتة وأسماء أماكن ومصطلحات دينية وأسماء أشخاص ومعاجم متخصصة، ويبلغ مجموعها نحو 80 معجمًا. صدر مجانًا في أكتوبر 2019. ويتوفر موقع إلكتروني لمن يرغب في استخدام قاموس أولاد عبر الإنترنت:"
+        ]
+      },
       "downloads": [],
       "stores": [
         {
@@ -94,15 +189,47 @@
       "website": {
         "label": "www.ewlat.biz",
         "url": "https://www.ewlat.biz"
+      },
+      "name": {
+        "ug": "ئەۋلاد لۇغىتى",
+        "ul": "Ewlad Lughiti",
+        "uc": "Әвлад Луғити",
+        "tr": "Ewlad Sözlüğü",
+        "en": "Ewlad Dictionary",
+        "ar": "قاموس أولاد"
       }
     },
     {
       "id": 4,
-      "title": "«ئاۋازلىق كىتاب» ئەپ دېتالى",
+      "title": {
+        "ug": "«ئاۋازلىق كىتاب» ئەپ دېتالى",
+        "ul": "«Awazliq Kitab» ep détali",
+        "uc": "«Авазлиқ Китаб» әп детали",
+        "tr": "«Sesli Kitap» Uygulaması",
+        "en": "\"Audiobook\" App",
+        "ar": "تطبيق «الكتاب الصوتي»"
+      },
       "image": "images/apps/4.png",
-      "description": [
-        "«ئاۋازلىق كىتاب» ئەپ دېتالى كۆپىنچىسى ۋەتىنىمىزدە ئاۋازغا ئېلىنغان ھەرقاىسى ژانىردىكى ئۇىغۇرچە ئاۋازلىق كىتابلار جەمگاھى ھېسابلىنىدۇ. ھازىرغىچە 120 دىن ئارتۇق ئاۋازلىق كىتاب كىرگۈزۈلدى؛ ىېقىندا قوشۇلىدىغان 250 پارچىدەك ئەسەرنىڭ تەىىارلىق خىزمىتى داۋاملىشىۋاتىدۇ. ئەسەرلەر قەرەللىك ھالدا تولۇقلىنىپ تۇرىدۇ. بۇ ئەپ دېتالىمىز 2014 – ىىلىدىن بۇىان ئاكتىپ خىزمەت قىلىپ كەلمەكتە."
-      ],
+      "description": {
+        "ug": [
+          "«ئاۋازلىق كىتاب» ئەپ دېتالى كۆپىنچىسى ۋەتىنىمىزدە ئاۋازغا ئېلىنغان ھەرقاىسى ژانىردىكى ئۇىغۇرچە ئاۋازلىق كىتابلار جەمگاھى ھېسابلىنىدۇ. ھازىرغىچە 120 دىن ئارتۇق ئاۋازلىق كىتاب كىرگۈزۈلدى؛ ىېقىندا قوشۇلىدىغان 250 پارچىدەك ئەسەرنىڭ تەىىارلىق خىزمىتى داۋاملىشىۋاتىدۇ. ئەسەرلەر قەرەللىك ھالدا تولۇقلىنىپ تۇرىدۇ. بۇ ئەپ دېتالىمىز 2014 – ىىلىدىن بۇىان ئاكتىپ خىزمەت قىلىپ كەلمەكتە."
+        ],
+        "ul": [
+          "«Awazliq Kitab» ep détali köpinchisi wetinimizde awazgha élinghan herqaysi zhanirdiki Uyghurche awazliq kitablar jemgahi hésablinidu. Hazirghiche 120 din artuq awazliq kitab kirgüzüldi; yéqinda qoshulidighan 250 parchidek eserning teyyarliq xizmiti dawamlishiwatidu. Eserler qerellik halda toluqlinip turidu. Bu ep détalimiz 2014-yilidin buyan aktip xizmet qilip kelmekte."
+        ],
+        "uc": [
+          "«Авазлиқ Китаб» әп детали көпинчиси ветинимизда авазға елинған һәрқайси жанирдики Уйғурчә авазлиқ китаблар җәмгаһи һесаблиниду. Һазирғичә 120 дин артуқ авазлиқ китаб киргүзүлди; йеқинда қошулидиған 250 парчидәк әсәрниң тәйярлиқ хизмити давамлишиватиду. Әсәрләр қәрәллик һалда толуқлинип туриду. Бу әп деталимиз 2014-йилидин буян актип хизмәт қилип кәлмәктә."
+        ],
+        "tr": [
+          "«Sesli Kitap» uygulaması, çoğunlukla vatanımızda seslendirilmiş her türden Uygurca sesli kitabın buluşma noktasıdır. Şimdiye kadar 120’den fazla sesli kitap eklendi; yakında eklenecek yaklaşık 250 eserin hazırlık çalışmaları sürüyor. Eserler düzenli olarak tamamlanıyor. Uygulamamız 2014’ten beri aktif olarak hizmet vermektedir."
+        ],
+        "en": [
+          "The \"Audiobook\" app is a home for Uyghur audiobooks of every genre, most of them recorded in our homeland. More than 120 audiobooks have been added so far, and preparation of about 250 more works to be added soon is under way. New works are added regularly. The app has been actively serving since 2014."
+        ],
+        "ar": [
+          "يُعدّ تطبيق «الكتاب الصوتي» منصة للكتب الصوتية الأويغورية من مختلف الأنواع، وكثير منها سُجّل في وطننا. أُضيف حتى الآن أكثر من 120 كتابًا صوتيًا، ويجري العمل على تجهيز نحو 250 عملًا ستُضاف قريبًا. وتُستكمل الأعمال بانتظام. ويعمل التطبيق بنشاط منذ عام 2014."
+        ]
+      },
       "downloads": [],
       "stores": [
         {
@@ -114,15 +241,47 @@
           "url": "https://play.google.com/store/apps/details?id=com.ewlat.awazliq&hl=tr&gl=US"
         }
       ],
-      "website": null
+      "website": null,
+      "name": {
+        "ug": "ئاۋازلىق كىتاب",
+        "ul": "Awazliq Kitab",
+        "uc": "Авазлиқ Китаб",
+        "tr": "Sesli Kitap",
+        "en": "Audiobook",
+        "ar": "كتاب صوتي"
+      }
     },
     {
       "id": 5,
-      "title": "«قۇرئان كەرىم» ئەپ دېتالى",
+      "title": {
+        "ug": "«قۇرئان كەرىم» ئەپ دېتالى",
+        "ul": "«Qur’an Kerim» ep détali",
+        "uc": "«Қуръан Кәрим» әп детали",
+        "tr": "«Kur’an-ı Kerim» Uygulaması",
+        "en": "\"Holy Quran\" App",
+        "ar": "تطبيق «القرآن الكريم»"
+      },
       "image": "images/apps/5.png",
-      "description": [
-        "«قۇرئان كەرىم» ئەپ دېتالى قۇرئان كەرىم، قۇرئان كەرىمنىڭ 20 دىن ئارتۇق تىلدىكى تەرجىمىسى، ئۇىغۇرچە تۆت خىل تەرجىمىسى، ئۇىغۇرچە تەپسىرلەر، ئۇىغۇر ۋە باشقا مىللەت قارىىلىرى قىرائەتلىرى، ئۇىغۇرچە تەرجىمىسىنىڭ ئوخشىمىغان بىرقانچە ئاۋازلىق نۇسخىسى، 10 دىن ئارتۇق تىلدىكى قۇرئان كەرىم تەرجىمىسىنىڭ ئاۋازلىق نۇسخىسى، تەجۋىد قاتارلىق قۇرئان كەرىمگە ئالاقىدار مەزمۇنلارنى ئۆز ئىچىگە ئالغان بولۇپ، تەرجىمە ۋە تەپسىرلەرنى سېلىشتۇرۇش، سۆز ئىزدەش ۋە كۆچۈرۈشكە ئوخشاش كۆپ خىل ئىقتىدارلار سەپلەنگەن، پۈتۈنلەى ئۇىغۇرچە لاىىھەلەنگەن كۆركەم ۋە قوللىنىشچان ئەپ دېتال. بۇ ئەپ دېتالىمىز 2016 - ىىلىدىن باشلاپ ئاكتىپ خىزمەت قىلىپ كەلمەكتە. قۇرئان كەرىم ئەپ دېتالىدىن توردا پاىدىلىنىدىغانلار ئۈچۈن تور بېتىمۇ مەۋجۇت:"
-      ],
+      "description": {
+        "ug": [
+          "«قۇرئان كەرىم» ئەپ دېتالى قۇرئان كەرىم، قۇرئان كەرىمنىڭ 20 دىن ئارتۇق تىلدىكى تەرجىمىسى، ئۇىغۇرچە تۆت خىل تەرجىمىسى، ئۇىغۇرچە تەپسىرلەر، ئۇىغۇر ۋە باشقا مىللەت قارىىلىرى قىرائەتلىرى، ئۇىغۇرچە تەرجىمىسىنىڭ ئوخشىمىغان بىرقانچە ئاۋازلىق نۇسخىسى، 10 دىن ئارتۇق تىلدىكى قۇرئان كەرىم تەرجىمىسىنىڭ ئاۋازلىق نۇسخىسى، تەجۋىد قاتارلىق قۇرئان كەرىمگە ئالاقىدار مەزمۇنلارنى ئۆز ئىچىگە ئالغان بولۇپ، تەرجىمە ۋە تەپسىرلەرنى سېلىشتۇرۇش، سۆز ئىزدەش ۋە كۆچۈرۈشكە ئوخشاش كۆپ خىل ئىقتىدارلار سەپلەنگەن، پۈتۈنلەى ئۇىغۇرچە لاىىھەلەنگەن كۆركەم ۋە قوللىنىشچان ئەپ دېتال. بۇ ئەپ دېتالىمىز 2016 - ىىلىدىن باشلاپ ئاكتىپ خىزمەت قىلىپ كەلمەكتە. قۇرئان كەرىم ئەپ دېتالىدىن توردا پاىدىلىنىدىغانلار ئۈچۈن تور بېتىمۇ مەۋجۇت:"
+        ],
+        "ul": [
+          "«Qur’an Kerim» ep détali Qur’an Kerim, Qur’an Kerimning 20 din artuq tildiki terjimisi, Uyghurche töt xil terjimisi, Uyghurche tepsirler, Uyghur we bashqa millet qariliri qiraetliri, Uyghurche terjimisining oxshimighan birqanche awazliq nusxisi, 10 din artuq tildiki Qur’an Kerim terjimisining awazliq nusxisi, tejwid qatarliq Qur’an Kerimge alaqidar mezmunlarni öz ichige alghan bolup, terjime we tepsirlerni sélishturush, söz izdesh we köchürüshke oxshash köp xil iqtidarlar seplengen, pütünley Uyghurche layihelengen körkem we qollinishchan ep détal. Bu ep détalimiz 2016-yilidin bashlap aktip xizmet qilip kelmekte. Qur’an Kerim ep détalidin torda paydilinidighanlar üchün tor bétimu mewjut:"
+        ],
+        "uc": [
+          "«Қуръан Кәрим» әп детали Қуръан Кәрим, Қуръан Кәримниң 20 дин артуқ тилдики тәрҗимиси, Уйғурчә төт хил тәрҗимиси, Уйғурчә тәпсирләр, Уйғур вә башқа милләт қарилири қираәтлири, Уйғурчә тәрҗимисиниң охшимиған бирқанчә авазлиқ нусхиси, 10 дин артуқ тилдики Қуръан Кәрим тәрҗимисиниң авазлиқ нусхиси, тәҗвид қатарлиқ Қуръан Кәримгә алақидар мәзмунларни өз ичигә алған болуп, тәрҗимә вә тәпсирләрни селиштуруш, сөз издәш вә көчүрүшкә охшаш көп хил иқтидарлар сәпләнгән, пүтүнләй Уйғурчә лайиһәләнгән көркәм вә қоллинишчан әп детал. Бу әп деталимиз 2016-йилидин башлап актип хизмәт қилип кәлмәктә. Қуръан Кәрим әп деталидин торда пайдилинидиғанлар үчүн тор бети му мәвҗут:"
+        ],
+        "tr": [
+          "«Kur’an-ı Kerim» uygulaması; Kur’an-ı Kerim’i, 20’den fazla dildeki mealini, dört farklı Uygurca mealini, Uygurca tefsirleri, Uygur ve diğer milletlerden kârilerin kıraatlerini, Uygurca mealin farklı seslendirmelerini, 10’dan fazla dildeki mealin sesli sürümünü, tecvid gibi Kur’an’la ilgili içerikleri barındırır. Meal ve tefsirleri karşılaştırma, kelime arama ve kopyalama gibi birçok işlev sunar; tamamen Uygurca tasarlanmış, şık ve kullanışlı bir uygulamadır. Uygulamamız 2016’dan beri aktif olarak hizmet vermektedir. Kur’an-ı Kerim uygulamasını çevrimiçi kullanmak isteyenler için web sitesi de mevcuttur:"
+        ],
+        "en": [
+          "The \"Holy Quran\" app contains the Holy Quran, its translations in more than 20 languages, four different Uyghur translations, Uyghur commentaries, recitations by Uyghur and other reciters, several audio versions of the Uyghur translation, audio versions of translations in more than 10 languages, tajweed and other Quran-related content. It offers many features such as comparing translations and commentaries, searching for words and copying text, and is a beautiful, easy-to-use app designed entirely in Uyghur. It has been actively serving since 2016. A website is also available for those who want to use the Holy Quran app online:"
+        ],
+        "ar": [
+          "يضم تطبيق «القرآن الكريم» القرآن الكريم وترجماته إلى أكثر من 20 لغة، وأربع ترجمات أويغورية مختلفة، وتفاسير بالأويغورية، وقراءات لقرّاء من الأويغور ومن شعوب أخرى، وعدة نسخ صوتية للترجمة الأويغورية، ونسخًا صوتية لترجمات بأكثر من 10 لغات، وأحكام التجويد وغيرها من المحتوى المتعلق بالقرآن الكريم. ويوفّر ميزات متعددة مثل مقارنة الترجمات والتفاسير والبحث عن الكلمات والنسخ، وهو تطبيق جميل وسهل الاستخدام صُمّم بالكامل بالأويغورية. ويعمل بنشاط منذ عام 2016. ويتوفر موقع إلكتروني لمن يرغب في استخدام التطبيق عبر الإنترنت:"
+        ]
+      },
       "downloads": [],
       "stores": [
         {
@@ -137,15 +296,47 @@
       "website": {
         "label": "www.qurankerim.com",
         "url": "https://www.qurankerim.com"
+      },
+      "name": {
+        "ug": "قۇرئان كەرىم",
+        "ul": "Qur’an Kerim",
+        "uc": "Қуръан Кәрим",
+        "tr": "Kur’an-ı Kerim",
+        "en": "Holy Quran",
+        "ar": "القرآن الكريم"
       }
     },
     {
       "id": 6,
-      "title": "«ئەۋلاد» ئەپ دېتالى",
+      "title": {
+        "ug": "«ئەۋلاد» ئەپ دېتالى",
+        "ul": "«Ewlad» ep détali",
+        "uc": "«Әвлад» әп детали",
+        "tr": "«Ewlad» Uygulaması",
+        "en": "\"Ewlad\" App",
+        "ar": "تطبيق «أولاد»"
+      },
       "image": "images/apps/6.png",
-      "description": [
-        "««ئەۋلاد» ئەپ دېتالى ئەۋلاد گۇرۇپپىسى تەىىارلىغان، تەرجىمە قىلىپ ئاۋاز بەرگەن بىرقانچە ىۈز قىسىم ئۇىغۇرچە فىلىم ۋە سىن ماتېرىىاللىرىنى ئۆز ئىچىگە ئالغان ئەپ دېتالى بولۇپ، 2014 – ىىلىدىن ھازىرغىچە ئاكتىپ خىزمەت قىلىپ كەلمەكتە. تور بېتىمۇ مەۋجۇت:"
-      ],
+      "description": {
+        "ug": [
+          "«ئەۋلاد» ئەپ دېتالى ئەۋلاد گۇرۇپپىسى تەىىارلىغان، تەرجىمە قىلىپ ئاۋاز بەرگەن بىرقانچە ىۈز قىسىم ئۇىغۇرچە فىلىم ۋە سىن ماتېرىىاللىرىنى ئۆز ئىچىگە ئالغان ئەپ دېتالى بولۇپ، 2014 – ىىلىدىن ھازىرغىچە ئاكتىپ خىزمەت قىلىپ كەلمەكتە. تور بېتىمۇ مەۋجۇت:"
+        ],
+        "ul": [
+          "«Ewlad» ep détali Ewlad guruppisi teyyarlighan, terjime qilip awaz bergen birqanche yüz qisim Uyghurche filim we sin matériyallirini öz ichige alghan ep détali bolup, 2014-yilidin hazirghiche aktip xizmet qilip kelmekte. Tor bétimu mewjut:"
+        ],
+        "uc": [
+          "«Әвлад» әп детали Әвлад гурупписи тәйярлиған, тәрҗимә қилип аваз бәргән бирқанчә йүз қисим Уйғурчә филим вә син материяллирини өз ичигә алған әп детали болуп, 2014-йилидин һазирғичә актип хизмәт қилип кәлмәктә. Тор бети му мәвҗут:"
+        ],
+        "tr": [
+          "«Ewlad» uygulaması, Ewlad grubunun hazırladığı, çevirip seslendirdiği birkaç yüz Uygurca film ve video materyalini içeren bir uygulamadır; 2014’ten bu yana aktif olarak hizmet vermektedir. Web sitesi de mevcuttur:"
+        ],
+        "en": [
+          "The \"Ewlad\" app contains several hundred Uyghur films and videos prepared, translated and dubbed by the Ewlad group, and has been actively serving since 2014. A website is also available:"
+        ],
+        "ar": [
+          "يضم تطبيق «أولاد» بضع مئات من الأفلام ومواد الفيديو الأويغورية التي أعدّتها مجموعة أولاد وترجمتها ودبلجتها، ويعمل بنشاط منذ عام 2014. ويتوفر موقع إلكتروني أيضًا:"
+        ]
+      },
       "downloads": [],
       "stores": [
         {
@@ -160,15 +351,47 @@
       "website": {
         "label": "www.ewlat.net",
         "url": "https://www.ewlat.net"
+      },
+      "name": {
+        "ug": "ئەۋلاد دېتالى",
+        "ul": "Ewlad Détali",
+        "uc": "Әвлад Детали",
+        "tr": "Ewlad Uygulaması",
+        "en": "Ewlad App",
+        "ar": "تطبيق أولاد"
       }
     },
     {
       "id": 7,
-      "title": "«ئۇىغۇرچە قۇرئان» ئەپ دېتالى",
+      "title": {
+        "ug": "«ئۇىغۇرچە قۇرئان» ئەپ دېتالى",
+        "ul": "«Uyghurche Qur’an» ep détali",
+        "uc": "«Уйғурчә Қуръан» әп детали",
+        "tr": "«Uygurca Kur’an» Uygulaması",
+        "en": "\"Uyghur Quran\" App",
+        "ar": "تطبيق «القرآن بالأويغورية»"
+      },
       "image": "images/apps/7.png",
-      "description": [
-        "«ئۇىغۇرچە قۇرئان» ئەپ دېتالى قۇرئان كەرىم ۋە تەرجىمىسىدىنلا پاىدىلىنىشنى خالاىدىغانلار ئۈچۈن تۈزۈلگەن بولۇپ، ئەپ دېتالدىكى قۇرئان كەرىم ئۇىغۇرچە تەرجىمىسى مەرھۇم مۇھەممەد سالىھ داموللاھاجىمغا ئائىت."
-      ],
+      "description": {
+        "ug": [
+          "«ئۇىغۇرچە قۇرئان» ئەپ دېتالى قۇرئان كەرىم ۋە تەرجىمىسىدىنلا پاىدىلىنىشنى خالاىدىغانلار ئۈچۈن تۈزۈلگەن بولۇپ، ئەپ دېتالدىكى قۇرئان كەرىم ئۇىغۇرچە تەرجىمىسى مەرھۇم مۇھەممەد سالىھ داموللاھاجىمغا ئائىت."
+        ],
+        "ul": [
+          "«Uyghurche Qur’an» ep détali Qur’an Kerim we terjimisidinla paydilinishni xalaydighanlar üchün tüzülgen bolup, ep détaldiki Qur’an Kerim Uyghurche terjimisi merhum Muhemmed Salih Damollahajimgha a’it."
+        ],
+        "uc": [
+          "«Уйғурчә Қуръан» әп детали Қуръан Кәрим вә тәрҗимисидинла пайдилинишни халайдиғанлар үчүн түзүлгән болуп, әп деталдики Қуръан Кәрим Уйғурчә тәрҗимиси мәрһум Муһәммәд Салиһ Дамоллаһаҗимға аит."
+        ],
+        "tr": [
+          "«Uygurca Kur’an» uygulaması, yalnızca Kur’an-ı Kerim ve mealinden yararlanmak isteyenler için hazırlanmıştır; uygulamadaki Uygurca meal merhum Muhammed Salih Damollahajim’e aittir."
+        ],
+        "en": [
+          "The \"Uyghur Quran\" app is made for those who only want to use the Holy Quran and its translation; the Uyghur translation in the app belongs to the late Muhammad Salih Damollahajim."
+        ],
+        "ar": [
+          "أُعدّ تطبيق «القرآن بالأويغورية» لمن يرغب في الاستفادة من القرآن الكريم وترجمته فقط، والترجمة الأويغورية فيه للمرحوم محمد صالح داموللاحاجيم."
+        ]
+      },
       "downloads": [],
       "stores": [
         {
@@ -180,7 +403,15 @@
           "url": "https://play.google.com/store/apps/details?id=com.c9.uyghurquran"
         }
       ],
-      "website": null
+      "website": null,
+      "name": {
+        "ug": "ئۇيغۇرچە قۇرئان",
+        "ul": "Uyghurche Qur’an",
+        "uc": "Уйғурчә Қуръан",
+        "tr": "Uygurca Kur’an",
+        "en": "Uyghur Quran",
+        "ar": "القرآن الأويغوري"
+      }
     }
   ]
 }

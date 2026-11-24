@@ -124,22 +124,25 @@ html.ew-js .top { overflow-x: clip; }   /* hero'dan taşan hiçbir şey sayfayı
 html.ew-motion .menu.ew-wheel-on > img.ew-center { opacity: 0; }
 
 /* Çocuğun başı: çoğunlukla kitaba bakar, ara sıra başını kaldırıp yavaşça indirir */
-html.ew-motion .ew-head { animation: ew-head 9s ease-in-out infinite; }
+html.ew-motion .ew-head { animation: ew-head 7s ease-in-out infinite; }
 @keyframes ew-head {
-  0%, 38%   { rotate: 1.5deg; }    /* kitaba bakıyor */
-  48%, 62%  { rotate: -6deg; }     /* başını kaldırıyor */
-  72%, 100% { rotate: 1.5deg; }    /* tekrar kitaba */
+  0%, 30%   { rotate: 3deg; }      /* kitaba bakıyor */
+  40%, 58%  { rotate: -13deg; }    /* başını belirgin şekilde kaldırıyor */
+  68%, 100% { rotate: 3deg; }      /* tekrar kitaba */
 }
 
-/* Hilalde oturan çocuğun bacakları: dizden hafifçe ileri-geri sallanır */
-html.ew-motion .ew-legs { animation: ew-legs 1.6s ease-in-out infinite alternate; }
+/* Hilalde oturan çocuğun bacakları: dizden belirgin şekilde ileri-geri sallanır */
+html.ew-motion .ew-legs { animation: ew-legs 1.3s ease-in-out infinite alternate; }
 @keyframes ew-legs {
-  from { rotate: -3.5deg; }
-  to   { rotate: 3.5deg; }
+  from { rotate: -10deg; }
+  to   { rotate: 10deg; }
 }
 
 /* Dönen iskelet */
 .ew-wheel { rotate: var(--ew-a, 0deg); pointer-events: none; }
+/* Üzerine gelinen dilim: koyu örtü (halkayla birlikte döner; logolar ve yazılar üstte kalır) */
+.ew-sector { position: absolute; pointer-events: none; overflow: visible; }
+.ew-sector path { fill: rgba(3, 30, 40, .42); }
 /* Logolar: pime merkezinden takılı, yazının ağırlığıyla dik durur (konum ve açı JS'ten) */
 .ew-cabin {
   position: absolute;
@@ -166,7 +169,6 @@ html.ew-motion .ew-legs { animation: ew-legs 1.6s ease-in-out infinite alternate
 }
 html.ew-js .menu.ew-wheel-on .ew-slice { opacity: 1; box-shadow: 0 0 0 2px rgba(255, 255, 255, .9), 0 6px 14px rgba(0, 0, 0, .3); }
 html.ew-js .menu.ew-wheel-on .mbtn-inactive .ew-slice { filter: none; }
-html.ew-js .menu.ew-wheel-on .mbtn-inactive:hover .ew-slice { filter: grayscale(.85); }
 
 /* Ok düğmeleri: Bootstrap'in button { border-radius: 0 } kuralını ez (Tailwind utility'leri katmanlı) */
 html.ew-js .top .ew-arrow { border-radius: 50%; line-height: 0; outline-offset: 3px; }
@@ -203,12 +205,10 @@ html.ew-js .menu .mbtn {
   background: transparent;
   transition: transform .5s cubic-bezier(.34, 1.56, .64, 1);
 }
+/* Logo üzerinde hover efekti yok (büyüme/küçülme). Vurgu, arkadaki dilim (.ew-sector) ile yapılır.
+   app.css'teki ".mbtn:hover { transform: scale(0.7) }" kuralını da bu yüzden eziyoruz. */
 html.ew-js .menu .mbtn:hover,
-html.ew-js .menu .mbtn:focus-within {
-  opacity: 1;
-  background: transparent;
-  transform: scale(1.17);
-}
+html.ew-js .menu .mbtn:focus-within,
 html.ew-js .menu.ew-grabbing .mbtn { transform: none; }
 html.ew-js .menu .mbtn-inactive {
   pointer-events: auto;
@@ -224,24 +224,6 @@ html.ew-js .menu .mbtn-inactive {
   transition: opacity .25s ease, box-shadow .35s ease;
 }
 .mbtn-inactive .ew-slice { filter: grayscale(.85) brightness(1.05); }
-html.ew-js .menu:not(.ew-grabbing) .mbtn:hover .ew-slice,
-html.ew-js .mbtn:focus-within .ew-slice {
-  opacity: 1;
-  box-shadow:
-    0 0 0 3px rgba(255, 255, 255, .95),
-    0 0 26px 8px rgba(255, 224, 138, .55),
-    0 14px 26px rgba(0, 0, 0, .35);
-}
-html.ew-js .menu .mbtn::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 236, 170, .9);
-  opacity: 0;
-  pointer-events: none;
-}
-html.ew-motion .menu:not(.ew-grabbing) .mbtn:hover::after { animation: ew-ring-out .9s ease-out; }
 html.ew-js .menu .mbtn a:focus-visible { outline: none; }
 
 /* Okuyan çocuğun arkasındaki ışık huzmeleri */
@@ -309,6 +291,17 @@ html.ew-js #appMpdal .modal-content {
   box-shadow: 0 30px 80px rgba(0, 0, 0, .35);
 }
 html.ew-js #appMpdal .modal-body { position: relative; }
+/* Telefon: modal ekrana sığsın; kaydırma yalnızca gövdede olsun, başlık (yok) ve alt düğme (تاقاش) yerinde kalsın */
+html.ew-js #appMpdal .modal-dialog { max-height: calc(100vh - 1rem); max-height: calc(100dvh - 1rem); }
+html.ew-js #appMpdal .modal-content { max-height: calc(100vh - 1rem); max-height: calc(100dvh - 1rem); min-height: 0; }
+html.ew-js #appMpdal .modal-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+html.ew-js #appMpdal .modal-footer { flex: 0 0 auto; }
 html.ew-motion #appMpdal.fade .modal-dialog {
   opacity: 0;
   transform: translateY(40px) scale(.9);
@@ -329,8 +322,6 @@ html.ew-motion #appMpdal.show .modal-dialog { opacity: 1; transform: none; }
   align-items: center;
   gap: 12px;
   padding: 28px 24px 22px;
-  max-height: calc(100vh - 150px);
-  overflow-y: auto;
   background: #fff;
   color: #0f4c5c;
   font-family: 'EwUKIJ', 'UKIJ', 'uyghur', sans-serif;

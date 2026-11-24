@@ -32,7 +32,7 @@
 	<link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
 	<link rel="stylesheet" href="assets/css/bootstrap.rtl.min.css">
 	<link rel="stylesheet" href="assets/css/app.css?v=3">
-	<link rel="stylesheet" href="../assets/css/motion.css?v=13">
+	<link rel="stylesheet" href="../assets/css/motion.css?v=16">
 	<script src="assets/js/jquery-3.7.1.min.js"></script>
 	<script src="assets/js/UQCal.js"></script>
 	<script src="assets/js/bootstrap.bundle.min.js" defer></script>
@@ -233,7 +233,36 @@
 	<div class="footer"></div>
 
 	<script>
-		var pageLang = 'ug';
+		// Önizleme: dil seçici ?lang=… ile sayfayı yeniden yükler (canlı sitede PHP bunu yapar)
+		var pageLang = (function () {
+			var q = new URLSearchParams(location.search).get('lang');
+			return ['ug', 'ul', 'uc', 'tr', 'en', 'ar'].indexOf(q) >= 0 ? q : 'ug';
+		})();
+		// Seçici kutusu: etiket ve aktif seçenek, o anki dile göre (sabit "ئۇيغۇرچە" yerine)
+		document.addEventListener('DOMContentLoaded', function () {
+			document.documentElement.lang = pageLang;
+			// Canlı sitenin dile göre yaptığı iki şey: slogan çevirisi ve (LTR dillerde) seçicinin sağa hizalanması
+			var tagline = {
+				ug: 'ئەجدادتىن ئەۋلادقا «ئەۋلاد»تىن ئەۋلادقا',
+				ul: 'Ejdadtin Ewladqa «Ewlad»Tin Ewladqa',
+				uc: 'Әҗдадтин Әвладқа «Әвлад»Тин Әвладқа',
+				tr: 'Atadan Evlada, «Ewlad»dan Evlada',
+				en: 'From Ancestors to Descendants, From «Ewlad» to Descendants',
+				ar: 'من الأجداد إلى الأحفاد، من «أولاد» إلى الأحفاد'
+			};
+			var titleEl = document.querySelector('.title');
+			if (titleEl) titleEl.textContent = tagline[pageLang];
+			if (pageLang !== 'ug' && pageLang !== 'ar') {
+				var st = document.createElement('style');
+				st.textContent = '.d-top-bar{justify-content:flex-end}.d-lang-dropdown{left:auto;right:0}';
+				document.head.appendChild(st);
+			}
+			document.querySelectorAll('.d-lang-dropdown a').forEach(function (a) {
+				var on = a.getAttribute('href') === '?lang=' + pageLang;
+				a.classList.toggle('d-active', on);
+				if (on) document.querySelector('.d-lang-trigger > span').textContent = a.textContent;
+			});
+		});
 
 		// ── Dil seçici ──
 		function toggleDLang() { document.getElementById('dLangPicker').classList.toggle('open'); }
@@ -299,6 +328,6 @@
 		    		    $(".app7").click(function(){ $("#myframe").attr('src', 'popup.php?id=7'); $('#appMpdal').modal('show'); });
 		    		});
 	</script>
-	<script src="../assets/js/motion.js?v=20" defer></script>
+	<script src="../assets/js/motion.js?v=23" defer></script>
 </body>
 </html>

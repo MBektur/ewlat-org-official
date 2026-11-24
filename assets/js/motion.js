@@ -39,9 +39,14 @@
     copyLink: { ug: 'ئۇلانما كۆچۈرۈش', ul: 'Ulanma köchürüsh', uc: 'Уланма көчүрүш', tr: 'Bağlantıyı kopyala', en: 'Copy link', ar: 'نسخ الرابط' },
     copied:   { ug: 'ئۇلانما كۆچۈرۈلدى', ul: 'Ulanma köchürüldi', uc: 'Уланма көчүрүлди', tr: 'Bağlantı kopyalandı', en: 'Link copied', ar: 'تم نسخ الرابط' },
     copyShort: { ug: 'ئۇلانما', ul: 'Ulanma', uc: 'Уланма', tr: 'Kopyala', en: 'Copy', ar: 'نسخ' },
+    appsTitle: { ug: 'ئەۋلاد ئەپ دېتاللىرى:', ul: 'Ewlad ep détalliri:', uc: 'Әвлад әп деталлири:', tr: 'Ewlad uygulamaları:', en: 'Ewlad apps:', ar: 'تطبيقات أولاد:' },
     shareTitle: { ug: 'ئورتاقلىشىش', ul: 'Ortaqlashish', uc: 'Ортақлишиш', tr: 'Paylaş', en: 'Share', ar: 'مشاركة' }
   };
   function t(key) { var m = I18N[key]; return m[LANG] || m.ug; }
+  /** Dile göre değer: {ug, ul, uc, tr, en, ar} haritası (apps.json) ya da düz değer; eksik dilde ug. */
+  function loc(v) { return v && typeof v === 'object' && !Array.isArray(v) ? (v[LANG] || v.ug) : v; }
+  var RTL_LANG = LANG === 'ug' || LANG === 'ar';
+  var LABEL_LANG = { ug: 'ug', ul: 'ug-Latn', uc: 'ug-Cyrl', tr: 'tr', en: 'en', ar: 'ar' };   // lang özniteliği
 
   function $(sel, ctx) { return (ctx || doc).querySelector(sel); }
   function $$(sel, ctx) { return Array.prototype.slice.call((ctx || doc).querySelectorAll(sel)); }
@@ -49,6 +54,12 @@
   function el(tag, cls, attrs) {
     var n = doc.createElement(tag);
     if (cls) n.className = cls;
+    if (attrs) for (var k in attrs) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+
+  function svgEl(tag, attrs) {
+    var n = doc.createElementNS('http://www.w3.org/2000/svg', tag);
     if (attrs) for (var k in attrs) n.setAttribute(k, attrs[k]);
     return n;
   }
@@ -238,14 +249,25 @@
         [89.5, 626.5, 55.5], [128.5, 469.4, 55.4], [210.6, 324.5, 55.4], [327.6, 210.5, 55.4],
         [466.5, 130.4, 55.2], [623.5, 87.5, 55.4], [787.6, 86.5, 55.4], [945.5, 126.5, 55.4],
         [1083.5, 209.5, 55.3], [1200.7, 325.6, 55.2], [1281.5, 465.5, 55.3], [1320.5, 623.6, 53.6]
-      ],
-      // menu.png'deki yazıların aynısı (menu_item_0 … 11) — gerçek metin, tek satır
-      labels: [
-        'دۇئا ۋە زىكرلەر', 'خەتمە قۇرئان', 'ئەۋلاد نەشرىياتى', 'ئەۋلاد يۇتيۇب',
-        'E-Kuran', 'ئەۋلاد لۇغىتى', 'ماقالىلەر ئامبىرى', 'ئۇيغۇر كىتاب',
-        'فارابى جەمئىيىتى', 'سىيرەت ژۇرنىلى', 'قۇرئان كەرىم', 'ئەۋلاد كارتون-فىلىم'
       ]
     };
+    // Logo altı yazıları: sabit metin (menu_item_0 … 11 sırasıyla), dile göre. Dil = sayfanın dili (pageLang).
+    // Yeni dil eklemek için her dilde 12 öğe yazın; eksik dilde ug kullanılır.
+    var LABELS = {
+      ug: ['دۇئا ۋە زىكرلەر', 'خەتمە قۇرئان', 'ئەۋلاد نەشرىياتى', 'ئەۋلاد يۇتيۇب', 'E-Kuran', 'ئەۋلاد لۇغىتى',
+           'ماقالىلەر ئامبىرى', 'ئۇيغۇر كىتاب', 'فارابى جەمئىيىتى', 'سىيرەت ژۇرنىلى', 'قۇرئان كەرىم', 'ئەۋلاد كارتون-فىلىم'],
+      ul: ['Duaa we zikirler', 'Xetme Qur\'an', 'Ewlad neshriyati', 'Ewlad YouTube', 'E-Qur\'an', 'Ewlad lughiti',
+           'Maqaliler ambiri', 'Uyghur kitab', 'Farabi jemiyiti', 'Siyret zhurnali', 'Qur\'an Kerim', 'Ewlad karton-filim'],
+      uc: ['Дуа вә зикирләр', 'Хәтмә Қуръан', 'Әвлад нәшрияти', 'Әвлад YouTube', 'E-Қуръан', 'Әвлад луғити',
+           'Мақалиләр амбири', 'Уйғур китаб', 'Фарабий җәмийити', 'Сийрәт журнали', 'Қуръан Кәрим', 'Әвлад картун-филим'],
+      tr: ['Dua ve zikirler', 'Hatim Kur\'an', 'Ewlad Yayınevi', 'Ewlad YouTube', 'E-Kur\'an', 'Ewlad Sözlüğü',
+           'Makaleler Arşivi', 'Uygur Kitap', 'Farabi Derneği', 'Siyer Dergisi', 'Kur\'an-ı Kerim', 'Ewlad Çizgi Film'],
+      en: ['Prayers & Dhikr', 'Quran Khatm', 'Ewlad Publishing', 'Ewlad YouTube', 'E-Quran', 'Ewlad Dictionary',
+           'Articles Archive', 'Uyghur Books', 'Farabi Society', 'Siyer Journal', 'Holy Quran', 'Ewlad Cartoons'],
+      ar: ['الدعاء والذكر', 'ختمة القرآن', 'دار نشر أولاد', 'يوتيوب أولاد', 'القرآن الإلكتروني', 'معجم أولاد',
+           'أرشيف المقالات', 'الكتب الأويغورية', 'جمعية الفارابي', 'مجلة السيرة', 'القرآن الكريم', 'أفلام أولاد الكرتونية']
+    };
+    function wheelLabel(i) { return (LABELS[LANG] || LABELS.ug)[i]; }
     var BASE = SCRIPT_BASE + '../images/wheel/';
     var ASSET_V = '?v=7';                 // wheel/ dosyaları her değiştiğinde artırın
     function asset(name) { return BASE + name + ASSET_V; }
@@ -296,7 +318,7 @@
         var logo = el('img', 'tw:size-16 tw:rounded-full tw:shadow-[0_4px_12px_rgba(0,0,0,.18)]', { src: asset('icon-' + i + '.png'), alt: '', loading: 'lazy' });
         logo.onerror = function () { this.style.visibility = 'hidden'; };
         var name = el('span', 'tw:text-[15px] tw:font-bold tw:text-ew-deep tw:leading-snug', { dir: 'auto' });
-        name.textContent = WHEEL.labels[i];
+        name.textContent = wheelLabel(i);
         card.appendChild(logo); card.appendChild(name);
         if (href) {
           var host = el('span', 'tw:text-xs tw:text-[#5b7f89]', { dir: 'ltr' });
@@ -436,6 +458,21 @@
       var ringImg = el('img', 'tw:absolute tw:pointer-events-none tw:select-none',
         { src: asset(RING_FILE), alt: '', draggable: 'false' });
       wheel.appendChild(ringImg);
+      // Üzerine gelinen dilim (sektör): halkayla birlikte döner, koyu bir örtüyle vurgulanır.
+      // Yolu (SVG, halka koordinatlarında) önceden hesaplanır; her dilim için bir kez.
+      function sectorD(q) {
+        var a1 = -(q + 1) * SLOT_DEG * DEG, a2 = -q * SLOT_DEG * DEG;
+        function P(r, a) { return (r * Math.cos(a)).toFixed(2) + ' ' + (r * Math.sin(a)).toFixed(2); }
+        return 'M' + P(R_EDGE, a1) + ' A' + R_EDGE + ' ' + R_EDGE + ' 0 0 1 ' + P(R_EDGE, a2) +
+               ' L' + P(R_HUB, a2) + ' A' + R_HUB + ' ' + R_HUB + ' 0 0 0 ' + P(R_HUB, a1) + ' Z';
+      }
+      var sectorPaths = [];
+      for (var q = 0; q < SLOTS; q++) sectorPaths.push(sectorD(q));
+      var sector = svgEl('svg', { 'class': 'ew-sector', viewBox: (-R_EDGE) + ' ' + (-R_EDGE) + ' ' + (2 * R_EDGE) + ' ' + (2 * R_EDGE), 'aria-hidden': 'true', focusable: 'false' });
+      var sectorPath = svgEl('path', { d: '' });
+      sector.appendChild(sectorPath);
+      wheel.appendChild(sector);
+      var lastSector = -2;
       clip.appendChild(wheel);
 
       // Kabinler
@@ -448,9 +485,10 @@
         if (dup) $$('a', b).forEach(function (a) { a.tabIndex = -1; });
         var cab = el('div', 'ew-cabin', dup ? { 'aria-hidden': 'true' } : null);
         var gondola = el('div', 'ew-gondola');
-        var lab = el('div', 'ew-label', { lang: i === 4 ? 'en' : 'ug', dir: i === 4 ? 'ltr' : 'rtl' });
+        var txt = wheelLabel(i);
+        var lab = el('div', 'ew-label', { lang: LABEL_LANG[LANG] || 'ug', dir: /[؀-ۿ]/.test(txt) ? 'rtl' : 'ltr' });
         if (dup) lab.setAttribute('aria-hidden', 'true');
-        lab.textContent = WHEEL.labels[i];
+        lab.textContent = txt;
         var slice = $('.ew-slice', b);
         slice.style.backgroundImage = 'url("' + asset('icon-' + i + '.png') + '")';
         gondola.appendChild(b);
@@ -514,6 +552,8 @@
         var rd = R_EDGE * s;                     // halkanın dış yarıçapı
         ringImg.style.left = ringImg.style.top = (W / 2 - rd) + 'px';
         ringImg.style.width = ringImg.style.height = 2 * rd + 'px';
+        sector.style.left = sector.style.top = (W / 2 - rd) + 'px';
+        sector.style.width = sector.style.height = 2 * rd + 'px';
         var k = W / WHEEL.size[0], hb = WHEEL.hub, lg = WHEEL.legs;
         var dy = HUB_DY * k;
         hub.style.left = hb[0] * k + 'px'; hub.style.top = hb[1] * k + dy + 'px';
@@ -584,13 +624,16 @@
       function inRing(p) { return p.r >= geo.rin && p.r <= geo.rout && (FULL || p.y <= p.cy); }
 
       // Fare çarkın üzerindeyken yavaşlayıp durur → bağlantılara rahat tıklanır
+      // ptr: sektör vurgusu için son fare konumu (yalnızca halkanın üzerindeyken)
+      var ptr = null;
       menu.addEventListener('pointermove', function (e) {
         if (e.pointerType !== 'mouse') return;
         var on = inRing(polar(e));
         hover = on;
+        ptr = on ? { clientX: e.clientX, clientY: e.clientY } : null;
         menu.style.cursor = drag && drag.moved ? 'grabbing' : (on ? 'grab' : '');
       });
-      menu.addEventListener('pointerleave', function () { hover = false; menu.style.cursor = ''; });
+      menu.addEventListener('pointerleave', function () { hover = false; ptr = null; menu.style.cursor = ''; });
 
       // Sürükleyerek çevirme (fare + dokunmatik), bırakınca savrulma
       menu.addEventListener('pointerdown', function (e) {
@@ -660,6 +703,16 @@
         }
         angle %= 360;
         wheel.style.setProperty('--ew-a', angle.toFixed(3) + 'deg');
+        // Fare hangi dilimin üzerinde? Dilim j: çarkın (dönmemiş) ekran açısında −(j+1)·S … −j·S
+        var sec = -1;
+        if (ptr && !(drag && drag.moved)) {
+          var pp = polar(ptr);
+          if (inRing(pp)) sec = Math.floor((((-(pp.a - angle)) % 360) + 360) % 360 / SLOT_DEG) % SLOTS;
+        }
+        if (sec !== lastSector) {
+          lastSector = sec;
+          sectorPath.setAttribute('d', sec < 0 ? '' : sectorPaths[sec]);
+        }
 
         var s = geo.s, Rp = RP * s, L = 45 * s, g = G * s, A = angle * DEG;   // L: pim → ağırlık merkezi (yazı tarafında)
         var gw = GW * s, half = ICON * s / 2;
@@ -850,9 +903,27 @@
     var DATA = null, card = null, native = false;
     var DATA_URL = SCRIPT_BASE + '../data/apps.json';
     var ASSET_ROOT = SCRIPT_BASE + '../';            // …/assets/ (görseller: images/apps/…)
+    // Ug dışındaki dillerde: "ئەۋلاد ئەپ دېتاللىرى:" başlığı, "تاقاش" düğmesi ve simge altı uygulama adları
+    // (canlı site bunları çevirmiyor; metinler I18N ve apps.json içinde)
+    function applyAppTexts() {
+      if (LANG === 'ug') return;
+      var closeBtn = $('.modal-footer button', modal);
+      if (closeBtn) closeBtn.textContent = t('close');
+      var appsTitle = $('.apps .item-title');
+      if (appsTitle) { appsTitle.textContent = t('appsTitle'); appsTitle.setAttribute('dir', RTL_LANG ? 'rtl' : 'ltr'); }   // ":" sona gelsin
+      if (!DATA) return;
+      DATA.apps.forEach(function (app) {
+        var item = $('.apps .item.app' + app.id);
+        if (!item) return;
+        var name = loc(app.name), tx = $('.item-text', item), im = $('img', item);
+        if (tx) tx.textContent = name;
+        if (im) im.setAttribute('alt', name);
+      });
+    }
+    applyAppTexts();
     try {
       fetch(DATA_URL).then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (d) { DATA = d && d.apps ? d : null; })
+        .then(function (d) { DATA = d && d.apps ? d : null; applyAppTexts(); })
         .catch(function () {});
     } catch (e) {}
 
@@ -880,15 +951,15 @@
     function renderApp(app) {
       var site = DATA.site, enc = encodeURIComponent;
       var url = site.url + '/popup.php?id=' + app.id;          // paylaşım bağlantısı: değişmez popup adresi
-      var text = '@' + site.handle + ' — ' + app.title + ' — ' + site.url;
+      var text = '@' + site.handle + ' — ' + loc(app.name) + ' — ' + site.url;
       card.textContent = '';
 
       card.appendChild(el('img', 'ew-app-img', { src: ASSET_ROOT + app.image, alt: '', width: '132', height: '132' }));
-      card.appendChild(textEl('h4', 'ew-app-title', app.title));
-      app.description.forEach(function (p) { card.appendChild(textEl('p', 'ew-app-desc', p)); });
+      card.appendChild(textEl('h4', 'ew-app-title', loc(app.title)));
+      loc(app.description).forEach(function (p) { card.appendChild(textEl('p', 'ew-app-desc', p)); });
 
       var acts = el('div', 'ew-app-actions');
-      app.downloads.forEach(function (d) { acts.appendChild(linkEl(d.url, d.label, 'ew-app-btn')); });
+      app.downloads.forEach(function (d) { acts.appendChild(linkEl(d.url, loc(d.label), 'ew-app-btn')); });
       if (app.stores.length) {
         var stores = el('div', 'ew-app-stores');
         app.stores.forEach(function (s) {
@@ -943,7 +1014,7 @@
     }
     function openApp(app) {
       if (!card) {
-        card = el('div', 'ew-app', { lang: 'ug', dir: 'rtl' });
+        card = el('div', 'ew-app', { lang: LABEL_LANG[LANG] || 'ug', dir: RTL_LANG ? 'rtl' : 'ltr' });
         body.insertBefore(card, body.firstChild);
       }
       renderApp(app);

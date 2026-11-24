@@ -11,7 +11,7 @@ A drop-in animation/interaction layer for **ewlat.org**, a PHP + Bootstrap 5 (RT
 Deliverables (the only things that ship to ewlat.org):
 - `assets/css/motion.css` — **compiled** output of `src/motion.css` (never edit by hand)
 - `assets/js/motion.js` — all behavior, vanilla JS, no dependencies
-- `assets/data/apps.json` — the 7 app detail cards (title, description, image, download/store/website links, site social links). Read by motion.js; edit this file to change app content, not the page
+- `assets/data/apps.json` — the 7 app detail cards (`name`, `title`, `description`, `downloads[].label` are per-language maps `{ug,ul,uc,tr,en,ar}`; a missing language falls back to `ug`; plus image, store/website links, site social links). Read by motion.js; edit this file to change app content, not the page. The live site itself only translates the tagline, language picker and dates — app names, card text, "apps" heading, modal close button and wheel labels are translated by motion.js (`I18N`, `LABELS`, `apps.json`)
 - `assets/images/apps/` — app icons (`1.png`…`7.png`) and store badges (`ios.png`, `android.png`)
 - `assets/fonts/UKIJEkran.ttf` — UKIJ Ekran font used by the app cards (`@font-face` 'EwUKIJ' in `src/motion.css`)
 - `assets/images/wheel/` — generated Ferris-wheel parts (`ring.webp`, `icon-N.png`, `hub.png`, `legs.png`, `head.png`, `wheel.json`)
