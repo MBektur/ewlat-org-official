@@ -35,7 +35,11 @@
     close:      { ug: 'تاقاش', ul: 'Taqash', uc: 'Тақаш', tr: 'Kapat', en: 'Close', ar: 'إغلاق' },
     turnLeft:  { ug: 'سولغا چۆرۈش', ul: 'Solgha chörüsh', uc: 'Солға чөрүш', tr: 'Sola çevir', en: 'Turn left', ar: 'أدر لليسار' },
     turnRight: { ug: 'ئوڭغا چۆرۈش', ul: 'Onggha chörüsh', uc: 'Оңға чөрүш', tr: 'Sağa çevir', en: 'Turn right', ar: 'أدر لليمين' },
-    loading: { ug: 'يۈكلىنىۋاتىدۇ…', ul: 'Yüklüniwatidu…', uc: 'Йүклиниватиду…', tr: 'Yükleniyor…', en: 'Loading…', ar: 'جارٍ التحميل…' }
+    loading: { ug: 'يۈكلىنىۋاتىدۇ…', ul: 'Yüklüniwatidu…', uc: 'Йүклиниватиду…', tr: 'Yükleniyor…', en: 'Loading…', ar: 'جارٍ التحميل…' },
+    copyLink: { ug: 'ئۇلانما كۆچۈرۈش', ul: 'Ulanma köchürüsh', uc: 'Уланма көчүрүш', tr: 'Bağlantıyı kopyala', en: 'Copy link', ar: 'نسخ الرابط' },
+    copied:   { ug: 'ئۇلانما كۆچۈرۈلدى', ul: 'Ulanma köchürüldi', uc: 'Уланма көчүрүлди', tr: 'Bağlantı kopyalandı', en: 'Link copied', ar: 'تم نسخ الرابط' },
+    copyShort: { ug: 'ئۇلانما', ul: 'Ulanma', uc: 'Уланма', tr: 'Kopyala', en: 'Copy', ar: 'نسخ' },
+    shareTitle: { ug: 'ئورتاقلىشىش', ul: 'Ortaqlashish', uc: 'Ортақлишиш', tr: 'Paylaş', en: 'Share', ar: 'مشاركة' }
   };
   function t(key) { var m = I18N[key]; return m[LANG] || m.ug; }
 
@@ -840,8 +844,135 @@
         if (w.ResizeObserver) new w.ResizeObserver(fit).observe(w.document.documentElement);
       } catch (e) {}
     });
-    modal.addEventListener('show.bs.modal', function () { frame.style.height = BASE_H + 'px'; show(); });
-    modal.addEventListener('hidden.bs.modal', hide);
+    /* ---- Uygulama kartları: iframe yerine assets/data/apps.json'dan çizilir ----
+       popup.php içeriğinin (görsel, açıklama, indirme/mağaza bağlantıları, paylaşım) verisi JSON'da tutulur.
+       Veri yüklenemezse ya da kimlik bulunamazsa eski iframe akışı (popup.php) aynen çalışır. */
+    var DATA = null, card = null, native = false;
+    var DATA_URL = SCRIPT_BASE + '../data/apps.json';
+    var ASSET_ROOT = SCRIPT_BASE + '../';            // …/assets/ (görseller: images/apps/…)
+    try {
+      fetch(DATA_URL).then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) { DATA = d && d.apps ? d : null; })
+        .catch(function () {});
+    } catch (e) {}
+
+    function findApp(id) {
+      if (!DATA) return null;
+      for (var i = 0; i < DATA.apps.length; i++) if (DATA.apps[i].id === id) return DATA.apps[i];
+      return null;
+    }
+    function textEl(tag, cls, text) {
+      var n = el(tag, cls);
+      n.textContent = text;
+      return n;
+    }
+    function linkEl(href, text, cls) {
+      var a = el('a', cls, { href: href, target: '_blank', rel: 'noopener noreferrer' });
+      a.textContent = text;
+      return a;
+    }
+    function copyText(s) {
+      try {
+        if (navigator.clipboard) return navigator.clipboard.writeText(s).then(function () { return true; }, function () { return false; });
+      } catch (e) {}
+      return Promise.resolve(false);
+    }
+    function renderApp(app) {
+      var site = DATA.site, enc = encodeURIComponent;
+      var url = site.url + '/popup.php?id=' + app.id;          // paylaşım bağlantısı: değişmez popup adresi
+      var text = '@' + site.handle + ' — ' + app.title + ' — ' + site.url;
+      card.textContent = '';
+
+      card.appendChild(el('img', 'ew-app-img', { src: ASSET_ROOT + app.image, alt: '', width: '132', height: '132' }));
+      card.appendChild(textEl('h4', 'ew-app-title', app.title));
+      app.description.forEach(function (p) { card.appendChild(textEl('p', 'ew-app-desc', p)); });
+
+      var acts = el('div', 'ew-app-actions');
+      app.downloads.forEach(function (d) { acts.appendChild(linkEl(d.url, d.label, 'ew-app-btn')); });
+      if (app.stores.length) {
+        var stores = el('div', 'ew-app-stores');
+        app.stores.forEach(function (s) {
+          var a = el('a', null, { href: s.url, target: '_blank', rel: 'noopener noreferrer' });
+          a.appendChild(el('img', null, {
+            src: ASSET_ROOT + 'images/apps/' + s.platform + '.png',
+            alt: s.platform === 'ios' ? 'App Store' : 'Google Play', loading: 'lazy'
+          }));
+          stores.appendChild(a);
+        });
+        acts.appendChild(stores);
+      }
+      if (acts.childNodes.length) card.appendChild(acts);
+      if (app.website) card.appendChild(linkEl(app.website.url, app.website.label, 'ew-app-web'));
+
+      // Paylaş: eşit boyutlu, marka renkli daireler + altında kısa ad (hepsi aynı satır/aralıkta)
+      card.appendChild(textEl('p', 'ew-app-share-title', t('shareTitle')));
+      var share = el('div', 'ew-app-share');
+      function shareItem(href, label, color, svgAttrs, pathD) {
+        var a = el('a', 'ew-app-sh', { href: href, target: '_blank', rel: 'noopener noreferrer', title: label, 'aria-label': label });
+        var ico = el('i', null, { 'aria-hidden': 'true' });
+        ico.style.background = color;
+        ico.innerHTML = '<svg viewBox="0 0 24 24" focusable="false"' + svgAttrs + '><path d="' + pathD + '"/></svg>';
+        a.appendChild(ico);
+        a.appendChild(textEl('span', null, label));
+        return a;
+      }
+      var FILL = ' fill="currentColor"', STROKE = ' fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+      share.appendChild(shareItem('https://wa.me/?text=' + enc(text + ' ' + url), 'WhatsApp', '#25d366', FILL,
+        'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z'));
+      share.appendChild(shareItem('https://www.facebook.com/sharer/sharer.php?u=' + enc(url), 'Facebook', '#1877f2', FILL,
+        'M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.6V4.3c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.4-4 4.1v2.5H8.6V14h2.7v8z'));
+      share.appendChild(shareItem('https://x.com/intent/post?text=' + enc(text) + '&url=' + enc(url), 'X', '#111', FILL,
+        'M18.2 2.3h3.3l-7.2 8.2 8.5 11.2h-6.6l-5.2-6.8-5.9 6.8H1.8l7.7-8.8L1.3 2.3h6.8l4.7 6.2zm-1.2 17.5h1.8L7.1 4.2H5.1z'));
+      share.appendChild(shareItem('https://t.me/share/url?url=' + enc(url) + '&text=' + enc(text), 'Telegram', '#229ed9', FILL,
+        'M9.8 15.2l-.4 4.3c.6 0 .8-.3 1.1-.6l2.7-2.5 5.6 4.1c1 .6 1.8.3 2-1L22.6 4c.3-1.4-.5-2-1.5-1.6L2.3 9.6c-1.4.5-1.3 1.3-.2 1.7l5.2 1.6L19 6.4c.6-.4 1.1-.2.7.2z'));
+      // Bağlantı kopyala (düğme; sonuç durum satırında)
+      var status = el('p', 'ew-app-status', { 'aria-live': 'polite' });
+      var copy = el('button', 'ew-app-sh', { type: 'button', title: t('copyLink'), 'aria-label': t('copyLink') });
+      var copyIco = el('i', null, { 'aria-hidden': 'true' });
+      copyIco.style.background = '#44acbf';
+      copyIco.innerHTML = '<svg viewBox="0 0 24 24" focusable="false"' + STROKE + '><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.2 1.2"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.2-1.2"/></svg>';
+      copy.appendChild(copyIco);
+      copy.appendChild(textEl('span', null, t('copyShort')));
+      copy.addEventListener('click', function () {
+        copyText(url).then(function (ok) { status.textContent = ok ? t('copied') : ''; });
+      });
+      share.appendChild(copy);
+      card.appendChild(share);
+      card.appendChild(status);
+      // Sosyal medya bağlantıları sitenin alt bilgisinde zaten var; modalda tekrarlanmaz.
+    }
+    function openApp(app) {
+      if (!card) {
+        card = el('div', 'ew-app', { lang: 'ug', dir: 'rtl' });
+        body.insertBefore(card, body.firstChild);
+      }
+      renderApp(app);
+      native = true;
+      frame.style.display = 'none';
+      card.style.display = '';
+      if (window.jQuery && window.jQuery.fn && window.jQuery.fn.modal) window.jQuery(modal).modal('show');
+      else if (window.bootstrap && window.bootstrap.Modal) window.bootstrap.Modal.getOrCreateInstance(modal).show();
+    }
+    // Sitenin kendi tıklama işleyicisi (iframe'e popup.php?id=N yazar) yerine kartı aç.
+    doc.addEventListener('click', function (e) {
+      var target = e.target;
+      var item = target && target.closest && target.closest('.apps .item');
+      var m = item && /(?:^|\s)app(\d+)(?=\s|$)/.exec(item.className || '');
+      var app = m && findApp(parseInt(m[1], 10));
+      if (!app) return;                              // veri yok: iframe akışı
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      openApp(app);
+    }, true);
+
+    modal.addEventListener('show.bs.modal', function () {
+      if (native) return;                            // kart açılıyor: iframe/yükleyici yok
+      frame.style.display = '';
+      if (card) card.style.display = 'none';
+      frame.style.height = BASE_H + 'px';
+      show();
+    });
+    modal.addEventListener('hidden.bs.modal', function () { hide(); native = false; });
   });
 
   /* ------------------------------------------------------------------ */
@@ -849,6 +980,13 @@
   /* ------------------------------------------------------------------ */
   safe('social', function () {
     var icons = $$('.footer-social .social-icon');
+    // WhatsApp: kaynak PNG'si kenarlardan kırpılmış (kuyruk/çerçeve taşıyor) ve "cover" ile daha da kesiliyordu.
+    // Marka yeşili zemin + beyaz simge olarak (popup'taki simgenin aynısı) SVG ile çiziyoruz.
+    icons.forEach(function (a) {
+      if (!/\bwa\b/.test(a.className) || !a.querySelector('img')) return;
+      a.innerHTML = '<svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" focusable="false">' +
+        '<path fill="#fff" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>';
+    });
     icons.forEach(function (a, i) {
       a.style.setProperty('--i', i);
       a.addEventListener('animationend', function () { a.classList.add('ew-done'); });

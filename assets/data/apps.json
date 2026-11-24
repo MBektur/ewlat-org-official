@@ -1,0 +1,186 @@
+{
+  "site": {
+    "name": "ewlat.org",
+    "url": "https://ewlat.org",
+    "handle": "ewlatnet",
+    "social": [
+      {
+        "name": "YouTube",
+        "platform": "youtube",
+        "url": "https://www.youtube.com/ewlatnet"
+      },
+      {
+        "name": "X",
+        "platform": "x",
+        "url": "https://x.com/ewlatnet"
+      },
+      {
+        "name": "Facebook",
+        "platform": "facebook",
+        "url": "https://www.facebook.com/ewlatorg"
+      },
+      {
+        "name": "Instagram",
+        "platform": "instagram",
+        "url": "https://www.instagram.com/ewlatnet"
+      },
+      {
+        "name": "LinkedIn",
+        "platform": "linkedin",
+        "url": "https://www.linkedin.com/in/ewlad-guruppisi-047152323/"
+      },
+      {
+        "name": "WhatsApp",
+        "platform": "whatsapp",
+        "url": "https://wa.me/905530707350"
+      }
+    ]
+  },
+  "apps": [
+    {
+      "id": 1,
+      "title": "«ئەۋلاد ئىملا» ىۇمشاق دېتالى",
+      "image": "images/apps/1.png",
+      "description": [
+        "«ئەۋلاد ئىملا» ىۇمشاق دېتالى «مىكروسوفت ئوفىس ۋورد» مۇھىتىدا ئۇىغۇرچە ئىملا تەكشۈرىدىغان كوررېكتور بولۇپ، ئىملا تەكشۈرۈش، ئىملا توغرىلاش، ىېڭى سۆز قوشۇش ۋە كونا ىېزىق، ىېڭى ىېزىق، سىلاۋىىان ىېزىقلىرىنى ئۆزئارا ئالماشتۇرۇش، كونا خەت نۇسخىلىرىنى ىۇنىكودقا ئۆزگەرتىش قاتارلىق ئىقتىدارلارغا ئىگە. 2019 - ىىلى 10 – ئاىدا ھەقسىز تارقىتىلدى."
+      ],
+      "downloads": [
+        {
+          "label": "چۈشۈرۈش",
+          "url": "https://www.uyghurkitap.com/book.php?id=fb2cfc113d09fc7504f87030395b5334"
+        }
+      ],
+      "stores": [],
+      "website": null
+    },
+    {
+      "id": 2,
+      "title": "«ئاۋازلىق (دىنىى) ئەسەرلەر» ئەپ دېتالى",
+      "image": "images/apps/2.png",
+      "description": [
+        "«ئاۋازلىق (دىنىى) ئەسەرلەر» ئەپ دېتالى 2018 – ىىلى تارقىتىلغان بولۇپ، ئۇىغۇرچە ئاۋازلىق دىنىى ئەسەرلەر جەمگاھى ھېسابلىنىدۇ. ھازىرغىچە 50 پارچىدەك ئەسەر كىرگۈزۈلدى، تۈرلۈك دىنىى ئەسەرلەر ئاۋازغا ئېلىنىپ داۋاملىق تولۇقلىنىدۇ."
+      ],
+      "downloads": [],
+      "stores": [
+        {
+          "platform": "ios",
+          "url": "https://apps.apple.com/tr/app/awazliq-eserler/id1422703118"
+        },
+        {
+          "platform": "android",
+          "url": "https://play.google.com/store/apps/details?id=com.ewlat.eserler&hl=tr&gl=US"
+        }
+      ],
+      "website": null
+    },
+    {
+      "id": 3,
+      "title": "كۆپ تىللىق ئەۋلاد لۇغىتى",
+      "image": "images/apps/3.png",
+      "description": [
+        "بۇ كۆپ تىللىق لۇغەتكە ئۇىغۇرچە، چاغاتاىچە، تۈركچە، ئەرەبچە، ئىنگلىزچە، ىاپونچە، رۇسچە، نورۋېگچە، قازاقچە، خەنزۇچەبۇ كۆپ تىللىق لۇغەتكە ئۇىغۇرچە، تۈركچە، ئەرەبچە، ئىنگلىزچە، چاغاتاىچە، ىاپونچە، رۇسچە، قازاقچە، خىتاىچە قاتارلىق ئوندىن ئارتۇق تىل كىرگۈزۈلگەن بولۇپ، سۆزلۈك زاپىسى ئىنتاىىن مول. لۇغەتلەرنىڭ كۆپ قىسمى تاق ۋە قوش ىۆنىلىشلىك. بۇنىڭدىن سىرت ھەرقاىسى تىللارنىڭ ئىزاھلىق لۇغەتلىرى، ئۇىغۇرچە ماقال - تەمسىللەر، تۇراقلىق ئىبارىلەر، ئىدىىوملار، ىەر – جاى ناملىرى، دىنىى ئاتالغۇلار، كىشى ئىسىملىرى ۋە ھەر خىل كەسپىى لۇغەتلەر مەۋجۇت. ئومۇمىى لۇغەت سانى 80 خىلغا ىېتىدۇ. 2019 - ىىلى 10 – ئاىدا ھەقسىز تارقىتىلدى. ئەۋلاد لۇغىتىدىن توردا پاىدىلىنىدىغانلار ئۈچۈن تور بېتىمۇ مەۋجۇت:"
+      ],
+      "downloads": [],
+      "stores": [
+        {
+          "platform": "ios",
+          "url": "https://apps.apple.com/tr/app/%D8%A6%DB%95%DB%8B%D9%84%D8%A7%D8%AF-%D9%84%DB%87%D8%BA%D9%89%D8%AA%D9%89/id1482295832"
+        },
+        {
+          "platform": "android",
+          "url": "https://play.google.com/store/apps/details?id=com.ewlad.lughet&hl=tr&gl=US"
+        }
+      ],
+      "website": {
+        "label": "www.ewlat.biz",
+        "url": "https://www.ewlat.biz"
+      }
+    },
+    {
+      "id": 4,
+      "title": "«ئاۋازلىق كىتاب» ئەپ دېتالى",
+      "image": "images/apps/4.png",
+      "description": [
+        "«ئاۋازلىق كىتاب» ئەپ دېتالى كۆپىنچىسى ۋەتىنىمىزدە ئاۋازغا ئېلىنغان ھەرقاىسى ژانىردىكى ئۇىغۇرچە ئاۋازلىق كىتابلار جەمگاھى ھېسابلىنىدۇ. ھازىرغىچە 120 دىن ئارتۇق ئاۋازلىق كىتاب كىرگۈزۈلدى؛ ىېقىندا قوشۇلىدىغان 250 پارچىدەك ئەسەرنىڭ تەىىارلىق خىزمىتى داۋاملىشىۋاتىدۇ. ئەسەرلەر قەرەللىك ھالدا تولۇقلىنىپ تۇرىدۇ. بۇ ئەپ دېتالىمىز 2014 – ىىلىدىن بۇىان ئاكتىپ خىزمەت قىلىپ كەلمەكتە."
+      ],
+      "downloads": [],
+      "stores": [
+        {
+          "platform": "ios",
+          "url": "https://apps.apple.com/tr/app/awazliq-kitap/id961327340"
+        },
+        {
+          "platform": "android",
+          "url": "https://play.google.com/store/apps/details?id=com.ewlat.awazliq&hl=tr&gl=US"
+        }
+      ],
+      "website": null
+    },
+    {
+      "id": 5,
+      "title": "«قۇرئان كەرىم» ئەپ دېتالى",
+      "image": "images/apps/5.png",
+      "description": [
+        "«قۇرئان كەرىم» ئەپ دېتالى قۇرئان كەرىم، قۇرئان كەرىمنىڭ 20 دىن ئارتۇق تىلدىكى تەرجىمىسى، ئۇىغۇرچە تۆت خىل تەرجىمىسى، ئۇىغۇرچە تەپسىرلەر، ئۇىغۇر ۋە باشقا مىللەت قارىىلىرى قىرائەتلىرى، ئۇىغۇرچە تەرجىمىسىنىڭ ئوخشىمىغان بىرقانچە ئاۋازلىق نۇسخىسى، 10 دىن ئارتۇق تىلدىكى قۇرئان كەرىم تەرجىمىسىنىڭ ئاۋازلىق نۇسخىسى، تەجۋىد قاتارلىق قۇرئان كەرىمگە ئالاقىدار مەزمۇنلارنى ئۆز ئىچىگە ئالغان بولۇپ، تەرجىمە ۋە تەپسىرلەرنى سېلىشتۇرۇش، سۆز ئىزدەش ۋە كۆچۈرۈشكە ئوخشاش كۆپ خىل ئىقتىدارلار سەپلەنگەن، پۈتۈنلەى ئۇىغۇرچە لاىىھەلەنگەن كۆركەم ۋە قوللىنىشچان ئەپ دېتال. بۇ ئەپ دېتالىمىز 2016 - ىىلىدىن باشلاپ ئاكتىپ خىزمەت قىلىپ كەلمەكتە. قۇرئان كەرىم ئەپ دېتالىدىن توردا پاىدىلىنىدىغانلار ئۈچۈن تور بېتىمۇ مەۋجۇت:"
+      ],
+      "downloads": [],
+      "stores": [
+        {
+          "platform": "ios",
+          "url": "https://apps.apple.com/tr/app/%D9%82%DB%87%D8%B1%D8%A6%D8%A7%D9%86-%D9%83%DB%95%D8%B1%D9%89%D9%85/id1203681641"
+        },
+        {
+          "platform": "android",
+          "url": "https://play.google.com/store/apps/details?id=com.ewlat.qurankerim&hl=tr&gl=US"
+        }
+      ],
+      "website": {
+        "label": "www.qurankerim.com",
+        "url": "https://www.qurankerim.com"
+      }
+    },
+    {
+      "id": 6,
+      "title": "«ئەۋلاد» ئەپ دېتالى",
+      "image": "images/apps/6.png",
+      "description": [
+        "««ئەۋلاد» ئەپ دېتالى ئەۋلاد گۇرۇپپىسى تەىىارلىغان، تەرجىمە قىلىپ ئاۋاز بەرگەن بىرقانچە ىۈز قىسىم ئۇىغۇرچە فىلىم ۋە سىن ماتېرىىاللىرىنى ئۆز ئىچىگە ئالغان ئەپ دېتالى بولۇپ، 2014 – ىىلىدىن ھازىرغىچە ئاكتىپ خىزمەت قىلىپ كەلمەكتە. تور بېتىمۇ مەۋجۇت:"
+      ],
+      "downloads": [],
+      "stores": [
+        {
+          "platform": "ios",
+          "url": "https://apps.apple.com/us/app/ewlat/id910773623"
+        },
+        {
+          "platform": "android",
+          "url": "https://play.google.com/store/apps/details?id=ewlat.com.ewlatuyghur"
+        }
+      ],
+      "website": {
+        "label": "www.ewlat.net",
+        "url": "https://www.ewlat.net"
+      }
+    },
+    {
+      "id": 7,
+      "title": "«ئۇىغۇرچە قۇرئان» ئەپ دېتالى",
+      "image": "images/apps/7.png",
+      "description": [
+        "«ئۇىغۇرچە قۇرئان» ئەپ دېتالى قۇرئان كەرىم ۋە تەرجىمىسىدىنلا پاىدىلىنىشنى خالاىدىغانلار ئۈچۈن تۈزۈلگەن بولۇپ، ئەپ دېتالدىكى قۇرئان كەرىم ئۇىغۇرچە تەرجىمىسى مەرھۇم مۇھەممەد سالىھ داموللاھاجىمغا ئائىت."
+      ],
+      "downloads": [],
+      "stores": [
+        {
+          "platform": "ios",
+          "url": "https://apps.apple.com/tr/app/%D8%A6%DB%87%D9%8A%D8%BA%DB%87%D8%B1%DA%86%DB%95-%D9%82%DB%87%D8%B1%D8%A6%D8%A7%D9%86/id1552158994"
+        },
+        {
+          "platform": "android",
+          "url": "https://play.google.com/store/apps/details?id=com.c9.uyghurquran"
+        }
+      ],
+      "website": null
+    }
+  ]
+}

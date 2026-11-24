@@ -11,6 +11,9 @@ A drop-in animation/interaction layer for **ewlat.org**, a PHP + Bootstrap 5 (RT
 Deliverables (the only things that ship to ewlat.org):
 - `assets/css/motion.css` — **compiled** output of `src/motion.css` (never edit by hand)
 - `assets/js/motion.js` — all behavior, vanilla JS, no dependencies
+- `assets/data/apps.json` — the 7 app detail cards (title, description, image, download/store/website links, site social links). Read by motion.js; edit this file to change app content, not the page
+- `assets/images/apps/` — app icons (`1.png`…`7.png`) and store badges (`ios.png`, `android.png`)
+- `assets/fonts/UKIJEkran.ttf` — UKIJ Ekran font used by the app cards (`@font-face` 'EwUKIJ' in `src/motion.css`)
 - `assets/images/wheel/` — generated Ferris-wheel parts (`ring.webp`, `icon-N.png`, `hub.png`, `legs.png`, `head.png`, `wheel.json`)
 
 The live site's `<meta name="viewport" content="width=1120">` forces phones to render a scaled-down desktop page (huge empty area below the footer). `preview/index.html` uses `width=device-width, initial-scale=1`, which activates `app.css`'s own mobile rules; the same one-line change is needed in production `index.php`.
@@ -63,7 +66,7 @@ The original menu is a single image (`menu.png`, 1409×701) with 12 transparent 
 - "See all" (`openSites`): the pill button or a transparent `.ew-hubbtn` over the boy/crescent opens a custom dialog (not Bootstrap's modal) listing all 12 links as cards (logo `icon-N.png`, `WHEEL.labels`, hostname; the link-less item gets a "soon" badge). Built lazily; Esc/backdrop/close button; works in static mode too.
 - If any wheel asset fails to load (or reduced motion), `staticMode()` keeps the original menu image with hover effects.
 
-The modal module also resizes the site's fixed-height (440px) popup iframe to its content (capped to the viewport) on load — only possible same-origin, i.e. on production or through the preview proxy.
+The modal module renders app cards from `assets/data/apps.json` instead of the site's `popup.php?id=N` iframe: a capture-phase click listener on `.apps .item.appN` stops the site's own jQuery handler and opens the card via `jQuery(modal).modal('show')`. If the JSON is missing or the id is unknown, the original iframe flow runs unchanged; the iframe resize (fit) is then the fallback path and only works same-origin (production or the preview proxy). Share buttons use the stable `popup.php?id=N` URL.
 
 ### Regenerating wheel assets
 

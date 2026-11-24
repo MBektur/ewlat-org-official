@@ -8,6 +8,8 @@ Stiller **Tailwind CSS v4** ile yazıldı. Bootstrap ile çakışmaması için T
 1. Şunları sunucuda **aynı yollara** yükleyin:
    - `assets/css/motion.css`
    - `assets/js/motion.js`
+   - `assets/data/apps.json` (uygulama kartlarının içeriği: başlık, açıklama, görsel, indirme/mağaza/web bağlantıları)
+   - `assets/images/apps/` (uygulama simgeleri ve mağaza rozetleri), `assets/fonts/UKIJEkran.ttf` (uygulama kartı yazı tipi)
    - `assets/images/wheel/` klasörü (`ring.webp` çark halkası, 12 yuvarlak logo, `hub.png`, `legs.png` — toplam ~310 KB)
 2. `index.php` içinde:
 
@@ -39,7 +41,7 @@ Eski ayar telefonları sayfayı 1120px genişlikte küçültülmüş çizmeye zo
 | Tarih | Hicri tarihin yanında bugünkü **ay evresi** (UQCal'dan hesaplanır) |
 | Yarım daire menü | **Dönme dolap.** Ortadaki ay ve kitap okuyan çocuk sabit göbektir; hilalde oturan çocuğun bacakları dizden hafifçe sallanır. Çevresinde 360° bir çark döner: orijinal menu.png'nin bir diliminden üretilmiş 24 özdeş dilim (aralarında orijinaldeki gölgeli sınır çizgileri), iç ve dış çemberde çarkın kendi renginin koyu tonunda kenar çizgisi. Bandın tam ortasında 24 yer vardır; 12 yuvarlak logo karşılıklı ikişer kez yer alır, böylece görünen üst yarıda 12'sinin hepsi her an görünür. Logolar çarka merkezlerinden takılıdır ve hep dik durur; altlarındaki tek satırlık yazılar (gerçek metin) ağırlık merkezini aşağıda tutar, çark hızlanıp yavaşladıkça logo ve yazı birlikte hafifçe sallanır (sınırlı ve sönümlü). Açılışta çark bir kez çevrilir, sonra yavaşça döner. Fare çarkın üzerine gelince durur; fareyle ya da parmakla tutup çevrilebilir, bırakınca savrulur (sürükleme bağlantı açmaz). Hover'da logo büyür. Çemberin altındaki oklarla (üzerine gelince o yöne döner, tıklayınca iter) çevrilebilir. Telefonda her logo bir kez ve iki kat büyük gösterilir. **"Hepsini gör"** düğmesi ya da ortadaki çocuğa tıklama, tüm siteleri kartlarla listeleyen bir pencere açar (pasif öğede "يېقىندا"). Çocuk ara sıra başını kaldırıp indirir |
 | Uygulamalar | Arka planda yükselen Uygur harfleri; ikonlar kaydırınca yaylanarak belirir, hafifçe süzülür; hover'da 3D eğim + ışık yansıması; tıklamada dalga efekti |
-| Modal | Bulanık arka plan, yaylanarak açılış, iframe yüklenene kadar "يۈكلىنىۋاتىدۇ…" göstergesi. İframe yüksekliği içeriğe göre ayarlanır (sitenin sabit 440px'i mağaza düğmelerini ve paylaşım bölümünü kesiyordu) |
+| Modal | Bulanık arka plan, yaylanarak açılış. Uygulama kartları (`assets/data/apps.json`) doğrudan çizilir: görsel, açıklama, indirme/mağaza/web bağlantıları ve paylaşım düğmeleri (WhatsApp, Facebook, X, Telegram, bağlantı kopyala). Veri yüklenemezse eski iframe (`popup.php`) akışı çalışır. |
 | Dil seçici & footer | Yumuşak açılan menü; sosyal ikonlar sırayla belirir ve imlece "mıknatıs" gibi çekilir |
 
 **Erişilebilirlik ve performans:** "Hareketi azalt" ayarı açık olan ziyaretçilerde tüm hareket kapanır ve menü orijinal haliyle durur. Çark ve harf animasyonu yalnızca ekranda görünürken çalışır. Dokunmatik cihazlarda eğim ve mıknatıs efektleri kapalıdır. JS çalışmazsa sayfa bugünkü haliyle görünür. Arayüz metinleri sitedeki 6 dilin hepsinde (`pageLang`) hazır.
