@@ -217,6 +217,7 @@
 
     // ---- "Hepsini gör": tüm siteler kartlarla bir pencerede (düğme + çocuğa tıklama) ----
     var sites = null;
+    var hubShift = 0;                     // tam daire modunda göbeğin (çocuk + hilal) aşağı kayması (menu.png pikseli)
     function buildSites() {
       var overlay = el('div',
         'ew-sites tw:fixed tw:inset-0 tw:z-[2000] tw:flex tw:items-center tw:justify-center tw:p-4 ' +
@@ -307,7 +308,7 @@
       if (!W) return;
       var k = W / WHEEL.size[0], s = W / 1120;
       // çocuk + hilal: menu.png'de merkez ≈ (700, 535), yarıçap ≈ 110
-      hubBtn.style.left = (700 - 110) * k + 'px'; hubBtn.style.top = (535 - 110) * k + 'px';
+      hubBtn.style.left = (700 - 110) * k + 'px'; hubBtn.style.top = (535 - 110 + hubShift) * k + 'px';
       hubBtn.style.width = hubBtn.style.height = 220 * k + 'px';
       var h = Math.max(44 * s, COARSE ? W * .11 : 34, 34);
       seeAll.style.height = h + 'px';
@@ -342,6 +343,9 @@
     // ---- Çark parçalarını önceden yükle ----
     // Dar ekran (telefon): 12 dilimli halka ve 12 logo; geniş ekran: 24 dilim / 24 logo
     var COMPACT = (menu.clientWidth || img.clientWidth) < 700;
+    // Dar ekranda çarkın TAMAMI (tam daire) gösterilir → 12 logonun hepsi aynı anda görünür.
+    // Göbek (çocuk + hilal + yazı) dairenin merkezine kaydırılır.
+    var FULL = COMPACT, HUB_DY = FULL ? 150 : 0;
     var RING_FILE = COMPACT ? 'ring-12.webp' : 'ring.webp';
     var urls = [asset(RING_FILE), asset('hub.png'), asset('legs.png'), asset('head.png')];
     WHEEL.icons.forEach(function (_, i) { urls.push(asset('icon-' + i + '.png')); });
@@ -448,23 +452,30 @@
         // M: kırpma kutusunun yan payı. 0 olmalı — pay, overflow:clip desteklemeyen tarayıcılarda
         // (ör. Safari < 16) sayfayı yana taşırıyor. Logolar menü genişliğinin içinde kalıyor.
         var s = W / 1120, M = 0;
-        geo = { W: W, H: H, s: s, M: M, cx: M + W / 2, cy: W / 2, rin: R_HUB * s, rout: R_EDGE * s };
+        var CH = FULL ? W : H;                   // görünen yükseklik: tam daire ya da üst yarı
+        geo = { W: W, H: CH, s: s, M: M, cx: M + W / 2, cy: W / 2, rin: R_HUB * s, rout: R_EDGE * s };
+        menu.style.height = FULL ? CH + 'px' : '';
         clip.style.left = -M + 'px';
         clip.style.width = (W + 2 * M) + 'px';
-        clip.style.height = H + 'px';
+        clip.style.height = CH + 'px';
         wheel.style.left = M + 'px';
         wheel.style.width = wheel.style.height = W + 'px';
         var rd = R_EDGE * s;                     // halkanın dış yarıçapı
         ringImg.style.left = ringImg.style.top = (W / 2 - rd) + 'px';
         ringImg.style.width = ringImg.style.height = 2 * rd + 'px';
         var k = W / WHEEL.size[0], hb = WHEEL.hub, lg = WHEEL.legs;
-        hub.style.left = hb[0] * k + 'px'; hub.style.top = hb[1] * k + 'px';
+        var dy = HUB_DY * k;
+        hub.style.left = hb[0] * k + 'px'; hub.style.top = hb[1] * k + dy + 'px';
         hub.style.width = hb[2] * k + 'px'; hub.style.height = hb[3] * k + 'px';
-        legs.style.left = lg[0] * k + 'px'; legs.style.top = lg[1] * k + 'px';
+        legs.style.left = lg[0] * k + 'px'; legs.style.top = lg[1] * k + dy + 'px';
         legs.style.width = lg[2] * k + 'px'; legs.style.height = lg[3] * k + 'px';
         legs.style.transformOrigin = (WHEEL.knee[0] - lg[0]) * k + 'px ' + (WHEEL.knee[1] - lg[1]) * k + 'px';
+        if (FULL) {                              // huzmeler çocuğun arkasında, kaydırılmış göbeğe göre
+          haloWrap.style.top = (540 + HUB_DY) * k + 'px';
+          haloWrap.style.clipPath = 'none';
+        }
         var hd = WHEEL.head;
-        head.style.left = hd[0] * k + 'px'; head.style.top = hd[1] * k + 'px';
+        head.style.left = hd[0] * k + 'px'; head.style.top = hd[1] * k + dy + 'px';
         head.style.width = hd[2] * k + 'px'; head.style.height = hd[3] * k + 'px';
         head.style.transformOrigin = (WHEEL.neck[0] - hd[0]) * k + 'px ' + (WHEEL.neck[1] - hd[1]) * k + 'px';
         // ok düğmeleri: .top içinde (dar ekranda .menu taşanı gizliyor), bandın sol/sağ ucunun altında,
@@ -497,14 +508,16 @@
           c.label.style.fontSize = FONT * s + 'px';
         });
       }
+      hubShift = HUB_DY;
       layout();
       window.addEventListener('resize', debounce(layout, 150));
+      placeExtras();
       // hero yüksekliği font yüklenince / tarih satırı kırılınca değişebilir → okları yeniden yerleştir
       if ('ResizeObserver' in window) new ResizeObserver(debounce(layout, 50)).observe(top);
 
       // ---- Dönüş: açılışta çevirme → yavaş, sürekli dönüş ----
-      var AUTO = -3.2;              // derece/sn (negatif = saat yönünün tersi: kabinler sağdan sola akar)
-      var angle = 0, omega = -150;
+      var AUTO = 3.2;               // derece/sn (pozitif = saat yönü: kabinler soldan sağa akar)
+      var angle = 0, omega = 150;
       var hover = false, drag = null, steer = 0, STEER_SPEED = 40, KICK = 150;
 
       function center() {
@@ -516,7 +529,7 @@
         return { r: Math.sqrt(dx * dx + dy * dy), a: Math.atan2(dy, dx) * 180 / Math.PI, x: e.clientX, y: e.clientY, cy: c.y };
       }
       function norm(d) { while (d > 180) d -= 360; while (d < -180) d += 360; return d; }
-      function inRing(p) { return p.r >= geo.rin && p.r <= geo.rout && p.y <= p.cy; }
+      function inRing(p) { return p.r >= geo.rin && p.r <= geo.rout && (FULL || p.y <= p.cy); }
 
       // Fare çarkın üzerindeyken yavaşlayıp durur → bağlantılara rahat tıklanır
       menu.addEventListener('pointermove', function (e) {
