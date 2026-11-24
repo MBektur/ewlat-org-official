@@ -895,449 +895,466 @@
             menu.addEventListener('click', block, true);
             setTimeout(function () { menu.removeEventListener('click', block, true); }, 80);
           }
-        menu.classList.remove('ew-grabbing');
-        drag = null;
+          menu.classList.remove('ew-grabbing');
+          drag = null;
+        }
+        window.addEventListener('pointerup', function () { endDrag(false); });
+        window.addEventListener('pointercancel', function () { endDrag(true); });
+        menu.addEventListener('dragstart', function (e) { e.preventDefault(); });
+
+        // ---- Kabin fiziği: hareketli pime asılı sarkaç ----
+        // φ'' = (g_eff.x·cosφ − g_eff.y·sinφ)/L − c·φ' ,  g_eff = g − a_pim
+        var G = 3000, INERTIA = .35, DAMP = 2.4, WIND = 55, MAXPHI = .7;   // MAXPHI ≈ 40°: kabin tamponu
+        var prevAngle = 0, wS = 0, aS = 0, clock = 0;
+
+        clip.classList.add('ew-ready');
+        showHalo();
+        runWhileVisible(top, function (dtMs) {
+          var dt = Math.min(.05, dtMs / 1000);
+          clock += dt;
+          if (!drag || !drag.moved) {
+            var target = steer ? steer * STEER_SPEED : (hover ? 0 : AUTO);   // ok üzerindeyken o yöne döner
+            omega += (target - omega) * (1 - Math.exp(-dt / .9));
+            angle += omega * dt;
+          }
+          // gerçek açısal hız ve ivme (sürükleme dahil), yumuşatılmış
+          var wNow = norm(angle - prevAngle) / dt * DEG;
+          prevAngle = angle;
+          var wPrev = wS;
+          wS += (wNow - wS) * .35;
+          aS += (clamp((wS - wPrev) / dt, -6, 6) - aS) * .25;
+          // Tık sesi: elle çevirme, oklar ve açılış dönüşünde her SLOT_DEG kadar yol bir dilim geçişi sayılır
+          var spd = Math.abs(wS) / DEG;                          // deg/s (yumuşatılmış)
+          var modalOpen = root.classList.contains('ew-sites-open') || doc.body.classList.contains('modal-open');
+          if (spd > SOUND_MIN && !modalOpen) {
+            travel += spd * dt;
+            var vol = clamp((spd - SOUND_MIN) / 120, .35, 1) * .055;
+            while (travel >= SLOT_DEG) { travel -= SLOT_DEG; ratchet.click(vol); }
+          } else {
+            travel = 0;
+          }
+          angle %= 360;
+          wheel.style.setProperty('--ew-a', angle.toFixed(3) + 'deg');
+          // Fare hangi dilimin üzerinde? Dilim j: çarkın (dönmemiş) ekran açısında −(j+1)·S … −j·S
+          var sec = -1;
+          if (ptr && !(drag && drag.moved)) {
+            var pp = polar(ptr);
+            if (inRing(pp)) sec = Math.floor((((-(pp.a - angle)) % 360) + 360) % 360 / SLOT_DEG) % SLOTS;
+          }
+          if (sec !== lastSector) {
+            lastSector = sec;
+            sectorPath.setAttribute('d', sec < 0 ? '' : sectorPaths[sec]);
+            if (sec >= 0) ratchet.hover();
+          }
+
+          var s = geo.s, Rp = RP * s, L = 45 * s, g = G * s, A = angle * DEG;   // L: pim → ağırlık merkezi (yazı tarafında)
+          var gw = GW * s, half = ICON * s / 2;
+          for (var k = 0; k < cabins.length; k++) {
+            var c = cabins[k];
+            var beta = -c.th0 + A;                 // ekran açısı (y aşağı)
+            var cb = Math.cos(beta), sb = Math.sin(beta);
+            var px = geo.cx + Rp * cb, py = geo.cy + Rp * sb;
+            // pim ivmesi: merkezcil + teğetsel
+            var ax = Rp * (-wS * wS * cb - aS * sb) * INERTIA;
+            var ay = Rp * (-wS * wS * sb + aS * cb) * INERTIA;
+            var gx = -ax + WIND * s * Math.sin(clock * .8 + c.wind), gy = g - ay;
+            var acc = (gx * Math.cos(c.phi) - gy * Math.sin(c.phi)) / L - DAMP * c.dphi;
+            c.dphi += acc * dt;
+            c.phi += c.dphi * dt;
+            if (c.phi > MAXPHI) { c.phi = MAXPHI; if (c.dphi > 0) c.dphi *= -.3; }       // tampona yumuşak çarpma
+            else if (c.phi < -MAXPHI) { c.phi = -MAXPHI; if (c.dphi < 0) c.dphi *= -.3; }
+            // Ufkun altında kalan kabinleri çizme
+            var hidden = py - half > geo.H;
+            if (hidden !== c.hidden) { c.hidden = hidden; c.el.style.visibility = hidden ? 'hidden' : ''; }
+            if (hidden) continue;
+            c.el.style.transform = 'translate(' + (px - gw / 2).toFixed(2) + 'px,' + (py - half).toFixed(2) + 'px) rotate(' + (-c.phi).toFixed(4) + 'rad)';
+          }
+        });
+
       }
-      window.addEventListener('pointerup', function () { endDrag(false); });
-      window.addEventListener('pointercancel', function () { endDrag(true); });
-      menu.addEventListener('dragstart', function (e) { e.preventDefault(); });
-
-      // ---- Kabin fiziği: hareketli pime asılı sarkaç ----
-      // φ'' = (g_eff.x·cosφ − g_eff.y·sinφ)/L − c·φ' ,  g_eff = g − a_pim
-      var G = 3000, INERTIA = .35, DAMP = 2.4, WIND = 55, MAXPHI = .7;   // MAXPHI ≈ 40°: kabin tamponu
-      var prevAngle = 0, wS = 0, aS = 0, clock = 0;
-
-      clip.classList.add('ew-ready');
-      showHalo();
-      runWhileVisible(top, function (dtMs) {
-        var dt = Math.min(.05, dtMs / 1000);
-        clock += dt;
-        if (!drag || !drag.moved) {
-          var target = steer ? steer * STEER_SPEED : (hover ? 0 : AUTO);   // ok üzerindeyken o yöne döner
-          omega += (target - omega) * (1 - Math.exp(-dt / .9));
-          angle += omega * dt;
-        }
-        // gerçek açısal hız ve ivme (sürükleme dahil), yumuşatılmış
-        var wNow = norm(angle - prevAngle) / dt * DEG;
-        prevAngle = angle;
-        var wPrev = wS;
-        wS += (wNow - wS) * .35;
-        aS += (clamp((wS - wPrev) / dt, -6, 6) - aS) * .25;
-        // Tık sesi: elle çevirme, oklar ve açılış dönüşünde her SLOT_DEG kadar yol bir dilim geçişi sayılır
-        var spd = Math.abs(wS) / DEG;                          // deg/s (yumuşatılmış)
-        var modalOpen = root.classList.contains('ew-sites-open') || doc.body.classList.contains('modal-open');
-        if (spd > SOUND_MIN && !modalOpen) {
-          travel += spd * dt;
-          var vol = clamp((spd - SOUND_MIN) / 120, .35, 1) * .055;
-          while (travel >= SLOT_DEG) { travel -= SLOT_DEG; ratchet.click(vol); }
-        } else {
-          travel = 0;
-        }
-        angle %= 360;
-        wheel.style.setProperty('--ew-a', angle.toFixed(3) + 'deg');
-        // Fare hangi dilimin üzerinde? Dilim j: çarkın (dönmemiş) ekran açısında −(j+1)·S … −j·S
-        var sec = -1;
-        if (ptr && !(drag && drag.moved)) {
-          var pp = polar(ptr);
-          if (inRing(pp)) sec = Math.floor((((-(pp.a - angle)) % 360) + 360) % 360 / SLOT_DEG) % SLOTS;
-        }
-        if (sec !== lastSector) {
-          lastSector = sec;
-          sectorPath.setAttribute('d', sec < 0 ? '' : sectorPaths[sec]);
-          if (sec >= 0) ratchet.hover();
-        }
-
-        var s = geo.s, Rp = RP * s, L = 45 * s, g = G * s, A = angle * DEG;   // L: pim → ağırlık merkezi (yazı tarafında)
-        var gw = GW * s, half = ICON * s / 2;
-        for (var k = 0; k < cabins.length; k++) {
-          var c = cabins[k];
-          var beta = -c.th0 + A;                 // ekran açısı (y aşağı)
-          var cb = Math.cos(beta), sb = Math.sin(beta);
-          var px = geo.cx + Rp * cb, py = geo.cy + Rp * sb;
-          // pim ivmesi: merkezcil + teğetsel
-          var ax = Rp * (-wS * wS * cb - aS * sb) * INERTIA;
-          var ay = Rp * (-wS * wS * sb + aS * cb) * INERTIA;
-          var gx = -ax + WIND * s * Math.sin(clock * .8 + c.wind), gy = g - ay;
-          var acc = (gx * Math.cos(c.phi) - gy * Math.sin(c.phi)) / L - DAMP * c.dphi;
-          c.dphi += acc * dt;
-          c.phi += c.dphi * dt;
-          if (c.phi > MAXPHI) { c.phi = MAXPHI; if (c.dphi > 0) c.dphi *= -.3; }       // tampona yumuşak çarpma
-          else if (c.phi < -MAXPHI) { c.phi = -MAXPHI; if (c.dphi < 0) c.dphi *= -.3; }
-          // Ufkun altında kalan kabinleri çizme
-          var hidden = py - half > geo.H;
-          if (hidden !== c.hidden) { c.hidden = hidden; c.el.style.visibility = hidden ? 'hidden' : ''; }
-          if (hidden) continue;
-          c.el.style.transform = 'translate(' + (px - gw / 2).toFixed(2) + 'px,' + (py - half).toFixed(2) + 'px) rotate(' + (-c.phi).toFixed(4) + 'rad)';
-        }
-      });
-
-    }
     }, 'menu');
-});
-
-/* ------------------------------------------------------------------ */
-/* 5. UYGULAMALAR — beliriş, süzülme, 3D eğim, parlama, dalga, harfler  */
-/* ------------------------------------------------------------------ */
-safe('apps', function () {
-  var apps = $('.apps');
-  if (!apps) return;
-  var items = $$('.item', apps);
-
-  items.forEach(function (it, i) {
-    it.style.setProperty('--i', i);
-    var icon = $('.icon', it), img = icon && $('img', icon);
-    if (!img) return;
-
-    // Görsel + parlama katmanı aynı kapta süzülsün diye sarmalanır
-    var floater = el('span', 'ew-floater');
-    icon.insertBefore(floater, img);
-    floater.appendChild(img);
-
-    var mask = el('span', 'ew-iconmask', { 'aria-hidden': 'true' });
-    mask.style.setProperty('--ew-mask', 'url("' + (img.currentSrc || img.src) + '")');
-    var glare = el('span', 'ew-glare');
-    mask.appendChild(glare);
-    floater.appendChild(mask);
-    icon.classList.add('ew-group');
-
-    if (FINE) {
-      if (MOTION) icon.classList.add('ew-tilt');
-      it.addEventListener('pointerenter', function (e) {
-        if (e.pointerType === 'mouse') ratchet.hover();
-      });
-      icon.addEventListener('mousemove', function (e) {
-        var r = icon.getBoundingClientRect();
-        var px = clamp((e.clientX - r.left) / r.width, 0, 1), py = clamp((e.clientY - r.top) / r.height, 0, 1);
-        icon.style.setProperty('--ry', ((px - .5) * 24).toFixed(2) + 'deg');
-        icon.style.setProperty('--rx', ((.5 - py) * 24).toFixed(2) + 'deg');
-        icon.style.setProperty('--gx', (px * 100).toFixed(1) + '%');
-        icon.style.setProperty('--gy', (py * 100).toFixed(1) + '%');
-      });
-      icon.addEventListener('mouseleave', function () {
-        icon.style.setProperty('--rx', '0deg');
-        icon.style.setProperty('--ry', '0deg');
-      });
-    }
-
-    if (MOTION) {
-      it.addEventListener('pointerdown', function (e) {
-        var r = mask.getBoundingClientRect();
-        var dot = el('span', 'ew-ripple-dot');
-        dot.style.left = (e.clientX - r.left) + 'px';
-        dot.style.top = (e.clientY - r.top) + 'px';
-        mask.appendChild(dot);
-        setTimeout(function () { dot.remove(); }, 800);
-      });
-    }
   });
 
-  if (!MOTION) return;
-  revealOnScroll(items, .15);
+  /* ------------------------------------------------------------------ */
+  /* 5. UYGULAMALAR — beliriş, süzülme, 3D eğim, parlama, dalga, harfler  */
+  /* ------------------------------------------------------------------ */
+  safe('apps', function () {
+    var apps = $('.apps');
+    if (!apps) return;
+    var items = $$('.item', apps);
 
-  // Arka planda yükselen Uygur harfleri — "harfler nesilden nesile"
-  var LETTERS = 'ئا ئە ب پ ت ج چ خ د ر ز ژ س ش غ ف ق ك گ ڭ ل م ن ھ ئو ئۇ ئۆ ئۈ ۋ ئې ئى ي'.split(' ');
-  var cv = el('canvas', 'ew-letters', { 'aria-hidden': 'true' });
-  apps.insertBefore(cv, apps.firstChild);
-  var size = fitCanvas(cv), parts = [];
+    items.forEach(function (it, i) {
+      it.style.setProperty('--i', i);
+      var icon = $('.icon', it), img = icon && $('img', icon);
+      if (!img) return;
 
-  function make(anyY) {
-    return {
-      ch: pick(LETTERS), x: rand(0, size.w), y: anyY ? rand(0, size.h) : size.h + rand(10, 60),
-      s: rand(16, 44), v: rand(9, 22), a: rand(.05, .16), ph: rand(0, 6.28), rot: rand(-.3, .3), vr: rand(-.08, .08)
-    };
-  }
-  function populate() {
-    size = fitCanvas(cv);
-    var n = clamp(Math.round(size.w * size.h / 11000), 10, 36);
-    while (parts.length < n) parts.push(make(true));
-    parts.length = n;
-  }
-  populate();
-  window.addEventListener('resize', debounce(populate, 200));
+      // Görsel + parlama katmanı aynı kapta süzülsün diye sarmalanır
+      var floater = el('span', 'ew-floater');
+      icon.insertBefore(floater, img);
+      floater.appendChild(img);
 
-  runWhileVisible(apps, function (dt, now) {
-    var ctx = size.ctx, w = size.w, h = size.h;
-    if (!ctx) return;
-    ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = '#fff';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    for (var i = 0; i < parts.length; i++) {
-      var p = parts[i];
-      p.y -= p.v * dt / 1000;
-      p.rot += p.vr * dt / 1000;
-      if (p.y < -p.s) { parts[i] = p = make(false); }
-      var x = p.x + Math.sin(now / 1600 + p.ph) * 10;
-      var edge = clamp(Math.min(p.y, h - p.y) / 50, 0, 1);
-      ctx.globalAlpha = p.a * edge;
-      ctx.save();
-      ctx.translate(x, p.y);
-      ctx.rotate(p.rot);
-      ctx.font = p.s.toFixed(0) + "px UKIJ, uyghur, 'Noto Naskh Arabic', sans-serif";
-      ctx.fillText(p.ch, 0, 0);
-      ctx.restore();
-    }
-    ctx.globalAlpha = 1;
-  });
-});
+      var mask = el('span', 'ew-iconmask', { 'aria-hidden': 'true' });
+      mask.style.setProperty('--ew-mask', 'url("' + (img.currentSrc || img.src) + '")');
+      var glare = el('span', 'ew-glare');
+      mask.appendChild(glare);
+      floater.appendChild(mask);
+      icon.classList.add('ew-group');
 
-/* ------------------------------------------------------------------ */
-/* 6. MODAL — yükleniyor animasyonu                                    */
-/* ------------------------------------------------------------------ */
-safe('modal', function () {
-  var modal = $('#appMpdal'), frame = $('#myframe');
-  var body = modal && $('.modal-body', modal);
-  if (!frame || !body) return;
+      if (FINE) {
+        if (MOTION) icon.classList.add('ew-tilt');
+        it.addEventListener('pointerenter', function (e) {
+          if (e.pointerType === 'mouse') ratchet.hover();
+        });
+        icon.addEventListener('mousemove', function (e) {
+          var r = icon.getBoundingClientRect();
+          var px = clamp((e.clientX - r.left) / r.width, 0, 1), py = clamp((e.clientY - r.top) / r.height, 0, 1);
+          icon.style.setProperty('--ry', ((px - .5) * 24).toFixed(2) + 'deg');
+          icon.style.setProperty('--rx', ((.5 - py) * 24).toFixed(2) + 'deg');
+          icon.style.setProperty('--gx', (px * 100).toFixed(1) + '%');
+          icon.style.setProperty('--gy', (py * 100).toFixed(1) + '%');
+        });
+        icon.addEventListener('mouseleave', function () {
+          icon.style.setProperty('--rx', '0deg');
+          icon.style.setProperty('--ry', '0deg');
+        });
+      }
 
-  var loader = el('div', 'ew-loader', { 'aria-live': 'polite' });
-  var spinner = el('div', 'ew-spinner');
-  var txt = el('div', 'ew-loader-text');
-  loader.appendChild(spinner);
-  loader.appendChild(txt);
-  body.appendChild(loader);
-
-  var timer;
-  function show() {
-    loader.classList.add('ew-on');
-    clearTimeout(timer);
-    timer = setTimeout(hide, 10000);
-  }
-  function hide() {
-    clearTimeout(timer);
-    loader.classList.remove('ew-on');
-  }
-  // iframe yüksekliğini içeriğe uydur: sitenin iframe'i 440px'e sabit, popup.php içeriği ise ~600–700px →
-  // mağaza düğmeleri ve paylaşım bölümü kesiliyordu. Pencere ekrana sığacak kadar; fazlası iframe içinde kayar.
-  // (Yalnızca aynı kökende okunabilir: canlı sitede ve proxy'li önizlemede çalışır, aksi halde 440px kalır.)
-  var BASE_H = parseInt(frame.getAttribute('height'), 10) || 440;
-  function fit() {
-    try {
-      var d = frame.contentDocument;
-      if (!d || !d.documentElement) return;
-      var h = Math.max(d.documentElement.scrollHeight, d.body ? d.body.scrollHeight : 0);
-      // üst sınır: ekran yüksekliği − (pencere kenar boşlukları + "تاقاش" altlığı ≈ 150px)
-      if (h > 0) frame.style.height = Math.min(h, Math.max(BASE_H, window.innerHeight - 150)) + 'px';
-    } catch (e) { /* farklı köken: ölçülemez */ }
-  }
-  frame.addEventListener('load', function () {
-    if (!frame.getAttribute('src')) return;
-    hide();
-    fit();
-    setTimeout(fit, 400);                          // fontlar/görseller yüklendikten sonra yeniden ölç
-    try {
-      var w = frame.contentWindow;
-      w.addEventListener('load', fit);
-      if (w.ResizeObserver) new w.ResizeObserver(fit).observe(w.document.documentElement);
-    } catch (e) { }
-  });
-  /* ---- Uygulama kartları: iframe yerine assets/data/apps.json'dan çizilir ----
-     popup.php içeriğinin (görsel, açıklama, indirme/mağaza bağlantıları, paylaşım) verisi JSON'da tutulur.
-     Veri yüklenemezse ya da kimlik bulunamazsa eski iframe akışı (popup.php) aynen çalışır. */
-  var DATA = null, card = null, head = null, headTitle = null, native = false;
-  var DATA_URL = SCRIPT_BASE + '../data/apps.json';
-  var ASSET_ROOT = SCRIPT_BASE + '../';            // …/assets/ (görseller: images/apps/…)
-  // Ug dışındaki dillerde: "ئەۋلاد ئەپ دېتاللىرى:" başlığı, "تاقاش" düğmesi ve simge altı uygulama adları
-  // (canlı site bunları çevirmiyor; metinler ui.json ve apps.json içinde)
-  function applyAppTexts() {
-    if (LANG === 'ug' || !UI) return;
-    var closeBtn = $('.modal-footer button', modal);
-    if (closeBtn) closeBtn.textContent = t('close');
-    var appsTitle = $('.apps .item-title');
-    if (appsTitle) { appsTitle.textContent = t('appsTitle'); appsTitle.setAttribute('dir', RTL_LANG ? 'rtl' : 'ltr'); }   // ":" sona gelsin
-    if (!DATA) return;
-    DATA.apps.forEach(function (app) {
-      var item = $('.apps .item.app' + app.id);
-      if (!item) return;
-      var name = loc(app.name), tx = $('.item-text', item), im = $('img', item);
-      if (tx) tx.textContent = name;
-      if (im) im.setAttribute('alt', name);
+      if (MOTION) {
+        it.addEventListener('pointerdown', function (e) {
+          var r = mask.getBoundingClientRect();
+          var dot = el('span', 'ew-ripple-dot');
+          dot.style.left = (e.clientX - r.left) + 'px';
+          dot.style.top = (e.clientY - r.top) + 'px';
+          mask.appendChild(dot);
+          setTimeout(function () { dot.remove(); }, 800);
+        });
+      }
     });
-  }
-  whenData(function () { txt.textContent = t('loading'); applyAppTexts(); }, 'modal-i18n');
-  appsReady.then(function (d) { DATA = d; applyAppTexts(); });
 
-  function findApp(id) {
-    if (!DATA) return null;
-    for (var i = 0; i < DATA.apps.length; i++) if (DATA.apps[i].id === id) return DATA.apps[i];
-    return null;
-  }
-  function textEl(tag, cls, text) {
-    var n = el(tag, cls);
-    n.textContent = text;
-    return n;
-  }
-  function linkEl(href, text, cls) {
-    var a = el('a', cls, { href: href, target: '_blank', rel: 'noopener noreferrer' });
-    a.textContent = text;
-    return a;
-  }
-  function copyText(s) {
-    try {
-      if (navigator.clipboard) return navigator.clipboard.writeText(s).then(function () { return true; }, function () { return false; });
-    } catch (e) { }
-    return Promise.resolve(false);
-  }
-  function renderApp(app) {
-    var site = DATA.site, enc = encodeURIComponent;
-    var url = site.url + '/popup.php?id=' + app.id;          // paylaşım bağlantısı: değişmez popup adresi
-    var text = '@' + site.handle + ' — ' + loc(app.name) + ' — ' + site.url;
-    card.textContent = '';
+    if (!MOTION) return;
+    revealOnScroll(items, .15);
 
-    card.appendChild(el('img', 'ew-app-img', { src: ASSET_ROOT + app.image, alt: '', width: '132', height: '132' }));
-    loc(app.description).forEach(function (p) { card.appendChild(textEl('p', 'ew-app-desc', p)); });
+    // Arka planda yükselen Uygur harfleri — "harfler nesilden nesile"
+    var LETTERS = 'ئا ئە ب پ ت ج چ خ د ر ز ژ س ش غ ف ق ك گ ڭ ل م ن ھ ئو ئۇ ئۆ ئۈ ۋ ئې ئى ي'.split(' ');
+    var cv = el('canvas', 'ew-letters', { 'aria-hidden': 'true' });
+    apps.insertBefore(cv, apps.firstChild);
+    var size = fitCanvas(cv), parts = [];
 
-    var acts = el('div', 'ew-app-actions');
-    app.downloads.forEach(function (d) { acts.appendChild(linkEl(d.url, loc(d.label), 'ew-app-btn')); });
-    if (app.stores.length) {
-      var stores = el('div', 'ew-app-stores');
-      app.stores.forEach(function (s) {
-        var a = el('a', null, { href: s.url, target: '_blank', rel: 'noopener noreferrer' });
-        a.appendChild(el('img', null, {
-          src: ASSET_ROOT + 'images/apps/' + s.platform + '.png',
-          alt: s.platform === 'ios' ? 'App Store' : 'Google Play', loading: 'lazy'
-        }));
-        stores.appendChild(a);
-      });
-      acts.appendChild(stores);
+    function make(anyY) {
+      return {
+        ch: pick(LETTERS), x: rand(0, size.w), y: anyY ? rand(0, size.h) : size.h + rand(10, 60),
+        s: rand(16, 44), v: rand(9, 22), a: rand(.05, .16), ph: rand(0, 6.28), rot: rand(-.3, .3), vr: rand(-.08, .08)
+      };
     }
-    if (acts.childNodes.length) card.appendChild(acts);
-    if (app.website) {
-      var webLink = el('a', 'ew-app-web', {
-        href: app.website.url, target: '_blank', rel: 'noopener noreferrer', dir: 'ltr'
-      });
-      webLink.innerHTML =
-        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>' +
-        '<span></span>' +
-        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M7 7h10v10"/></svg>';
-      webLink.children[1].textContent = app.website.label;
-      card.appendChild(webLink);
+    function populate() {
+      size = fitCanvas(cv);
+      var n = clamp(Math.round(size.w * size.h / 11000), 10, 36);
+      while (parts.length < n) parts.push(make(true));
+      parts.length = n;
     }
+    populate();
+    window.addEventListener('resize', debounce(populate, 200));
 
-    // Paylaş: eşit boyutlu, marka renkli daireler + altında kısa ad (hepsi aynı satır/aralıkta)
-    card.appendChild(textEl('p', 'ew-app-share-title', t('shareTitle')));
-    var share = el('div', 'ew-app-share');
-    function shareItem(href, label, color, svgAttrs, pathD) {
-      var a = el('a', 'ew-app-sh', { href: href, target: '_blank', rel: 'noopener noreferrer', title: label, 'aria-label': label });
-      var ico = el('i', null, { 'aria-hidden': 'true' });
-      ico.style.background = color;
-      ico.innerHTML = '<svg viewBox="0 0 24 24" focusable="false"' + svgAttrs + '><path d="' + pathD + '"/></svg>';
-      a.appendChild(ico);
-      a.appendChild(textEl('span', null, label));
+    runWhileVisible(apps, function (dt, now) {
+      var ctx = size.ctx, w = size.w, h = size.h;
+      if (!ctx) return;
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i];
+        p.y -= p.v * dt / 1000;
+        p.rot += p.vr * dt / 1000;
+        if (p.y < -p.s) { parts[i] = p = make(false); }
+        var x = p.x + Math.sin(now / 1600 + p.ph) * 10;
+        var edge = clamp(Math.min(p.y, h - p.y) / 50, 0, 1);
+        ctx.globalAlpha = p.a * edge;
+        ctx.save();
+        ctx.translate(x, p.y);
+        ctx.rotate(p.rot);
+        ctx.font = p.s.toFixed(0) + "px UKIJ, uyghur, 'Noto Naskh Arabic', sans-serif";
+        ctx.fillText(p.ch, 0, 0);
+        ctx.restore();
+      }
+      ctx.globalAlpha = 1;
+    });
+  });
+
+  /* ------------------------------------------------------------------ */
+  /* 6. MODAL — yükleniyor animasyonu                                    */
+  /* ------------------------------------------------------------------ */
+  safe('modal', function () {
+    var modal = $('#appMpdal'), frame = $('#myframe');
+    var body = modal && $('.modal-body', modal);
+    if (!frame || !body) return;
+
+    var loader = el('div', 'ew-loader', { 'aria-live': 'polite' });
+    var spinner = el('div', 'ew-spinner');
+    var txt = el('div', 'ew-loader-text');
+    loader.appendChild(spinner);
+    loader.appendChild(txt);
+    body.appendChild(loader);
+
+    var timer;
+    function show() {
+      loader.classList.add('ew-on');
+      clearTimeout(timer);
+      timer = setTimeout(hide, 10000);
+    }
+    function hide() {
+      clearTimeout(timer);
+      loader.classList.remove('ew-on');
+    }
+    // iframe yüksekliğini içeriğe uydur: sitenin iframe'i 440px'e sabit, popup.php içeriği ise ~600–700px →
+    // mağaza düğmeleri ve paylaşım bölümü kesiliyordu. Pencere ekrana sığacak kadar; fazlası iframe içinde kayar.
+    // (Yalnızca aynı kökende okunabilir: canlı sitede ve proxy'li önizlemede çalışır, aksi halde 440px kalır.)
+    var BASE_H = parseInt(frame.getAttribute('height'), 10) || 440;
+    function fit() {
+      try {
+        var d = frame.contentDocument;
+        if (!d || !d.documentElement) return;
+        var h = Math.max(d.documentElement.scrollHeight, d.body ? d.body.scrollHeight : 0);
+        // üst sınır: ekran yüksekliği − (pencere kenar boşlukları + "تاقاش" altlığı ≈ 150px)
+        if (h > 0) frame.style.height = Math.min(h, Math.max(BASE_H, window.innerHeight - 150)) + 'px';
+      } catch (e) { /* farklı köken: ölçülemez */ }
+    }
+    frame.addEventListener('load', function () {
+      if (!frame.getAttribute('src')) return;
+      hide();
+      fit();
+      setTimeout(fit, 400);                          // fontlar/görseller yüklendikten sonra yeniden ölç
+      try {
+        var w = frame.contentWindow;
+        w.addEventListener('load', fit);
+        if (w.ResizeObserver) new w.ResizeObserver(fit).observe(w.document.documentElement);
+      } catch (e) { }
+    });
+    /* ---- Uygulama kartları: iframe yerine assets/data/apps.json'dan çizilir ----
+       popup.php içeriğinin (görsel, açıklama, indirme/mağaza bağlantıları, paylaşım) verisi JSON'da tutulur.
+       Veri yüklenemezse ya da kimlik bulunamazsa eski iframe akışı (popup.php) aynen çalışır. */
+    var DATA = null, card = null, head = null, headTitle = null, native = false;
+    var DATA_URL = SCRIPT_BASE + '../data/apps.json';
+    var ASSET_ROOT = SCRIPT_BASE + '../';            // …/assets/ (görseller: images/apps/…)
+    // Ug dışındaki dillerde: "ئەۋلاد ئەپلىرى:" başlığı, "تاقاش" düğmesi ve simge altı uygulama adları
+    // (canlı site bunları çevirmiyor; metinler ui.json ve apps.json içinde)
+    function applyAppTexts() {
+      if (LANG === 'ug' || !UI) return;
+      var closeBtn = $('.modal-footer button', modal);
+      if (closeBtn) closeBtn.textContent = t('close');
+      var appsTitle = $('.apps .item-title');
+      if (appsTitle) { appsTitle.textContent = t('appsTitle'); appsTitle.setAttribute('dir', RTL_LANG ? 'rtl' : 'ltr'); }   // ":" sona gelsin
+      if (!DATA) return;
+      DATA.apps.forEach(function (app) {
+        var item = $('.apps .item.app' + app.id);
+        if (!item) return;
+        var name = loc(app.name), tx = $('.item-text', item), im = $('img', item);
+        if (tx) tx.textContent = name;
+        if (im) im.setAttribute('alt', name);
+      });
+    }
+    whenData(function () { txt.textContent = t('loading'); applyAppTexts(); }, 'modal-i18n');
+    appsReady.then(function (d) { DATA = d; applyAppTexts(); });
+    Promise.all([appsReady, dataReady]).then(function () {
+      if (!DATA) return;
+      var qApp = new URLSearchParams(location.search).get('app');
+      var targetApp = qApp && findApp(parseInt(qApp, 10));
+      if (targetApp) openApp(targetApp);
+    });
+
+    function findApp(id) {
+      if (!DATA) return null;
+      for (var i = 0; i < DATA.apps.length; i++) if (DATA.apps[i].id === id) return DATA.apps[i];
+      return null;
+    }
+    function textEl(tag, cls, text) {
+      var n = el(tag, cls);
+      n.textContent = text;
+      return n;
+    }
+    function linkEl(href, text, cls) {
+      var a = el('a', cls, { href: href, target: '_blank', rel: 'noopener noreferrer' });
+      a.textContent = text;
       return a;
     }
-    var FILL = ' fill="currentColor"', STROKE = ' fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
-    share.appendChild(shareItem('https://wa.me/?text=' + enc(text + ' ' + url), 'WhatsApp', '#25d366', FILL,
-      'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z'));
-    share.appendChild(shareItem('https://www.facebook.com/sharer/sharer.php?u=' + enc(url), 'Facebook', '#1877f2', FILL,
-      'M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.6V4.3c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.4-4 4.1v2.5H8.6V14h2.7v8z'));
-    share.appendChild(shareItem('https://x.com/intent/post?text=' + enc(text) + '&url=' + enc(url), 'X', '#111', FILL,
-      'M18.2 2.3h3.3l-7.2 8.2 8.5 11.2h-6.6l-5.2-6.8-5.9 6.8H1.8l7.7-8.8L1.3 2.3h6.8l4.7 6.2zm-1.2 17.5h1.8L7.1 4.2H5.1z'));
-    share.appendChild(shareItem('https://t.me/share/url?url=' + enc(url) + '&text=' + enc(text), 'Telegram', '#229ed9', FILL,
-      'M9.8 15.2l-.4 4.3c.6 0 .8-.3 1.1-.6l2.7-2.5 5.6 4.1c1 .6 1.8.3 2-1L22.6 4c.3-1.4-.5-2-1.5-1.6L2.3 9.6c-1.4.5-1.3 1.3-.2 1.7l5.2 1.6L19 6.4c.6-.4 1.1-.2.7.2z'));
-    // Bağlantı kopyala (düğme; sonuç durum satırında)
-    var status = el('p', 'ew-app-status', { 'aria-live': 'polite' });
-    var copy = el('button', 'ew-app-sh', { type: 'button', title: t('copyLink'), 'aria-label': t('copyLink') });
-    var copyIco = el('i', null, { 'aria-hidden': 'true' });
-    copyIco.style.background = '#44acbf';
-    copyIco.innerHTML = '<svg viewBox="0 0 24 24" focusable="false"' + STROKE + '><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.2 1.2"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.2-1.2"/></svg>';
-    copy.appendChild(copyIco);
-    copy.appendChild(textEl('span', null, t('copyShort')));
-    copy.addEventListener('click', function () {
-      copyText(url).then(function (ok) { status.textContent = ok ? t('copied') : ''; });
-    });
-    share.appendChild(copy);
-    card.appendChild(share);
-    card.appendChild(status);
-    // Sosyal medya bağlantıları sitenin alt bilgisinde zaten var; modalda tekrarlanmaz.
-  }
-  function openApp(app) {
-    if (!card) {
-      card = el('div', 'ew-app', { lang: LABEL_LANG[LANG] || 'ug', dir: RTL_LANG ? 'rtl' : 'ltr' });
-      body.insertBefore(card, body.firstChild);
+    function copyText(s) {
+      try {
+        if (navigator.clipboard) return navigator.clipboard.writeText(s).then(function () { return true; }, function () { return false; });
+      } catch (e) { }
+      return Promise.resolve(false);
     }
-    // Başlık: uygulamanın adı + X düğmesi. Sitenin modalında başlık yok; gövde kayarken yerinde kalır.
-    if (!head) {
-      head = el('div', 'ew-modal-head');
-      headTitle = el('div', 'ew-modal-title');
-      var x = el('button', 'ew-modal-close', { type: 'button', 'data-bs-dismiss': 'modal', 'aria-label': t('close') });
-      x.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
-      head.appendChild(headTitle);
-      head.appendChild(x);
-      body.parentNode.insertBefore(head, body);
-    }
-    head.setAttribute('dir', RTL_LANG ? 'rtl' : 'ltr');
-    head.setAttribute('lang', LABEL_LANG[LANG] || 'ug');
-    headTitle.textContent = loc(app.title);
-    head.style.display = '';
-    renderApp(app);
-    native = true;
-    frame.style.display = 'none';
-    card.style.display = '';
-    if (window.jQuery && window.jQuery.fn && window.jQuery.fn.modal) window.jQuery(modal).modal('show');
-    else if (window.bootstrap && window.bootstrap.Modal) window.bootstrap.Modal.getOrCreateInstance(modal).show();
-  }
-  // Sitenin kendi tıklama işleyicisi (iframe'e popup.php?id=N yazar) yerine kartı aç.
-  doc.addEventListener('click', function (e) {
-    var target = e.target;
-    var item = target && target.closest && target.closest('.apps .item');
-    var m = item && /(?:^|\s)app(\d+)(?=\s|$)/.exec(item.className || '');
-    var app = m && findApp(parseInt(m[1], 10));
-    if (!app) return;                              // veri yok: iframe akışı
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    openApp(app);
-  }, true);
+    function renderApp(app) {
+      var site = DATA.site, enc = encodeURIComponent;
+      var baseUrl = location.origin + location.pathname;
+      var url = baseUrl + '?' + (LANG !== 'ug' ? 'lang=' + enc(LANG) + '&' : '') + 'app=' + app.id;
+      var text = '@' + site.handle + ' — ' + loc(app.name);
+      card.textContent = '';
 
-  modal.addEventListener('show.bs.modal', function () {
-    if (native) return;                            // kart açılıyor: iframe/yükleyici yok
-    frame.style.display = '';
-    if (card) card.style.display = 'none';
-    if (head) head.style.display = 'none';
-    frame.style.height = BASE_H + 'px';
-    show();
-  });
-  modal.addEventListener('hidden.bs.modal', function () { hide(); native = false; });
-});
+      card.appendChild(el('img', 'ew-app-img', { src: ASSET_ROOT + app.image, alt: '', width: '132', height: '132' }));
+      loc(app.description).forEach(function (p) { card.appendChild(textEl('p', 'ew-app-desc', p)); });
 
-/* ------------------------------------------------------------------ */
-/* 7. FOOTER — sosyal ikonlar: sırayla beliriş                          */
-/* ------------------------------------------------------------------ */
-safe('social', function () {
-  var icons = $$('.footer-social .social-icon');
-  // Sosyal medya simgeleri: sitedeki düşük çözünürlüklü ve kenarları bozuk PNG/JPG'ler yerine
-  // her platform için temiz, keskin vektörel SVG'ler ve resmi marka renkleri uygulanır.
-  var svgs = {
-    yt: '<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" aria-hidden="true" focusable="false"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',
-    x: '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true" focusable="false"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
-    fb: '<svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor" aria-hidden="true" focusable="false"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>',
-    ig: '<svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>',
-    li: '<svg viewBox="0 0 24 24" width="23" height="23" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.68-2.91V8.48z"/></svg>',
-    wa: '<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" aria-hidden="true" focusable="false"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>'
-  };
-  var bgs = {
-    yt: '#ff0000',
-    x: '#000000',
-    fb: '#1877f2',
-    ig: 'radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%)',
-    li: '#0a66c2',
-    wa: '#25d366'
-  };
-
-  icons.forEach(function (a) {
-    for (var key in svgs) {
-      if (new RegExp('\\b' + key + '\\b').test(a.className)) {
-        if (a.querySelector('img') || !a.querySelector('svg')) {
-          a.innerHTML = svgs[key];
-        }
-        a.style.background = bgs[key];
-        break;
+      var acts = el('div', 'ew-app-actions');
+      app.downloads.forEach(function (d) { acts.appendChild(linkEl(d.url, loc(d.label), 'ew-app-btn')); });
+      if (app.stores.length) {
+        var stores = el('div', 'ew-app-stores');
+        app.stores.forEach(function (s) {
+          var a = el('a', null, { href: s.url, target: '_blank', rel: 'noopener noreferrer' });
+          a.appendChild(el('img', null, {
+            src: ASSET_ROOT + 'images/apps/' + s.platform + '.png',
+            alt: s.platform === 'ios' ? 'App Store' : 'Google Play', loading: 'lazy'
+          }));
+          stores.appendChild(a);
+        });
+        acts.appendChild(stores);
       }
+      if (acts.childNodes.length) card.appendChild(acts);
+      if (app.website) {
+        var webLink = el('a', 'ew-app-web', {
+          href: app.website.url, target: '_blank', rel: 'noopener noreferrer', dir: 'ltr'
+        });
+        webLink.innerHTML =
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>' +
+          '<span></span>' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M7 7h10v10"/></svg>';
+        webLink.children[1].textContent = app.website.label;
+        card.appendChild(webLink);
+      }
+
+      // Paylaş: eşit boyutlu, marka renkli daireler + altında kısa ad (hepsi aynı satır/aralıkta)
+      card.appendChild(textEl('p', 'ew-app-share-title', t('shareTitle')));
+      var share = el('div', 'ew-app-share');
+      function shareItem(href, label, color, svgAttrs, pathD) {
+        var a = el('a', 'ew-app-sh', { href: href, target: '_blank', rel: 'noopener noreferrer', title: label, 'aria-label': label });
+        var ico = el('i', null, { 'aria-hidden': 'true' });
+        ico.style.background = color;
+        ico.innerHTML = '<svg viewBox="0 0 24 24" focusable="false"' + svgAttrs + '><path d="' + pathD + '"/></svg>';
+        a.appendChild(ico);
+        a.appendChild(textEl('span', null, label));
+        return a;
+      }
+      var FILL = ' fill="currentColor"', STROKE = ' fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+      share.appendChild(shareItem('https://wa.me/?text=' + enc(text + ' ' + url), 'WhatsApp', '#25d366', FILL,
+        'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z'));
+      share.appendChild(shareItem('https://www.facebook.com/sharer/sharer.php?u=' + enc(url), 'Facebook', '#1877f2', FILL,
+        'M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.6V4.3c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.4-4 4.1v2.5H8.6V14h2.7v8z'));
+      share.appendChild(shareItem('https://x.com/intent/post?text=' + enc(text) + '&url=' + enc(url), 'X', '#111', FILL,
+        'M18.2 2.3h3.3l-7.2 8.2 8.5 11.2h-6.6l-5.2-6.8-5.9 6.8H1.8l7.7-8.8L1.3 2.3h6.8l4.7 6.2zm-1.2 17.5h1.8L7.1 4.2H5.1z'));
+      share.appendChild(shareItem('https://t.me/share/url?url=' + enc(url) + '&text=' + enc(text), 'Telegram', '#229ed9', FILL,
+        'M9.8 15.2l-.4 4.3c.6 0 .8-.3 1.1-.6l2.7-2.5 5.6 4.1c1 .6 1.8.3 2-1L22.6 4c.3-1.4-.5-2-1.5-1.6L2.3 9.6c-1.4.5-1.3 1.3-.2 1.7l5.2 1.6L19 6.4c.6-.4 1.1-.2.7.2z'));
+      // Bağlantı kopyala (düğme; sonuç durum satırında)
+      var status = el('p', 'ew-app-status', { 'aria-live': 'polite' });
+      var copy = el('button', 'ew-app-sh', { type: 'button', title: t('copyLink'), 'aria-label': t('copyLink') });
+      var copyIco = el('i', null, { 'aria-hidden': 'true' });
+      copyIco.style.background = '#44acbf';
+      copyIco.innerHTML = '<svg viewBox="0 0 24 24" focusable="false"' + STROKE + '><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.2 1.2"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.2-1.2"/></svg>';
+      copy.appendChild(copyIco);
+      copy.appendChild(textEl('span', null, t('copyShort')));
+      copy.addEventListener('click', function () {
+        copyText(url).then(function (ok) { status.textContent = ok ? t('copied') : ''; });
+      });
+      share.appendChild(copy);
+      card.appendChild(share);
+      card.appendChild(status);
+      // Sosyal medya bağlantıları sitenin alt bilgisinde zaten var; modalda tekrarlanmaz.
     }
+    function openApp(app) {
+      if (!card) {
+        card = el('div', 'ew-app', { lang: LABEL_LANG[LANG] || 'ug', dir: RTL_LANG ? 'rtl' : 'ltr' });
+        body.insertBefore(card, body.firstChild);
+      }
+      // Başlık: uygulamanın adı + X düğmesi. Sitenin modalında başlık yok; gövde kayarken yerinde kalır.
+      if (!head) {
+        head = el('div', 'ew-modal-head');
+        headTitle = el('div', 'ew-modal-title');
+        var x = el('button', 'ew-modal-close', { type: 'button', 'data-bs-dismiss': 'modal', 'aria-label': t('close') });
+        x.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+        head.appendChild(headTitle);
+        head.appendChild(x);
+        body.parentNode.insertBefore(head, body);
+      }
+      head.setAttribute('dir', RTL_LANG ? 'rtl' : 'ltr');
+      head.setAttribute('lang', LABEL_LANG[LANG] || 'ug');
+      headTitle.textContent = loc(app.title);
+      head.style.display = '';
+      renderApp(app);
+      native = true;
+      frame.style.display = 'none';
+      card.style.display = '';
+      if (window.jQuery && window.jQuery.fn && window.jQuery.fn.modal) window.jQuery(modal).modal('show');
+      else if (window.bootstrap && window.bootstrap.Modal) window.bootstrap.Modal.getOrCreateInstance(modal).show();
+    }
+    // Sitenin kendi tıklama işleyicisi (iframe'e popup.php?id=N yazar) yerine kartı aç.
+    doc.addEventListener('click', function (e) {
+      var target = e.target;
+      var item = target && target.closest && target.closest('.apps .item');
+      var m = item && /(?:^|\s)app(\d+)(?=\s|$)/.exec(item.className || '');
+      var app = m && findApp(parseInt(m[1], 10));
+      if (!app) return;                              // veri yok: iframe akışı
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      openApp(app);
+    }, true);
+
+    modal.addEventListener('show.bs.modal', function () {
+      if (native) return;                            // kart açılıyor: iframe/yükleyici yok
+      frame.style.display = '';
+      if (card) card.style.display = 'none';
+      if (head) head.style.display = 'none';
+      frame.style.height = BASE_H + 'px';
+      show();
+    });
+    modal.addEventListener('hidden.bs.modal', function () {
+      hide();
+      native = false;
+      try {
+        if (history && history.replaceState && new URLSearchParams(location.search).has('app')) {
+          var u = new URL(location.href);
+          u.searchParams.delete('app');
+          history.replaceState(null, '', u.pathname + u.search + u.hash);
+        }
+      } catch (e) {}
+    });
   });
-  icons.forEach(function (a, i) {
-    a.style.setProperty('--i', i);
-    a.addEventListener('animationend', function () { a.classList.add('ew-done'); });
+
+  /* ------------------------------------------------------------------ */
+  /* 7. FOOTER — sosyal ikonlar: sırayla beliriş                          */
+  /* ------------------------------------------------------------------ */
+  safe('social', function () {
+    var icons = $$('.footer-social .social-icon');
+    // Sosyal medya simgeleri: sitedeki düşük çözünürlüklü ve kenarları bozuk PNG/JPG'ler yerine
+    // her platform için temiz, keskin vektörel SVG'ler ve resmi marka renkleri uygulanır.
+    var svgs = {
+      yt: '<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" aria-hidden="true" focusable="false"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',
+      x: '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true" focusable="false"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
+      fb: '<svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor" aria-hidden="true" focusable="false"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>',
+      ig: '<svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>',
+      li: '<svg viewBox="0 0 24 24" width="23" height="23" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.68-2.91V8.48z"/></svg>',
+      wa: '<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" aria-hidden="true" focusable="false"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>'
+    };
+    var bgs = {
+      yt: '#ff0000',
+      x: '#000000',
+      fb: '#1877f2',
+      ig: 'radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%)',
+      li: '#0a66c2',
+      wa: '#25d366'
+    };
+
+    icons.forEach(function (a) {
+      for (var key in svgs) {
+        if (new RegExp('\\b' + key + '\\b').test(a.className)) {
+          if (a.querySelector('img') || !a.querySelector('svg')) {
+            a.innerHTML = svgs[key];
+          }
+          a.style.background = bgs[key];
+          break;
+        }
+      }
+    });
+    icons.forEach(function (a, i) {
+      a.style.setProperty('--i', i);
+      a.addEventListener('animationend', function () { a.classList.add('ew-done'); });
+    });
+    if (MOTION) revealOnScroll(icons, .3);
   });
-  if (MOTION) revealOnScroll(icons, .3);
-});
-}) ();
+})();

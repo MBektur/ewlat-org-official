@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<!-- ÖNİZLEME: ewlat.org ana sayfasının yerel kopyası (yalnızca test için) -->
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- SEO Meta Tags -->
-	<meta name="description" content="ئەۋلاد ئەپ دېتاللىرى ۋە تور بەتلىرى">
-	<meta name="keywords" content="ئەۋلاد، ئەلاد گۇرۇپپىسى، ئەۋلاد كىتاب، ئەۋلاد نەشرىياتى، ئەۋلاد كارتون فىلىملىرى، فىلىم، كارتون، ئۇيغۇر كىتاب، كىتاب، ژۇرنال، سىيرەت ژۇرنىلى، ئۆسمۈرلەر ژۇرنىلى، ئەۋلاد ئەپ دېتالى، ئاۋازلىق كىتاب، ئاۋازلىق ئەسەرلەر، قۇرئان كەرىم تورى، قۇرئان كەرىم ئەپ دېتالى، ئۇيغۇرچە، ئۇيغۇرچە ماقالىلار ئامبىرى، ئەۋلاد كىتاب بازىرى، ئەۋلاد لۇغىتى،">
+	<meta name="description" content="ئەۋلاد ئەپلىرى ۋە تور بەتلىرى">
+	<meta name="keywords"
+		content="ئەۋلاد، ئەلاد گۇرۇپپىسى، ئەۋلاد كىتاب، ئەۋلاد نەشرىياتى، ئەۋلاد كارتون فىلىملىرى، فىلىم، كارتون، ئۇيغۇر كىتاب، كىتاب، ژۇرنال، سىيرەت ژۇرنىلى، ئۆسمۈرلەر ژۇرنىلى، ئەۋلاد ئەپ دېتالى، ئاۋازلىق كىتاب، ئاۋازلىق ئەسەرلەر، قۇرئان كەرىم تورى، قۇرئان كەرىم ئەپ دېتالى، ئۇيغۇرچە، ئۇيغۇرچە ماقالىلار ئامبىرى، ئەۋلاد كىتاب بازىرى، ئەۋلاد لۇغىتى،">
 	<meta name="robots" content="index, follow">
 	<link rel="canonical" href="https://www.ewlat.org/">
 	<!-- Open Graph -->
@@ -14,7 +16,7 @@
 	<meta property="og:site_name" content="Ewlat.org">
 	<meta property="og:locale" content="ug_CN">
 	<meta property="og:title" content="ئەجدادتىن ئەۋلادقا «ئەۋلاد»تىن ئەۋلادقا">
-	<meta property="og:description" content="ئەۋلاد ئەپ دېتاللىرى ۋە تور بەتلىرى">
+	<meta property="og:description" content="ئەۋلاد ئەپلىرى ۋە تور بەتلىرى">
 	<meta property="og:image" content="https://www.ewlat.org/assets/images/og_share.png">
 	<meta property="og:image:width" content="512">
 	<meta property="og:image:height" content="512">
@@ -24,7 +26,7 @@
 	<meta name="twitter:card" content="summary_large_image">
 	<meta name="twitter:site" content="@ewlatnet">
 	<meta name="twitter:title" content="ئەجدادتىن ئەۋلادقا «ئەۋلاد»تىن ئەۋلادقا">
-	<meta name="twitter:description" content="ئەۋلاد ئەپ دېتاللىرى ۋە تور بەتلىرى">
+	<meta name="twitter:description" content="ئەۋلاد ئەپلىرى ۋە تور بەتلىرى">
 	<meta name="twitter:image" content="https://www.ewlat.org/assets/images/og_share.png">
 
 
@@ -32,88 +34,132 @@
 	<link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
 	<link rel="stylesheet" href="assets/css/bootstrap.rtl.min.css">
 	<link rel="stylesheet" href="assets/css/app.css?v=3">
-	<link rel="stylesheet" href="../assets/css/motion.css?v=30">
+	<link rel="stylesheet" href="../assets/css/motion.css?v=31">
 	<script src="assets/js/jquery-3.7.1.min.js"></script>
 	<script src="assets/js/UQCal.js"></script>
 	<script src="assets/js/bootstrap.bundle.min.js" defer></script>
 	<style>
-	.icon { width: 88px !important; height: 88px !important; }
-	@media (max-width: 768px) {
-		.items { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 10px !important; padding: 0 8px; }
-		.icon  { width: 80px !important; height: 80px !important; }
-	}
-	/* ── Dil seçici ── */
-	.d-top-bar {
-		display: flex;
-		justify-content: flex-start;
-		padding: 12px 20px 0;
-		position: relative;
-		z-index: 20;
-	}
-	.d-lang-wrap {
-		position: relative;
-	}
-	.d-lang-trigger {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		background: rgba(255,255,255,0.18);
-		border: 1px solid rgba(255,255,255,0.35);
-		border-radius: 20px;
-		padding: 6px 14px;
-		cursor: pointer;
-		color: #fff;
-		font-size: 14px;
-		user-select: none;
-		white-space: nowrap;
-		backdrop-filter: blur(6px);
-	}
-	.d-lang-caret { font-size: 9px; opacity: 0.7; transition: transform 0.2s; }
-	.d-lang-picker.open .d-lang-caret { transform: rotate(180deg); }
-	.d-lang-dropdown {
-		display: none;
-		position: absolute;
-		top: calc(100% + 6px);
-		left: 0;
-		background: rgba(55,140,160,0.97);
-		border: 1px solid rgba(255,255,255,0.25);
-		border-radius: 12px;
-		overflow: hidden;
-		box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-		z-index: 100;
-		min-width: 150px;
-		backdrop-filter: blur(8px);
-	}
-	.d-lang-picker.open .d-lang-dropdown { display: block; }
-	.d-lang-dropdown a {
-		display: block;
-		padding: 9px 18px;
-		font-size: 14px;
-		color: rgba(255,255,255,0.9);
-		text-decoration: none;
-		transition: background 0.15s;
-		border-bottom: 1px solid rgba(255,255,255,0.12);
-		font-family: 'UKIJ','uyghur',sans-serif;
-	}
-	.d-lang-dropdown a:last-child { border-bottom: none; }
-	.d-lang-dropdown a:hover, .d-lang-dropdown a.d-active { background: rgba(255,255,255,0.18); color:#fff; }
-	.title { font-size: 24px !important; }
-	.chislaDiv { font-size: 16px !important; }
+		.icon {
+			width: 88px !important;
+			height: 88px !important;
+		}
+
+		@media (max-width: 768px) {
+			.items {
+				display: grid !important;
+				grid-template-columns: repeat(4, 1fr) !important;
+				gap: 10px !important;
+				padding: 0 8px;
+			}
+
+			.icon {
+				width: 80px !important;
+				height: 80px !important;
+			}
+		}
+
+		/* ── Dil seçici ── */
+		.d-top-bar {
+			display: flex;
+			justify-content: flex-start;
+			padding: 12px 20px 0;
+			position: relative;
+			z-index: 20;
+		}
+
+		.d-lang-wrap {
+			position: relative;
+		}
+
+		.d-lang-trigger {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			background: rgba(255, 255, 255, 0.18);
+			border: 1px solid rgba(255, 255, 255, 0.35);
+			border-radius: 20px;
+			padding: 6px 14px;
+			cursor: pointer;
+			color: #fff;
+			font-size: 14px;
+			user-select: none;
+			white-space: nowrap;
+			backdrop-filter: blur(6px);
+		}
+
+		.d-lang-caret {
+			font-size: 9px;
+			opacity: 0.7;
+			transition: transform 0.2s;
+		}
+
+		.d-lang-picker.open .d-lang-caret {
+			transform: rotate(180deg);
+		}
+
+		.d-lang-dropdown {
+			display: none;
+			position: absolute;
+			top: calc(100% + 6px);
+			left: 0;
+			background: rgba(55, 140, 160, 0.97);
+			border: 1px solid rgba(255, 255, 255, 0.25);
+			border-radius: 12px;
+			overflow: hidden;
+			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+			z-index: 100;
+			min-width: 150px;
+			backdrop-filter: blur(8px);
+		}
+
+		.d-lang-picker.open .d-lang-dropdown {
+			display: block;
+		}
+
+		.d-lang-dropdown a {
+			display: block;
+			padding: 9px 18px;
+			font-size: 14px;
+			color: rgba(255, 255, 255, 0.9);
+			text-decoration: none;
+			transition: background 0.15s;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+			font-family: 'UKIJ', 'uyghur', sans-serif;
+		}
+
+		.d-lang-dropdown a:last-child {
+			border-bottom: none;
+		}
+
+		.d-lang-dropdown a:hover,
+		.d-lang-dropdown a.d-active {
+			background: rgba(255, 255, 255, 0.18);
+			color: #fff;
+		}
+
+		.title {
+			font-size: 24px !important;
+		}
+
+		.chislaDiv {
+			font-size: 16px !important;
+		}
 	</style>
 </head>
+
 <body>
-	
+
 	<div class="modal fade" id="appMpdal" aria-hidden="true">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	      <div class="modal-body">
-	        <iframe id="myframe" frameborder="0" width="100%" height="440"></iframe>
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">تاقاش</button>
-	      </div>
-	    </div>
-	  </div>
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<iframe id="myframe" frameborder="0" width="100%" height="440"></iframe>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">تاقاش</button>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<div class="top">
@@ -122,18 +168,24 @@
 			<div class="d-lang-wrap">
 				<div class="d-lang-picker" id="dLangPicker">
 					<div class="d-lang-trigger" onclick="toggleDLang()">
-						<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+						<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<circle cx="12" cy="12" r="10" />
+							<line x1="2" y1="12" x2="22" y2="12" />
+							<path
+								d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+						</svg>
 						<span>ئۇيغۇرچە</span>
 						<span class="d-lang-caret">▼</span>
 					</div>
 					<div class="d-lang-dropdown">
-												<a href="?lang=ug" class="d-active">ئۇيغۇرچە</a>
-												<a href="?lang=ul" class="">Latin</a>
-												<a href="?lang=uc" class="">Кирил</a>
-												<a href="?lang=tr" class="">Türkçe</a>
-												<a href="?lang=en" class="">English</a>
-												<a href="?lang=ar" class="">العربية</a>
-											</div>
+						<a href="?lang=ug" class="d-active">ئۇيغۇرچە</a>
+						<a href="?lang=ul" class="">Latin</a>
+						<a href="?lang=uc" class="">Кирил</a>
+						<a href="?lang=tr" class="">Türkçe</a>
+						<a href="?lang=en" class="">English</a>
+						<a href="?lang=ar" class="">العربية</a>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -145,95 +197,124 @@
 		</div>
 		<div class="menu">
 			<img src="assets/images/menu.png">
-						<div class="menu_item_0 mbtn mbtn-active">
-								<a target="_blank" href="https://www.qurankerim.com/dualar">www.qurankerim.com/dualar</a>
-							</div>
-						<div class="menu_item_1 mbtn mbtn-active">
-								<a target="_blank" href="https://www.qurankerim.com/xetim">خەتىم</a>
-							</div>
-						<div class="menu_item_2 mbtn mbtn-active">
-								<a target="_blank" href="https://www.ewlatnesriyat.com">www.ewlatnesriyat.com</a>
-							</div>
-						<div class="menu_item_3 mbtn mbtn-active">
-								<a target="_blank" href="https://www.youtube.com/@ewlatnet">youtube.com/ewlatnet</a>
-							</div>
-						<div class="menu_item_4 mbtn mbtn-active">
-								<a target="_blank" href="https://e-kuran.org/">e-kuran.org</a>
-							</div>
-						<div class="menu_item_5 mbtn mbtn-active">
-								<a target="_blank" href="http://www.ewlat.biz">www.ewlat.biz</a>
-							</div>
-						<div class="menu_item_6 mbtn mbtn-active">
-								<a target="_blank" href="https://maqale.uyghurkitap.com/">ماقالىلەر</a>
-							</div>
-						<div class="menu_item_7 mbtn mbtn-active">
-								<a target="_blank" href="https://www.uyghurkitap.com/">www.uyghurkitap.com</a>
-							</div>
-						<div class="menu_item_8 mbtn mbtn-inactive">
-							</div>
-						<div class="menu_item_9 mbtn mbtn-active">
-								<a target="_blank" href="https://www.siyret.com/">www.siyret.com</a>
-							</div>
-						<div class="menu_item_10 mbtn mbtn-active">
-								<a target="_blank" href="https://www.qurankerim.com/">www.qurankerim.com</a>
-							</div>
-						<div class="menu_item_11 mbtn mbtn-active">
-								<a target="_blank" href="https://www.ewlat.net/">www.ewlat.net</a>
-							</div>
-					</div>
+			<div class="menu_item_0 mbtn mbtn-active">
+				<a target="_blank" href="https://www.qurankerim.com/dualar">www.qurankerim.com/dualar</a>
+			</div>
+			<div class="menu_item_1 mbtn mbtn-active">
+				<a target="_blank" href="https://www.qurankerim.com/xetim">خەتىم</a>
+			</div>
+			<div class="menu_item_2 mbtn mbtn-active">
+				<a target="_blank" href="https://www.ewlatnesriyat.com">www.ewlatnesriyat.com</a>
+			</div>
+			<div class="menu_item_3 mbtn mbtn-active">
+				<a target="_blank" href="https://www.youtube.com/@ewlatnet">youtube.com/ewlatnet</a>
+			</div>
+			<div class="menu_item_4 mbtn mbtn-active">
+				<a target="_blank" href="https://e-kuran.org/">e-kuran.org</a>
+			</div>
+			<div class="menu_item_5 mbtn mbtn-active">
+				<a target="_blank" href="http://www.ewlat.biz">www.ewlat.biz</a>
+			</div>
+			<div class="menu_item_6 mbtn mbtn-active">
+				<a target="_blank" href="https://maqale.uyghurkitap.com/">ماقالىلەر</a>
+			</div>
+			<div class="menu_item_7 mbtn mbtn-active">
+				<a target="_blank" href="https://www.uyghurkitap.com/">www.uyghurkitap.com</a>
+			</div>
+			<div class="menu_item_8 mbtn mbtn-inactive">
+			</div>
+			<div class="menu_item_9 mbtn mbtn-active">
+				<a target="_blank" href="https://www.siyret.com/">www.siyret.com</a>
+			</div>
+			<div class="menu_item_10 mbtn mbtn-active">
+				<a target="_blank" href="https://www.qurankerim.com/">www.qurankerim.com</a>
+			</div>
+			<div class="menu_item_11 mbtn mbtn-active">
+				<a target="_blank" href="https://www.ewlat.net/">www.ewlat.net</a>
+			</div>
+		</div>
 	</div>
 	<div class="shadw"></div>
 
 	<!-- ── Uygulamalar ── -->
 	<div class="apps">
-		<div class="item-title">ئەۋلاد ئەپ دېتاللىرى:</div>
+		<div class="item-title">ئەۋلاد ئەپلىرى:</div>
 		<div class="items">
-						<div class="item app1">
+			<div class="item app1">
 				<div class="icon"><img src="assets/images/1.png" loading="lazy" alt="ئەۋلاد ئىملا"></div>
 				<div class="item-text">ئەۋلاد ئىملا</div>
 			</div>
-						<div class="item app2">
+			<div class="item app2">
 				<div class="icon"><img src="assets/images/2.png" loading="lazy" alt="ئاۋازلىق ئەسەرلەر"></div>
 				<div class="item-text">ئاۋازلىق ئەسەرلەر</div>
 			</div>
-						<div class="item app3">
+			<div class="item app3">
 				<div class="icon"><img src="assets/images/3.png" loading="lazy" alt="ئەۋلاد لۇغىتى"></div>
 				<div class="item-text">ئەۋلاد لۇغىتى</div>
 			</div>
-						<div class="item app4">
+			<div class="item app4">
 				<div class="icon"><img src="assets/images/4.png" loading="lazy" alt="ئاۋازلىق كىتاب"></div>
 				<div class="item-text">ئاۋازلىق كىتاب</div>
 			</div>
-						<div class="item app5">
+			<div class="item app5">
 				<div class="icon"><img src="assets/images/5.png" loading="lazy" alt="قۇرئان كەرىم"></div>
 				<div class="item-text">قۇرئان كەرىم</div>
 			</div>
-						<div class="item app6">
+			<div class="item app6">
 				<div class="icon"><img src="assets/images/6.png" loading="lazy" alt="ئەۋلاد دېتالى"></div>
 				<div class="item-text">ئەۋلاد دېتالى</div>
 			</div>
-						<div class="item app7">
+			<div class="item app7">
 				<div class="icon"><img src="assets/images/7.png" loading="lazy" alt="ئۇيغۇرچە قۇرئان"></div>
 				<div class="item-text">ئۇيغۇرچە قۇرئان</div>
 			</div>
-					</div>
+		</div>
 	</div>
 	<!-- ── Footer ──────────────────────────────────────────────── -->
 	<div class="site-footer">
 		<div class="footer-links">
-						<a href="https://www.ewlat.net" target="_blank">www.ewlat.net</a>
-									<span class="sep">|</span>
+			<a href="https://www.ewlat.net" target="_blank">www.ewlat.net</a>
+			<span class="sep">|</span>
 			<a href="https://www.ewlat.org" target="_blank">www.ewlat.org</a>
-									<span class="sep">|</span>
+			<span class="sep">|</span>
 			<a href="mailto:ewlatnet@gmail.com">ewlatnet@gmail.com</a>
-					</div>
+		</div>
 		<div class="footer-social">
-			<a href="https://www.youtube.com/ewlatnet" target="_blank" rel="noopener" title="YouTube" class="social-icon yt"><svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" aria-hidden="true" focusable="false"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
-			<a href="https://x.com/ewlatnet" target="_blank" rel="noopener" title="X" class="social-icon x"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true" focusable="false"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-			<a href="https://www.facebook.com/ewlatorg" target="_blank" rel="noopener" title="Facebook" class="social-icon fb"><svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor" aria-hidden="true" focusable="false"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
-			<a href="https://www.instagram.com/ewlatnet" target="_blank" rel="noopener" title="Instagram" class="social-icon ig"><svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
-			<a href="https://www.linkedin.com/in/ewlad-guruppisi-047152323/" target="_blank" rel="noopener" title="LinkedIn" class="social-icon li"><svg viewBox="0 0 24 24" width="23" height="23" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.68-2.91V8.48z"/></svg></a>
-			<a href="https://wa.me/905530707350" target="_blank" rel="noopener" title="WhatsApp" class="social-icon wa"><svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" aria-hidden="true" focusable="false"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg></a>
+			<a href="https://www.youtube.com/ewlatnet" target="_blank" rel="noopener" title="YouTube"
+				class="social-icon yt"><svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"
+					aria-hidden="true" focusable="false">
+					<path
+						d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+				</svg></a>
+			<a href="https://x.com/ewlatnet" target="_blank" rel="noopener" title="X" class="social-icon x"><svg
+					viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true" focusable="false">
+					<path
+						d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+				</svg></a>
+			<a href="https://www.facebook.com/ewlatorg" target="_blank" rel="noopener" title="Facebook"
+				class="social-icon fb"><svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor"
+					aria-hidden="true" focusable="false">
+					<path
+						d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+				</svg></a>
+			<a href="https://www.instagram.com/ewlatnet" target="_blank" rel="noopener" title="Instagram"
+				class="social-icon ig"><svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor"
+					aria-hidden="true" focusable="false">
+					<path
+						d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+				</svg></a>
+			<a href="https://www.linkedin.com/in/ewlad-guruppisi-047152323/" target="_blank" rel="noopener"
+				title="LinkedIn" class="social-icon li"><svg viewBox="0 0 24 24" width="23" height="23"
+					fill="currentColor" aria-hidden="true" focusable="false">
+					<path
+						d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.68-2.91V8.48z" />
+				</svg></a>
+			<a href="https://wa.me/905530707350" target="_blank" rel="noopener" title="WhatsApp"
+				class="social-icon wa"><svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"
+					aria-hidden="true" focusable="false">
+					<path
+						d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z" />
+				</svg></a>
 		</div>
 	</div>
 	<div class="footer"></div>
@@ -272,7 +353,7 @@
 
 		// ── Dil seçici ──
 		function toggleDLang() { document.getElementById('dLangPicker').classList.toggle('open'); }
-		document.addEventListener('click', function(e) {
+		document.addEventListener('click', function (e) {
 			var p = document.getElementById('dLangPicker');
 			if (p && !p.contains(e.target)) p.classList.remove('open');
 		});
@@ -281,59 +362,60 @@
 		function getHijriStr() {
 			try {
 				var today = new Date();
-				var dd = today.getDate(), mm = today.getMonth()+1, yyyy = today.getFullYear();
-				if(dd<10)dd='0'+dd; if(mm<10)mm='0'+mm;
-				var cal = new UQCal(yyyy+'-'+mm+'-'+dd);
+				var dd = today.getDate(), mm = today.getMonth() + 1, yyyy = today.getFullYear();
+				if (dd < 10) dd = '0' + dd; if (mm < 10) mm = '0' + mm;
+				var cal = new UQCal(yyyy + '-' + mm + '-' + dd);
 				var H = cal.convert();
 				var months = {
-					ug: ['','مۇھەررەم','سەفەر','رەبىئۇلئەۋۋەل','رەبىۇلئاخىر','جەمادىيەلئەۋۋەل','جەمازىيەل ئاخىر','رەجەب','شەئبان','رامازان','شەۋۋال','زىلقەئدە','زىلھىججە'],
-					tr: ['','Muharrem','Safer','RebîülEvvel','RebîülAhir','Cemâziyelevvel','Cemâziyelahir','Recep','Şaban','Ramazan','Şevval','Zilkade','Zilhicce'],
-					en: ['','Muharram','Safar',"Rabi' al-Awwal","Rabi' al-Thani",'Jumada al-Ula','Jumada al-Thani','Rajab',"Sha'ban",'Ramadan','Shawwal',"Dhu al-Qi'dah",'Dhu al-Hijjah'],
-					ar: ['','محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة']
+					ug: ['', 'مۇھەررەم', 'سەفەر', 'رەبىئۇلئەۋۋەل', 'رەبىۇلئاخىر', 'جەمادىيەلئەۋۋەل', 'جەمازىيەل ئاخىر', 'رەجەب', 'شەئبان', 'رامازان', 'شەۋۋال', 'زىلقەئدە', 'زىلھىججە'],
+					tr: ['', 'Muharrem', 'Safer', 'RebîülEvvel', 'RebîülAhir', 'Cemâziyelevvel', 'Cemâziyelahir', 'Recep', 'Şaban', 'Ramazan', 'Şevval', 'Zilkade', 'Zilhicce'],
+					en: ['', 'Muharram', 'Safar', "Rabi' al-Awwal", "Rabi' al-Thani", 'Jumada al-Ula', 'Jumada al-Thani', 'Rajab', "Sha'ban", 'Ramadan', 'Shawwal', "Dhu al-Qi'dah", 'Dhu al-Hijjah'],
+					ar: ['', 'محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر', 'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة']
 				};
 				var m = months[pageLang] || months.ug;
 				if (pageLang === 'ar') return H.Hday + ' ' + m[H.Hmonth] + ' ' + H.Hyear + ' هـ';
 				if (pageLang === 'en') return H.Hday + ' ' + m[H.Hmonth] + ' ' + H.Hyear + ' AH';
 				if (pageLang === 'tr') return H.Hday + ' ' + m[H.Hmonth] + ' ' + H.Hyear + ' H.';
 				return H.Hyear + '-يىلى ' + m[H.Hmonth] + ' ' + H.Hday;
-			} catch(e) { return ''; }
+			} catch (e) { return ''; }
 		}
 
 		function initDates() {
 			var now = new Date();
 			var arEl = document.querySelector('.chisla-ar');
 			var ugEl = document.querySelector('.chisla-ug');
-			var sep  = document.getElementById('dateSep');
+			var sep = document.getElementById('dateSep');
 			if (pageLang === 'tr') {
-				var days = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
-				var months = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+				var days = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+				var months = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
 				arEl.textContent = getHijriStr();
 				ugEl.textContent = days[now.getDay()] + ', ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
 			} else if (pageLang === 'en') {
 				arEl.textContent = getHijriStr();
-				ugEl.textContent = now.toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+				ugEl.textContent = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 			} else if (pageLang === 'ar') {
 				arEl.textContent = getHijriStr();
-				ugEl.textContent = now.toLocaleDateString('ar-SA', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+				ugEl.textContent = now.toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 			} else {
 				// ug / ul / uc
-				var ugWeeks = ['يەكشەنبە','دۈشەنبە','سەيشەنبە','چارشەنبە','پەيشەنبە','ئۇلۇغ جۈمە','شەنبە'];
+				var ugWeeks = ['يەكشەنبە', 'دۈشەنبە', 'سەيشەنبە', 'چارشەنبە', 'پەيشەنبە', 'ئۇلۇغ جۈمە', 'شەنبە'];
 				arEl.textContent = getHijriStr();
-				ugEl.textContent = now.getFullYear()+'-يىلى '+(now.getMonth()+1)+'-ئاينىڭ '+now.getDate()+'-كۈنى، '+ugWeeks[now.getDay()];
+				ugEl.textContent = now.getFullYear() + '-يىلى ' + (now.getMonth() + 1) + '-ئاينىڭ ' + now.getDate() + '-كۈنى، ' + ugWeeks[now.getDay()];
 			}
 		}
 
-		$( document ).ready(function() {
-		    initDates();
-		    		    $(".app1").click(function(){ $("#myframe").attr('src', 'popup.php?id=1'); $('#appMpdal').modal('show'); });
-		    		    $(".app2").click(function(){ $("#myframe").attr('src', 'popup.php?id=2'); $('#appMpdal').modal('show'); });
-		    		    $(".app3").click(function(){ $("#myframe").attr('src', 'popup.php?id=3'); $('#appMpdal').modal('show'); });
-		    		    $(".app4").click(function(){ $("#myframe").attr('src', 'popup.php?id=4'); $('#appMpdal').modal('show'); });
-		    		    $(".app5").click(function(){ $("#myframe").attr('src', 'popup.php?id=5'); $('#appMpdal').modal('show'); });
-		    		    $(".app6").click(function(){ $("#myframe").attr('src', 'popup.php?id=6'); $('#appMpdal').modal('show'); });
-		    		    $(".app7").click(function(){ $("#myframe").attr('src', 'popup.php?id=7'); $('#appMpdal').modal('show'); });
-		    		});
+		$(document).ready(function () {
+			initDates();
+			$(".app1").click(function () { $("#myframe").attr('src', 'popup.php?id=1'); $('#appMpdal').modal('show'); });
+			$(".app2").click(function () { $("#myframe").attr('src', 'popup.php?id=2'); $('#appMpdal').modal('show'); });
+			$(".app3").click(function () { $("#myframe").attr('src', 'popup.php?id=3'); $('#appMpdal').modal('show'); });
+			$(".app4").click(function () { $("#myframe").attr('src', 'popup.php?id=4'); $('#appMpdal').modal('show'); });
+			$(".app5").click(function () { $("#myframe").attr('src', 'popup.php?id=5'); $('#appMpdal').modal('show'); });
+			$(".app6").click(function () { $("#myframe").attr('src', 'popup.php?id=6'); $('#appMpdal').modal('show'); });
+			$(".app7").click(function () { $("#myframe").attr('src', 'popup.php?id=7'); $('#appMpdal').modal('show'); });
+		});
 	</script>
-	<script src="../assets/js/motion.js?v=44" defer></script>
+	<script src="../assets/js/motion.js?v=47" defer></script>
 </body>
+
 </html>
