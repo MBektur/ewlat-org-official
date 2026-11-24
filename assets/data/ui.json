@@ -153,6 +153,22 @@
       "en": "Ewlad websites",
       "ar": "مواقع أولاد"
     },
+    "sitesTab": {
+      "ug": "تور بېكەتلەر",
+      "ul": "Tor béketler",
+      "uc": "Тор бекәтләр",
+      "tr": "Web Siteleri",
+      "en": "Websites",
+      "ar": "المواقع"
+    },
+    "appsTab": {
+      "ug": "قوللىنىشچان يۇمشاق دېتاللار",
+      "ul": "Qollinishchan yumshaq détallar",
+      "uc": "Қоллинишчан юмшақ деталлар",
+      "tr": "Yazılım",
+      "en": "Software",
+      "ar": "البرمجيات"
+    },
     "close": {
       "ug": "تاقاش",
       "ul": "Taqash",

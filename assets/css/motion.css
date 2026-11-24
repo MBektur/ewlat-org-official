@@ -21,6 +21,14 @@
   to   { opacity: 0;  transform: scale(14); }
 }
 
+/* ---------- Çeviri yüklenene kadar (ug dışı dillerde) eski Uygurca metinlerin parlamasını önle ---------- */
+html.ew-i18n-wait .chislaDiv,
+html.ew-i18n-wait .apps .item-title,
+html.ew-i18n-wait .apps .item-text,
+html.ew-i18n-wait .menu:not(.ew-wheel-on) {
+  opacity: 0 !important;
+}
+
 /* ---------- Ortak keyframe'ler ---------- */
 @keyframes ew-word-in {
   from { opacity: 0; filter: blur(10px); transform: translateY(16px) scale(.96); }
@@ -229,10 +237,12 @@ html.ew-js .menu .ew-hubbtn:focus-visible { outline: 3px solid rgba(255, 224, 13
 .ew-sites[hidden] { display: none !important; }
 .ew-sites-panel {
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 880px;
   max-height: 88vh;
-  overflow: auto;
+  overflow: hidden;
   border-radius: 24px;
   background: #fff;
   color: #0f4c5c;
@@ -242,9 +252,7 @@ html.ew-js .menu .ew-hubbtn:focus-visible { outline: 3px solid rgba(255, 224, 13
 }
 .ew-sites.ew-show .ew-sites-panel { transform: none; }
 .ew-sites-head {
-  position: sticky;
-  top: 0;
-  z-index: 1;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -253,7 +261,72 @@ html.ew-js .menu .ew-hubbtn:focus-visible { outline: 3px solid rgba(255, 224, 13
   background: #fff;
   border-bottom: 1px solid #e2eef1;
 }
+.ew-sites-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+.ew-sites-foot {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 20px;
+  background: #f7fbfc;
+  border-top: 1px solid #e2eef1;
+}
+.ew-sites-foot-info {
+  font-size: 13px;
+  font-weight: 600;
+  color: #5b7f89;
+}
+.ew-sites-foot-close {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  color: #fff;
+  background: #0f4c5c;
+  cursor: pointer;
+  transition: background .15s, transform .15s;
+}
+.ew-sites-foot-close:hover { background: #146378; }
+.ew-sites-foot-close:active { transform: scale(.97); }
+.ew-sites-foot-close:focus-visible { outline: 3px solid #44acbf; outline-offset: 2px; }
 .ew-sites-title { font-size: 20px; line-height: 28px; font-weight: 700; }
+.ew-sites-tabs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 999px;
+  background: #eef5f7;
+}
+.ew-sites-tab {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: 700;
+  font-family: inherit;
+  color: #3b6976;
+  background: transparent;
+  cursor: pointer;
+  transition: background .18s, color .18s, box-shadow .18s;
+}
+.ew-sites-tab:hover { color: #0f4c5c; }
+.ew-sites-tab.ew-on {
+  background: #0f4c5c;
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(15, 76, 92, .22);
+}
+.ew-sites-tab:focus-visible { outline: 3px solid #44acbf; outline-offset: 2px; }
 .ew-sites-close {
   display: flex;
   align-items: center;
@@ -271,6 +344,7 @@ html.ew-js .menu .ew-hubbtn:focus-visible { outline: 3px solid rgba(255, 224, 13
 }
 .ew-sites-close:hover { background: #dcebef; }
 .ew-sites-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 20px; }
+.ew-sites-grid[hidden] { display: none !important; }
 @media (min-width: 640px) { .ew-sites-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (min-width: 768px) { .ew-sites-grid { grid-template-columns: repeat(4, 1fr); } }
 .ew-site-card {
@@ -287,13 +361,38 @@ html.ew-js .menu .ew-hubbtn:focus-visible { outline: 3px solid rgba(255, 224, 13
   background: #f7fbfc;
   transition: transform .2s, box-shadow .2s, border-color .2s;
 }
-a.ew-site-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(15, 76, 92, .18); border-color: #44acbf; }
+a.ew-site-card:hover,
+button.ew-site-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(15, 76, 92, .18); border-color: #44acbf; }
+button.ew-site-card { font-family: inherit; cursor: pointer; width: 100%; }
 .ew-site-card.ew-off { opacity: .6; }
 .ew-site-card:focus-visible { outline: 3px solid #44acbf; outline-offset: 2px; }
 .ew-site-logo { width: 64px; height: 64px; border-radius: 50%; box-shadow: 0 4px 12px rgba(0, 0, 0, .18); }
+.ew-app-logo { width: 64px; height: 64px; object-fit: contain; border-radius: 16px; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, .16)); }
 .ew-site-name { font-size: 15px; font-weight: 700; line-height: 1.375; color: #0f4c5c; }
 .ew-site-host { font-size: 12px; line-height: 16px; color: #5b7f89; }
 .ew-soon { font-size: 12px; line-height: 16px; font-weight: 700; padding: 2px 10px; border-radius: 999px; background: #ffe08a; color: #6b4e00; }
+.ew-app-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+.ew-plat-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border-radius: 50%;
+  background: #e4f1f4;
+  color: #0f4c5c;
+}
+.ew-plat-ios { background: #eef1f5; color: #1f2937; }
+.ew-plat-android { background: #e6f6ec; color: #136c36; }
+.ew-plat-win { background: #e6f2fc; color: #0b5cab; }
+.ew-plat-web { background: #e3f5f8; color: #0f5f70; }
 html.ew-sites-open, html.ew-sites-open body { overflow: hidden; }
 html.ew-motion .menu.ew-wheel-on {
   touch-action: pan-y;               /* dokunmatikte yatay kaydırma çarkı çevirir */
@@ -502,7 +601,27 @@ html.ew-motion #appMpdal.show .modal-dialog { opacity: 1; transform: none; }
 .ew-app .ew-app-stores { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
 .ew-app .ew-app-stores a { display: block; line-height: 0; }
 .ew-app .ew-app-stores img { width: 150px; height: auto; display: block; }
-.ew-app .ew-app-web { font-size: 16px; color: #0f4c5c; text-decoration: underline; }
+.ew-app .ew-app-web {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1.5px solid #cde3e8;
+  background: #f2f9fb;
+  color: #0f4c5c;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background .18s, border-color .18s, color .18s, transform .18s;
+}
+.ew-app .ew-app-web:hover,
+.ew-app .ew-app-web:focus-visible {
+  background: #0f4c5c;
+  border-color: #0f4c5c;
+  color: #fff;
+  transform: translateY(-1px);
+}
 .ew-app .ew-app-share-title { margin: 10px 0 -4px; font-size: 14px; color: #5b7c86; }
 .ew-app .ew-app-share { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 10px; margin-top: 4px; }
 .ew-app .ew-app-sh {

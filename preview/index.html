@@ -32,7 +32,7 @@
 	<link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
 	<link rel="stylesheet" href="assets/css/bootstrap.rtl.min.css">
 	<link rel="stylesheet" href="assets/css/app.css?v=3">
-	<link rel="stylesheet" href="../assets/css/motion.css?v=22">
+	<link rel="stylesheet" href="../assets/css/motion.css?v=29">
 	<script src="assets/js/jquery-3.7.1.min.js"></script>
 	<script src="assets/js/UQCal.js"></script>
 	<script src="assets/js/bootstrap.bundle.min.js" defer></script>
@@ -244,6 +244,8 @@
 			var q = new URLSearchParams(location.search).get('lang');
 			return ['ug', 'ul', 'uc', 'tr', 'en', 'ar'].indexOf(q) >= 0 ? q : 'ug';
 		})();
+		if (pageLang !== 'ug') document.documentElement.classList.add('ew-i18n-wait');
+		document.documentElement.lang = pageLang;
 		// Canlı sitenin dile göre yaptığı iki şey: slogan çevirisi (hemen, motion.js'ten önce) ve (LTR dillerde) seçicinin sağa hizalanması
 		(function () {
 			var tagline = {
@@ -256,10 +258,6 @@
 			};
 			var titleEl = document.querySelector('.title');
 			if (titleEl) titleEl.textContent = tagline[pageLang];
-		})();
-		// Seçici kutusu: etiket ve aktif seçenek, o anki dile göre (sabit "ئۇيغۇرچە" yerine)
-		document.addEventListener('DOMContentLoaded', function () {
-			document.documentElement.lang = pageLang;
 			if (pageLang !== 'ug' && pageLang !== 'ar') {
 				var st = document.createElement('style');
 				st.textContent = '.d-top-bar{justify-content:flex-end}.d-lang-dropdown{left:auto;right:0}';
@@ -270,7 +268,7 @@
 				a.classList.toggle('d-active', on);
 				if (on) document.querySelector('.d-lang-trigger > span').textContent = a.textContent;
 			});
-		});
+		})();
 
 		// ── Dil seçici ──
 		function toggleDLang() { document.getElementById('dLangPicker').classList.toggle('open'); }
@@ -336,6 +334,6 @@
 		    		    $(".app7").click(function(){ $("#myframe").attr('src', 'popup.php?id=7'); $('#appMpdal').modal('show'); });
 		    		});
 	</script>
-	<script src="../assets/js/motion.js?v=33" defer></script>
+	<script src="../assets/js/motion.js?v=41" defer></script>
 </body>
 </html>

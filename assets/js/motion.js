@@ -28,11 +28,12 @@
   /* Yardımcılar                                                         */
   /* ------------------------------------------------------------------ */
   var LANG = (typeof window.pageLang === 'string' && window.pageLang) || 'ug';
+  if (LANG !== 'ug') root.classList.add('ew-i18n-wait');
   /* Veri: arayüz metinleri + çark öğeleri → assets/data/ui.json (elle düzenlenir);
      çark konumları → assets/images/wheel/wheel.json (araçla üretilir). Yüklenemezse çark ve kartlar
      devreye girmez, site olduğu gibi kalır. */
-  var ASSET_V = '?v=9';        // data/ ve images/wheel/ dosyaları değiştiğinde artırın (önbellek)
-  var UI = null, WHEEL = null;
+  var ASSET_V = '?v=11';        // data/ ve images/wheel/ dosyaları değiştiğinde artırın (önbellek)
+  var UI = null, WHEEL = null, APPS_DATA = null;
   function getJSON(url) {
     return fetch(url + ASSET_V).then(function (r) {
       if (!r.ok) throw new Error(r.status + ' ' + url);
@@ -46,6 +47,20 @@
         .catch(function (e) { if (window.console) console.warn('[ewlat-motion] veri yüklenemedi:', e); return false; });
     } catch (e) { return Promise.resolve(false); }
   })();
+  var appsReady = (function () {
+    try {
+      return getJSON(SCRIPT_BASE + '../data/apps.json')
+        .then(function (d) { APPS_DATA = d && d.apps ? d : null; return APPS_DATA; })
+        .catch(function () { return null; });
+    } catch (e) { return Promise.resolve(null); }
+  })();
+  if (LANG !== 'ug') {
+    var clearI18nWait = function () { root.classList.remove('ew-i18n-wait'); };
+    Promise.all([dataReady, appsReady]).then(function () {
+      requestAnimationFrame(clearI18nWait);
+    });
+    setTimeout(clearI18nWait, 1000);
+  }
   /** Veri yüklenince fn çalışır (modül hatası diğerlerini etkilemesin diye safe içinde). */
   function whenData(fn, name) { dataReady.then(function (ok) { if (ok) safe(name || 'data', fn); }); }
   function t(key) {
@@ -408,22 +423,27 @@
     var hubShift = 0;                     // tam daire modunda göbeğin (çocuk + hilal) aşağı kayması (menu.png pikseli)
     function buildSites() {
       var overlay = el('div', 'ew-sites',
-        { role: 'dialog', 'aria-modal': 'true', 'aria-label': t('sitesTitle'), hidden: '' });
+        { role: 'dialog', 'aria-modal': 'true', 'aria-label': t('sitesTab') || t('sitesTitle'), hidden: '' });
       var panel = el('div', 'ew-sites-panel');
       var head = el('div', 'ew-sites-head');
-      var title = el('div', 'ew-sites-title');
-      title.textContent = t('sitesTitle');
+      var tabs = el('div', 'ew-sites-tabs', { role: 'tablist' });
+      var tabSites = el('button', 'ew-sites-tab ew-on', { type: 'button', role: 'tab', 'aria-selected': 'true' });
+      tabSites.textContent = t('sitesTab') || t('sitesTitle');
+      var tabApps = el('button', 'ew-sites-tab', { type: 'button', role: 'tab', 'aria-selected': 'false' });
+      tabApps.textContent = t('appsTab') || (t('appsTitle') || '').replace(/[:：]\s*$/, '');
+      tabs.appendChild(tabSites); tabs.appendChild(tabApps);
       var close = el('button', 'ew-sites-close', { type: 'button', 'aria-label': t('close') });
       close.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>';
-      head.appendChild(title); head.appendChild(close);
-      var grid = el('div', 'ew-sites-grid');
+      head.appendChild(tabs); head.appendChild(close);
+
+      var sitesGrid = el('div', 'ew-sites-grid', { role: 'tabpanel' });
       // Çarktaki sırayla (sağdan sola): son öğe … 0
       for (var i = N - 1; i >= 0; i--) {
         var a = $('a', btns[i]);
         var href = a && a.getAttribute('href');
         var card = el(href ? 'a' : 'div', 'ew-site-card' + (href ? '' : ' ew-off'),
           href ? { href: href, target: '_blank', rel: 'noopener' } : { 'aria-disabled': 'true' });
-        var logo = el('img', 'ew-site-logo', { src: asset('icon-' + i + '.png'), alt: '', loading: 'lazy' });
+        var logo = el('img', 'ew-site-logo', { src: asset(iconFile(i)), alt: '', loading: 'lazy' });
         logo.onerror = function () { this.style.visibility = 'hidden'; };
         var name = el('span', 'ew-site-name', { dir: 'auto' });
         name.textContent = wheelLabel(i);
@@ -437,29 +457,132 @@
           soon.textContent = t('soon');
           card.appendChild(soon);
         }
-        grid.appendChild(card);
+        sitesGrid.appendChild(card);
       }
-      panel.appendChild(head); panel.appendChild(grid);
+
+      var appsGrid = el('div', 'ew-sites-grid', { role: 'tabpanel', hidden: '' });
+      var platIcons = {
+        ios: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.96 6.33c.67-.81 1.12-1.94 1-3.08-.96.04-2.13.64-2.82 1.45-.62.71-1.16 1.86-1.02 2.96 1.08.08 2.17-.55 2.84-1.33"/></svg>',
+        android: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24a11.43 11.43 0 0 0-8.94 0L5.65 5.67c-.19-.28-.54-.37-.83-.22-.3.16-.42.54-.26.85l1.84 3.18C4.08 10.78 2.54 13.06 2.15 16h19.7c-.39-2.94-1.93-5.22-4.25-6.52zM8.5 13.75a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm7 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>',
+        win: '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5L10.5 4.4v7.1H3V5.5zm8.5-1.2L21 3v8.5h-9.5V4.3zM3 12.5h7.5v7.1L3 18.5v-6zm8.5 0H21V21l-9.5-1.3v-7.2z"/></svg>',
+        web: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>'
+      };
+      function appPlatforms(app) {
+        var tags = [];
+        if (app.stores && app.stores.length) {
+          app.stores.forEach(function (s) {
+            if (s.platform === 'ios') tags.push({ key: 'ios', cls: 'ew-plat-ios', text: 'iOS' });
+            else tags.push({ key: 'android', cls: 'ew-plat-android', text: 'Android' });
+          });
+        }
+        if (!tags.length && app.downloads && app.downloads.length) tags.push({ key: 'win', cls: 'ew-plat-win', text: 'Windows' });
+        if (app.website) tags.push({ key: 'web', cls: 'ew-plat-web', text: 'Web' });
+        return tags;
+      }
+      function renderAppsGrid() {
+        appsGrid.innerHTML = '';
+        var list = APPS_DATA && APPS_DATA.apps ? APPS_DATA.apps : null;
+        if (list) {
+          list.forEach(function (app) {
+            var card = el('button', 'ew-site-card ew-app-card', { type: 'button' });
+            var logo = el('img', 'ew-app-logo', { src: SCRIPT_BASE + '../' + app.image + ASSET_V, alt: '', loading: 'lazy' });
+            logo.onerror = function () { this.style.visibility = 'hidden'; };
+            var name = el('span', 'ew-site-name', { dir: 'auto' });
+            name.textContent = loc(app.name);
+            card.appendChild(logo); card.appendChild(name);
+            var plats = appPlatforms(app);
+            if (plats.length) {
+              var badges = el('div', 'ew-app-badges', { dir: 'ltr' });
+              plats.forEach(function (p) {
+                var b = el('span', 'ew-plat-badge ' + p.cls, { title: p.text, 'aria-label': p.text });
+                b.innerHTML = platIcons[p.key] || '';
+                badges.appendChild(b);
+              });
+              card.appendChild(badges);
+            }
+            card.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') ratchet.hover(); });
+            card.addEventListener('click', function () {
+              hide(true);
+              var item = $('.apps .item.app' + app.id);
+              if (item) item.click();
+            });
+            appsGrid.appendChild(card);
+          });
+        } else {
+          $$('.apps .item').forEach(function (item) {
+            var im = $('img', item), tx = $('.item-text', item);
+            var card = el('button', 'ew-site-card ew-app-card', { type: 'button' });
+            if (im) {
+              var logo = el('img', 'ew-app-logo', { src: im.currentSrc || im.src, alt: '', loading: 'lazy' });
+              card.appendChild(logo);
+            }
+            if (tx) {
+              var name = el('span', 'ew-site-name', { dir: 'auto' });
+              name.textContent = tx.textContent.trim();
+              card.appendChild(name);
+            }
+            card.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') ratchet.hover(); });
+            card.addEventListener('click', function () {
+              hide(true);
+              item.click();
+            });
+            appsGrid.appendChild(card);
+          });
+        }
+      }
+      renderAppsGrid();
+      appsReady.then(function (d) { if (d) renderAppsGrid(); });
+
+      var bodyWrap = el('div', 'ew-sites-body');
+      bodyWrap.appendChild(sitesGrid);
+      bodyWrap.appendChild(appsGrid);
+
+      var foot = el('div', 'ew-sites-foot');
+      var footInfo = el('span', 'ew-sites-foot-info');
+      footInfo.textContent = t('hubTitle');
+      var footClose = el('button', 'ew-sites-foot-close', { type: 'button' });
+      footClose.textContent = t('close');
+      foot.appendChild(footInfo); foot.appendChild(footClose);
+
+      function switchTab(which) {
+        var isApps = which === 'apps';
+        tabSites.classList.toggle('ew-on', !isApps);
+        tabApps.classList.toggle('ew-on', isApps);
+        tabSites.setAttribute('aria-selected', isApps ? 'false' : 'true');
+        tabApps.setAttribute('aria-selected', isApps ? 'true' : 'false');
+        sitesGrid.hidden = isApps;
+        appsGrid.hidden = !isApps;
+        overlay.setAttribute('aria-label', isApps ? tabApps.textContent : tabSites.textContent);
+        bodyWrap.scrollTop = 0;
+      }
+      tabSites.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') ratchet.hover(); });
+      tabApps.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') ratchet.hover(); });
+      tabSites.addEventListener('click', function () { switchTab('sites'); });
+      tabApps.addEventListener('click', function () { switchTab('apps'); });
+
+      panel.appendChild(head); panel.appendChild(bodyWrap); panel.appendChild(foot);
       overlay.appendChild(panel);
       doc.body.appendChild(overlay);
 
       var lastFocus = null;
       function open() {
         lastFocus = doc.activeElement;
+        switchTab('sites');
         overlay.hidden = false;
         doc.documentElement.classList.add('ew-sites-open');
         requestAnimationFrame(function () { overlay.classList.add('ew-show'); });
         close.focus();
       }
-      function hide() {
+      function hide(skipFocus) {
         overlay.classList.remove('ew-show');
         doc.documentElement.classList.remove('ew-sites-open');
         setTimeout(function () { overlay.hidden = true; }, MOTION ? 300 : 0);
-        if (lastFocus && lastFocus.focus) lastFocus.focus();
+        if (!skipFocus && lastFocus && lastFocus.focus) lastFocus.focus();
       }
-      close.addEventListener('click', hide);
-      overlay.addEventListener('click', function (e) { if (e.target === overlay) hide(); });
-      doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !overlay.hidden) hide(); });
+      close.addEventListener('click', function () { hide(false); });
+      footClose.addEventListener('click', function () { hide(false); });
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) hide(false); });
+      doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !overlay.hidden) hide(false); });
       return { open: open };
     }
     function openSites() { (sites = sites || buildSites()).open(); }
@@ -1030,9 +1153,7 @@
       });
     }
     whenData(function () { txt.textContent = t('loading'); applyAppTexts(); }, 'modal-i18n');
-    try {
-      getJSON(DATA_URL).then(function (d) { DATA = d && d.apps ? d : null; applyAppTexts(); }).catch(function () {});
-    } catch (e) {}
+    appsReady.then(function (d) { DATA = d; applyAppTexts(); });
 
     function findApp(id) {
       if (!DATA) return null;
@@ -1079,7 +1200,17 @@
         acts.appendChild(stores);
       }
       if (acts.childNodes.length) card.appendChild(acts);
-      if (app.website) card.appendChild(linkEl(app.website.url, app.website.label, 'ew-app-web'));
+      if (app.website) {
+        var webLink = el('a', 'ew-app-web', {
+          href: app.website.url, target: '_blank', rel: 'noopener noreferrer', dir: 'ltr'
+        });
+        webLink.innerHTML =
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>' +
+          '<span></span>' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M7 7h10v10"/></svg>';
+        webLink.children[1].textContent = app.website.label;
+        card.appendChild(webLink);
+      }
 
       // Paylaş: eşit boyutlu, marka renkli daireler + altında kısa ad (hepsi aynı satır/aralıkta)
       card.appendChild(textEl('p', 'ew-app-share-title', t('shareTitle')));
