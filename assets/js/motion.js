@@ -107,6 +107,53 @@
     nodes.forEach(function (n) { io.observe(n); });
   }
 
+  /* Çark tıkırtısı: hızlı dönüşte her dilim geçişinde çevirmeli telefon tarzı bir "tık" (Web Audio, ses dosyası yok).
+     AudioContext, sayfadaki ilk tıklamada oluşturulur (tarayıcılar ses için kullanıcı hareketi ister). */
+  var ratchet = (function () {
+    var ctx = null, noise = null;
+    function unlock() {
+      try {
+        if (!ctx) {
+          var AC = window.AudioContext || window.webkitAudioContext;
+          if (!AC) return;
+          ctx = new AC();
+          // Kısa, hızla sönen gürültü patlaması: tek seferlik buffer, her tık için yeniden kullanılır
+          var n = Math.floor(ctx.sampleRate * .022), buf = ctx.createBuffer(1, n, ctx.sampleRate), d = buf.getChannelData(0);
+          for (var i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 6);
+          noise = buf;
+        }
+        if (ctx.state === 'suspended') ctx.resume();
+      } catch (e) { /* ses yoksa sessiz devam */ }
+    }
+    // Çevirmeli telefonun numara çevirme diski gibi: mekanik vuruş + metalik çınlama + kontak tıkı
+    function click(vol) {
+      if (!ctx || ctx.state !== 'running') return;
+      try {
+        var t = ctx.currentTime;
+        var out = ctx.createGain(); out.gain.value = vol; out.connect(ctx.destination);
+        // 1) mekanik vuruş: hızla düşen kısa sinüs
+        var o = ctx.createOscillator(), e = ctx.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(420, t); o.frequency.exponentialRampToValueAtTime(260, t + .02);
+        e.gain.setValueAtTime(.5, t); e.gain.exponentialRampToValueAtTime(.001, t + .022);
+        o.connect(e); e.connect(out); o.start(t); o.stop(t + .025);
+        // 2) metalik çınlama: daha yüksek ve daha kısa iki kısmi
+        [1800, 3600].forEach(function (f, i) {
+          var o2 = ctx.createOscillator(), e2 = ctx.createGain();
+          o2.type = 'sine'; o2.frequency.value = f;
+          e2.gain.setValueAtTime(i ? .12 : .3, t); e2.gain.exponentialRampToValueAtTime(.001, t + .035);
+          o2.connect(e2); e2.connect(out); o2.start(t); o2.stop(t + .04);
+        });
+        // 3) kontak tıkı: kısa, dar filtreli gürültü
+        var src = ctx.createBufferSource(); src.buffer = noise;
+        var bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 4200; bp.Q.value = 3;
+        src.connect(bp); bp.connect(out); src.start(t);
+      } catch (e) { /* yoksay */ }
+    }
+    document.addEventListener('pointerdown', unlock, true);
+    return { click: click };
+  })();
+
   /* ------------------------------------------------------------------ */
   /* 2a. SLOGAN — kelime kelime açılış + altın parıltı                    */
   /* ------------------------------------------------------------------ */
@@ -343,9 +390,9 @@
     // ---- Çark parçalarını önceden yükle ----
     // Dar ekran (telefon): 12 dilimli halka ve 12 logo; geniş ekran: 24 dilim / 24 logo
     var COMPACT = (menu.clientWidth || img.clientWidth) < 700;
-    // Dar ekranda çarkın TAMAMI (tam daire) gösterilir → 12 logonun hepsi aynı anda görünür.
-    // Göbek (çocuk + hilal + yazı) dairenin merkezine kaydırılır.
-    var FULL = COMPACT, HUB_DY = FULL ? 150 : 0;
+    // FULL: çarkın tamamı (tam daire) mı, yoksa üst yarısı mı gösterilsin. Telefonda da yarım daire
+    // gösteriliyor; true yapılırsa tam daire açılır ve göbek (çocuk + hilal + yazı) dairenin merkezine kayar.
+    var FULL = false, HUB_DY = FULL ? 150 : 0;
     var RING_FILE = COMPACT ? 'ring-12.webp' : 'ring.webp';
     var urls = [asset(RING_FILE), asset('hub.png'), asset('legs.png'), asset('head.png')];
     WHEEL.icons.forEach(function (_, i) { urls.push(asset('icon-' + i + '.png')); });
@@ -516,7 +563,8 @@
       if ('ResizeObserver' in window) new ResizeObserver(debounce(layout, 50)).observe(top);
 
       // ---- Dönüş: açılışta çevirme → yavaş, sürekli dönüş ----
-      var AUTO = 3.2;               // derece/sn (pozitif = saat yönü: kabinler soldan sağa akar)
+      var SOUND_MIN = 60, travel = 0;   // deg/s: bunun üzerinde dilim geçtikçe tık sesi (yavaş dönüşte sessiz)
+      var AUTO = 3.2;              // derece/sn (pozitif = saat yönü: kabinler soldan sağa akar)
       var angle = 0, omega = 150;
       var hover = false, drag = null, steer = 0, STEER_SPEED = 40, KICK = 150;
 
@@ -597,6 +645,15 @@
         var wPrev = wS;
         wS += (wNow - wS) * .35;
         aS += (clamp((wS - wPrev) / dt, -6, 6) - aS) * .25;
+        // Tık sesi: yeterince hızlı dönüşte her SLOT_DEG kadar yol bir dilim geçişi sayılır
+        var spd = Math.abs(wS) / DEG;                          // deg/s (yumuşatılmış)
+        if (spd > SOUND_MIN) {
+          travel += spd * dt;
+          var vol = clamp((spd - SOUND_MIN) / 120, .02, 1) * .05;   // hız arttıkça sesi yükselt (çok ince, kısık tık)
+          while (travel >= SLOT_DEG) { travel -= SLOT_DEG; ratchet.click(vol); }
+        } else {
+          travel = 0;
+        }
         angle %= 360;
         wheel.style.setProperty('--ew-a', angle.toFixed(3) + 'deg');
 
