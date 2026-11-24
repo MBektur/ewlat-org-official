@@ -895,86 +895,8 @@
             menu.addEventListener('click', block, true);
             setTimeout(function () { menu.removeEventListener('click', block, true); }, 80);
           }
-          menu.classList.remove('ew-grabbing');
-          drag = null;
-        }
-        window.addEventListener('pointerup', function () { endDrag(false); });
-        window.addEventListener('pointercancel', function () { endDrag(true); });
-        menu.addEventListener('dragstart', function (e) { e.preventDefault(); });
-
-        // ---- Kabin fiziği: hareketli pime asılı sarkaç ----
-        // φ'' = (g_eff.x·cosφ − g_eff.y·sinφ)/L − c·φ' ,  g_eff = g − a_pim
-        var G = 3000, INERTIA = .35, DAMP = 2.4, WIND = 55, MAXPHI = .7;   // MAXPHI ≈ 40°: kabin tamponu
-        var prevAngle = 0, wS = 0, aS = 0, clock = 0;
-        // ---- Dönüş: açılışta çevirme → yavaş, sürekli dönüş ----
-        var SOUND_MIN = 20, travel = 0;  // deg/s: boşta yavaş dönüşte sessiz; elle çevirme ve oklarda tık sesi
-        var AUTO = 6.0;              // derece/sn (pozitif = saat yönü: kabinler soldan sağa akar)
-        var angle = 0, omega = 150;
-        var hover = false, drag = null, steer = 0, STEER_SPEED = 40, KICK = 150;
-
-        clip.classList.add('ew-ready');
-        showHalo();
-        runWhileVisible(top, function (dtMs) {
-          var dt = Math.min(.05, dtMs / 1000);
-          clock += dt;
-          if (!drag || !drag.moved) {
-            var target = steer ? steer * STEER_SPEED : (hover ? 0 : AUTO);   // ok üzerindeyken o yöne döner
-            omega += (target - omega) * (1 - Math.exp(-dt / .9));
-            angle += omega * dt;
-          }
-          // gerçek açısal hız ve ivme (sürükleme dahil), yumuşatılmış
-          var wNow = norm(angle - prevAngle) / dt * DEG;
-          prevAngle = angle;
-          var wPrev = wS;
-          wS += (wNow - wS) * .35;
-          aS += (clamp((wS - wPrev) / dt, -6, 6) - aS) * .25;
-          // Tık sesi: boşta dönerken ve hızlı dönüşte her SLOT_DEG kadar yol bir dilim geçişi sayılır
-          var spd = Math.abs(wS) / DEG;                          // deg/s (yumuşatılmış)
-          if (spd > SOUND_MIN) {
-            travel += spd * dt;
-            var vol = 0.035 + clamp(spd / 120, 0, 1) * .025;     // boşta zarif/kısık tık (~0.035), hızlandıkça toklaşır (~0.06)
-            while (travel >= SLOT_DEG) { travel -= SLOT_DEG; ratchet.click(vol); }
-          } else {
-            travel = 0;
-          }
-          angle %= 360;
-          wheel.style.setProperty('--ew-a', angle.toFixed(3) + 'deg');
-          // Fare hangi dilimin üzerinde? Dilim j: çarkın (dönmemiş) ekran açısında −(j+1)·S … −j·S
-          var sec = -1;
-          if (ptr && !(drag && drag.moved)) {
-            var pp = polar(ptr);
-            if (inRing(pp)) sec = Math.floor((((-(pp.a - angle)) % 360) + 360) % 360 / SLOT_DEG) % SLOTS;
-          }
-          if (sec !== lastSector) {
-            lastSector = sec;
-            sectorPath.setAttribute('d', sec < 0 ? '' : sectorPaths[sec]);
-            if (sec >= 0) ratchet.hover();
-          }
-
-          var s = geo.s, Rp = RP * s, L = 45 * s, g = G * s, A = angle * DEG;   // L: pim → ağırlık merkezi (yazı tarafında)
-          var gw = GW * s, half = ICON * s / 2;
-          for (var k = 0; k < cabins.length; k++) {
-            var c = cabins[k];
-            var beta = -c.th0 + A;                 // ekran açısı (y aşağı)
-            var cb = Math.cos(beta), sb = Math.sin(beta);
-            var px = geo.cx + Rp * cb, py = geo.cy + Rp * sb;
-            // pim ivmesi: merkezcil + teğetsel
-            var ax = Rp * (-wS * wS * cb - aS * sb) * INERTIA;
-            var ay = Rp * (-wS * wS * sb + aS * cb) * INERTIA;
-            var gx = -ax + WIND * s * Math.sin(clock * .8 + c.wind), gy = g - ay;
-            var acc = (gx * Math.cos(c.phi) - gy * Math.sin(c.phi)) / L - DAMP * c.dphi;
-            c.dphi += acc * dt;
-            c.phi += c.dphi * dt;
-            if (c.phi > MAXPHI) { c.phi = MAXPHI; if (c.dphi > 0) c.dphi *= -.3; }       // tampona yumuşak çarpma
-            else if (c.phi < -MAXPHI) { c.phi = -MAXPHI; if (c.dphi < 0) c.dphi *= -.3; }
-            // Ufkun altında kalan kabinleri çizme
-            var hidden = py - half > geo.H;
-            if (hidden !== c.hidden) { c.hidden = hidden; c.el.style.visibility = hidden ? 'hidden' : ''; }
-            if (hidden) continue;
-            c.el.style.transform = 'translate(' + (px - gw / 2).toFixed(2) + 'px,' + (py - half).toFixed(2) + 'px) rotate(' + (-c.phi).toFixed(4) + 'rad)';
-          }
-        });
-
+        menu.classList.remove('ew-grabbing');
+        drag = null;
       }
       window.addEventListener('pointerup', function () { endDrag(false); });
       window.addEventListener('pointercancel', function () { endDrag(true); });
