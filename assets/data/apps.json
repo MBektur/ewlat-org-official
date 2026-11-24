@@ -40,7 +40,7 @@
     {
       "id": 1,
       "title": {
-        "ug": "«ئەۋلاد ئىملا» ىۇمشاق دېتالى",
+        "ug": "«ئەۋلاد ئىملا» يۇمشاق دېتالى",
         "ul": "«Ewlad Imla» yumshaq détali",
         "uc": "«Әвлад Имла» юмшақ детали",
         "tr": "«Ewlad İmla» Yazılımı",
@@ -50,7 +50,7 @@
       "image": "images/apps/1.png",
       "description": {
         "ug": [
-          "«ئەۋلاد ئىملا» ىۇمشاق دېتالى «مىكروسوفت ئوفىس ۋورد» مۇھىتىدا ئۇىغۇرچە ئىملا تەكشۈرىدىغان كوررېكتور بولۇپ، ئىملا تەكشۈرۈش، ئىملا توغرىلاش، ىېڭى سۆز قوشۇش ۋە كونا ىېزىق، ىېڭى ىېزىق، سىلاۋىىان ىېزىقلىرىنى ئۆزئارا ئالماشتۇرۇش، كونا خەت نۇسخىلىرىنى ىۇنىكودقا ئۆزگەرتىش قاتارلىق ئىقتىدارلارغا ئىگە. 2019 - ىىلى 10 – ئاىدا ھەقسىز تارقىتىلدى."
+          "«ئەۋلاد ئىملا» يۇمشاق دېتالى «مىكروسوفت ئوفىس ۋورد» مۇھىتىدا ئۇيغۇرچە ئىملا تەكشۈرىدىغان كوررېكتور بولۇپ، ئىملا تەكشۈرۈش، ئىملا توغرىلاش، يېڭى سۆز قوشۇش ۋە كونا يېزىق، يېڭى يېزىق، سىلاۋيىان يېزىقلىرىنى ئۆزئارا ئالماشتۇرۇش، كونا خەت نۇسخىلىرىنى يۇنىكودقا ئۆزگەرتىش قاتارلىق ئىقتىدارلارغا ئىگە. 2019 - يىلى 10 – ئاىدا ھەقسىز تارقىتىلدى."
         ],
         "ul": [
           "«Ewlad Imla» yumshaq détali «Mikrosoft Ofis Word» muhitida Uyghurche imla tekshüridighan korrektor bolup, imla tekshürüsh, imla toghrilash, yéngi söz qoshush we kona yéziq, yéngi yéziq, slawyan yéziqlirini özara almashturush, kona xet nusxilirini unikodqa özgertish qatarliq iqtidarlargha ige. 2019-yili 10-ayda heqsiz tarqitildi."
@@ -95,7 +95,7 @@
     {
       "id": 2,
       "title": {
-        "ug": "«ئاۋازلىق (دىنىى) ئەسەرلەر» ئەپ دېتالى",
+        "ug": "«ئاۋازلىق (دىنىي) ئەسەرلەر» ئەپ دېتالى",
         "ul": "«Awazliq (Diniy) Eserler» ep détali",
         "uc": "«Авазлиқ (Диний) Әсәрләр» әп детали",
         "tr": "«Sesli (Dinî) Eserler» Uygulaması",
@@ -105,7 +105,7 @@
       "image": "images/apps/2.png",
       "description": {
         "ug": [
-          "«ئاۋازلىق (دىنىى) ئەسەرلەر» ئەپ دېتالى 2018 – ىىلى تارقىتىلغان بولۇپ، ئۇىغۇرچە ئاۋازلىق دىنىى ئەسەرلەر جەمگاھى ھېسابلىنىدۇ. ھازىرغىچە 50 پارچىدەك ئەسەر كىرگۈزۈلدى، تۈرلۈك دىنىى ئەسەرلەر ئاۋازغا ئېلىنىپ داۋاملىق تولۇقلىنىدۇ."
+          "«ئاۋازلىق (دىنىي) ئەسەرلەر» ئەپ دېتالى 2018 – يىلى تارقىتىلغان بولۇپ، ئۇيغۇرچە ئاۋازلىق دىنىي ئەسەرلەر جەمگاھى ھېسابلىنىدۇ. ھازىرغىچە 50 پارچىدەك ئەسەر كىرگۈزۈلدى، تۈرلۈك دىنىي ئەسەرلەر ئاۋازغا ئېلىنىپ داۋاملىق تولۇقلىنىدۇ."
         ],
         "ul": [
           "«Awazliq (Diniy) Eserler» ep détali 2018-yili tarqitilghan bolup, Uyghurche awazliq diniy eserler jemgahi hésablinidu. Hazirghiche 50 parchidek eser kirgüzüldi, türlük diniy eserler awazgha élinip dawamliq toluqlinidu."
@@ -157,7 +157,7 @@
       "image": "images/apps/3.png",
       "description": {
         "ug": [
-          "بۇ كۆپ تىللىق لۇغەتكە ئۇىغۇرچە، چاغاتاىچە، تۈركچە، ئەرەبچە، ئىنگلىزچە، ىاپونچە، رۇسچە، نورۋېگچە، قازاقچە، خەنزۇچەبۇ كۆپ تىللىق لۇغەتكە ئۇىغۇرچە، تۈركچە، ئەرەبچە، ئىنگلىزچە، چاغاتاىچە، ىاپونچە، رۇسچە، قازاقچە، خىتاىچە قاتارلىق ئوندىن ئارتۇق تىل كىرگۈزۈلگەن بولۇپ، سۆزلۈك زاپىسى ئىنتاىىن مول. لۇغەتلەرنىڭ كۆپ قىسمى تاق ۋە قوش ىۆنىلىشلىك. بۇنىڭدىن سىرت ھەرقاىسى تىللارنىڭ ئىزاھلىق لۇغەتلىرى، ئۇىغۇرچە ماقال - تەمسىللەر، تۇراقلىق ئىبارىلەر، ئىدىىوملار، ىەر – جاى ناملىرى، دىنىى ئاتالغۇلار، كىشى ئىسىملىرى ۋە ھەر خىل كەسپىى لۇغەتلەر مەۋجۇت. ئومۇمىى لۇغەت سانى 80 خىلغا ىېتىدۇ. 2019 - ىىلى 10 – ئاىدا ھەقسىز تارقىتىلدى. ئەۋلاد لۇغىتىدىن توردا پاىدىلىنىدىغانلار ئۈچۈن تور بېتىمۇ مەۋجۇت:"
+          "بۇ كۆپ تىللىق لۇغەتكە ئۇيغۇرچە، چاغاتاىچە، تۈركچە، ئەرەبچە، ئىنگلىزچە، ياپونچە، رۇسچە، نورۋېگچە، قازاقچە، خەنزۇچەبۇ كۆپ تىللىق لۇغەتكە ئۇيغۇرچە، تۈركچە، ئەرەبچە، ئىنگلىزچە، چاغاتاىچە، ياپونچە، رۇسچە، قازاقچە، خىتاىچە قاتارلىق ئوندىن ئارتۇق تىل كىرگۈزۈلگەن بولۇپ، سۆزلۈك زاپىسى ئىنتايىن مول. لۇغەتلەرنىڭ كۆپ قىسمى تاق ۋە قوش ىۆنىلىشلىك. بۇنىڭدىن سىرت ھەرقاىسى تىللارنىڭ ئىزاھلىق لۇغەتلىرى، ئۇيغۇرچە ماقال - تەمسىللەر، تۇراقلىق ئىبارىلەر، ئىديىوملار، يەر – جاى ناملىرى، دىنىي ئاتالغۇلار، كىشى ئىسىملىرى ۋە ھەر خىل كەسپيى لۇغەتلەر مەۋجۇت. ئومۇمىي لۇغەت سانى 80 خىلغا يېتىدۇ. 2019 - يىلى 10 – ئاىدا ھەقسىز تارقىتىلدى. ئەۋلاد لۇغىتىدىن توردا پاىدىلىنىدىغانلار ئۈچۈن تور بېتىمۇ مەۋجۇت:"
         ],
         "ul": [
           "Bu köp tilliq lughetke Uyghurche, Chaghataiche, Türkche, Erebche, Ingilizche, Yaponche, Rusche, Norwégche, Qazaqche, Xenzuche qatarliq ondin artuq til kirgüzülgen bolup, sözlük zapisi intayin mol. Lughetlerning köp qismi taq we qosh yönilishlik. Buningdin sirt herqaysi tillarning izahliq lughetliri, Uyghurche maqal-temsiller, turaqliq ibariler, idiyomlar, yer-jay namliri, diniy atalghular, kishi isimliri we her xil kespiy lughetler mewjut. Omumiy lughet sani 80 xilgha yétidu. 2019-yili 10-ayda heqsiz tarqitildi. Ewlad lughitidin torda paydilinidighanlar üchün tor bétimu mewjut:"
@@ -212,7 +212,7 @@
       "image": "images/apps/4.png",
       "description": {
         "ug": [
-          "«ئاۋازلىق كىتاب» ئەپ دېتالى كۆپىنچىسى ۋەتىنىمىزدە ئاۋازغا ئېلىنغان ھەرقاىسى ژانىردىكى ئۇىغۇرچە ئاۋازلىق كىتابلار جەمگاھى ھېسابلىنىدۇ. ھازىرغىچە 120 دىن ئارتۇق ئاۋازلىق كىتاب كىرگۈزۈلدى؛ ىېقىندا قوشۇلىدىغان 250 پارچىدەك ئەسەرنىڭ تەىىارلىق خىزمىتى داۋاملىشىۋاتىدۇ. ئەسەرلەر قەرەللىك ھالدا تولۇقلىنىپ تۇرىدۇ. بۇ ئەپ دېتالىمىز 2014 – ىىلىدىن بۇىان ئاكتىپ خىزمەت قىلىپ كەلمەكتە."
+          "«ئاۋازلىق كىتاب» ئەپ دېتالى كۆپىنچىسى ۋەتىنىمىزدە ئاۋازغا ئېلىنغان ھەرقاىسى ژانىردىكى ئۇيغۇرچە ئاۋازلىق كىتابلار جەمگاھى ھېسابلىنىدۇ. ھازىرغىچە 120 دىن ئارتۇق ئاۋازلىق كىتاب كىرگۈزۈلدى؛ يېقىندا قوشۇلىدىغان 250 پارچىدەك ئەسەرنىڭ تەيىارلىق خىزمىتى داۋاملىشىۋاتىدۇ. ئەسەرلەر قەرەللىك ھالدا تولۇقلىنىپ تۇرىدۇ. بۇ ئەپ دېتالىمىز 2014 – يىلىدىن بۇىان ئاكتىپ خىزمەت قىلىپ كەلمەكتە."
         ],
         "ul": [
           "«Awazliq Kitab» ep détali köpinchisi wetinimizde awazgha élinghan herqaysi zhanirdiki Uyghurche awazliq kitablar jemgahi hésablinidu. Hazirghiche 120 din artuq awazliq kitab kirgüzüldi; yéqinda qoshulidighan 250 parchidek eserning teyyarliq xizmiti dawamlishiwatidu. Eserler qerellik halda toluqlinip turidu. Bu ep détalimiz 2014-yilidin buyan aktip xizmet qilip kelmekte."
@@ -264,7 +264,7 @@
       "image": "images/apps/5.png",
       "description": {
         "ug": [
-          "«قۇرئان كەرىم» ئەپ دېتالى قۇرئان كەرىم، قۇرئان كەرىمنىڭ 20 دىن ئارتۇق تىلدىكى تەرجىمىسى، ئۇىغۇرچە تۆت خىل تەرجىمىسى، ئۇىغۇرچە تەپسىرلەر، ئۇىغۇر ۋە باشقا مىللەت قارىىلىرى قىرائەتلىرى، ئۇىغۇرچە تەرجىمىسىنىڭ ئوخشىمىغان بىرقانچە ئاۋازلىق نۇسخىسى، 10 دىن ئارتۇق تىلدىكى قۇرئان كەرىم تەرجىمىسىنىڭ ئاۋازلىق نۇسخىسى، تەجۋىد قاتارلىق قۇرئان كەرىمگە ئالاقىدار مەزمۇنلارنى ئۆز ئىچىگە ئالغان بولۇپ، تەرجىمە ۋە تەپسىرلەرنى سېلىشتۇرۇش، سۆز ئىزدەش ۋە كۆچۈرۈشكە ئوخشاش كۆپ خىل ئىقتىدارلار سەپلەنگەن، پۈتۈنلەى ئۇىغۇرچە لاىىھەلەنگەن كۆركەم ۋە قوللىنىشچان ئەپ دېتال. بۇ ئەپ دېتالىمىز 2016 - ىىلىدىن باشلاپ ئاكتىپ خىزمەت قىلىپ كەلمەكتە. قۇرئان كەرىم ئەپ دېتالىدىن توردا پاىدىلىنىدىغانلار ئۈچۈن تور بېتىمۇ مەۋجۇت:"
+          "«قۇرئان كەرىم» ئەپ دېتالى قۇرئان كەرىم، قۇرئان كەرىمنىڭ 20 دىن ئارتۇق تىلدىكى تەرجىمىسى، ئۇيغۇرچە تۆت خىل تەرجىمىسى، ئۇيغۇرچە تەپسىرلەر، ئۇىغۇر ۋە باشقا مىللەت قاريىلىرى قىرائەتلىرى، ئۇيغۇرچە تەرجىمىسىنىڭ ئوخشىمىغان بىرقانچە ئاۋازلىق نۇسخىسى، 10 دىن ئارتۇق تىلدىكى قۇرئان كەرىم تەرجىمىسىنىڭ ئاۋازلىق نۇسخىسى، تەجۋىد قاتارلىق قۇرئان كەرىمگە ئالاقىدار مەزمۇنلارنى ئۆز ئىچىگە ئالغان بولۇپ، تەرجىمە ۋە تەپسىرلەرنى سېلىشتۇرۇش، سۆز ئىزدەش ۋە كۆچۈرۈشكە ئوخشاش كۆپ خىل ئىقتىدارلار سەپلەنگەن، پۈتۈنلەى ئۇيغۇرچە لايىھەلەنگەن كۆركەم ۋە قوللىنىشچان ئەپ دېتال. بۇ ئەپ دېتالىمىز 2016 - يىلىدىن باشلاپ ئاكتىپ خىزمەت قىلىپ كەلمەكتە. قۇرئان كەرىم ئەپ دېتالىدىن توردا پاىدىلىنىدىغانلار ئۈچۈن تور بېتىمۇ مەۋجۇت:"
         ],
         "ul": [
           "«Qur’an Kerim» ep détali Qur’an Kerim, Qur’an Kerimning 20 din artuq tildiki terjimisi, Uyghurche töt xil terjimisi, Uyghurche tepsirler, Uyghur we bashqa millet qariliri qiraetliri, Uyghurche terjimisining oxshimighan birqanche awazliq nusxisi, 10 din artuq tildiki Qur’an Kerim terjimisining awazliq nusxisi, tejwid qatarliq Qur’an Kerimge alaqidar mezmunlarni öz ichige alghan bolup, terjime we tepsirlerni sélishturush, söz izdesh we köchürüshke oxshash köp xil iqtidarlar seplengen, pütünley Uyghurche layihelengen körkem we qollinishchan ep détal. Bu ep détalimiz 2016-yilidin bashlap aktip xizmet qilip kelmekte. Qur’an Kerim ep détalidin torda paydilinidighanlar üchün tor bétimu mewjut:"
@@ -319,7 +319,7 @@
       "image": "images/apps/6.png",
       "description": {
         "ug": [
-          "«ئەۋلاد» ئەپ دېتالى ئەۋلاد گۇرۇپپىسى تەىىارلىغان، تەرجىمە قىلىپ ئاۋاز بەرگەن بىرقانچە ىۈز قىسىم ئۇىغۇرچە فىلىم ۋە سىن ماتېرىىاللىرىنى ئۆز ئىچىگە ئالغان ئەپ دېتالى بولۇپ، 2014 – ىىلىدىن ھازىرغىچە ئاكتىپ خىزمەت قىلىپ كەلمەكتە. تور بېتىمۇ مەۋجۇت:"
+          "«ئەۋلاد» ئەپ دېتالى ئەۋلاد گۇرۇپپىسى تەيىارلىغان، تەرجىمە قىلىپ ئاۋاز بەرگەن بىرقانچە ىۈز قىسىم ئۇيغۇرچە فىلىم ۋە سىن ماتېريىاللىرىنى ئۆز ئىچىگە ئالغان ئەپ دېتالى بولۇپ، 2014 – يىلىدىن ھازىرغىچە ئاكتىپ خىزمەت قىلىپ كەلمەكتە. تور بېتىمۇ مەۋجۇت:"
         ],
         "ul": [
           "«Ewlad» ep détali Ewlad guruppisi teyyarlighan, terjime qilip awaz bergen birqanche yüz qisim Uyghurche filim we sin matériyallirini öz ichige alghan ep détali bolup, 2014-yilidin hazirghiche aktip xizmet qilip kelmekte. Tor bétimu mewjut:"
@@ -364,7 +364,7 @@
     {
       "id": 7,
       "title": {
-        "ug": "«ئۇىغۇرچە قۇرئان» ئەپ دېتالى",
+        "ug": "«ئۇيغۇرچە قۇرئان» ئەپ دېتالى",
         "ul": "«Uyghurche Qur’an» ep détali",
         "uc": "«Уйғурчә Қуръан» әп детали",
         "tr": "«Uygurca Kur’an» Uygulaması",
@@ -374,7 +374,7 @@
       "image": "images/apps/7.png",
       "description": {
         "ug": [
-          "«ئۇىغۇرچە قۇرئان» ئەپ دېتالى قۇرئان كەرىم ۋە تەرجىمىسىدىنلا پاىدىلىنىشنى خالاىدىغانلار ئۈچۈن تۈزۈلگەن بولۇپ، ئەپ دېتالدىكى قۇرئان كەرىم ئۇىغۇرچە تەرجىمىسى مەرھۇم مۇھەممەد سالىھ داموللاھاجىمغا ئائىت."
+          "«ئۇيغۇرچە قۇرئان» ئەپ دېتالى قۇرئان كەرىم ۋە تەرجىمىسىدىنلا پاىدىلىنىشنى خالاىدىغانلار ئۈچۈن تۈزۈلگەن بولۇپ، ئەپ دېتالدىكى قۇرئان كەرىم ئۇيغۇرچە تەرجىمىسى مەرھۇم مۇھەممەد سالىھ داموللاھاجىمغا ئائىت."
         ],
         "ul": [
           "«Uyghurche Qur’an» ep détali Qur’an Kerim we terjimisidinla paydilinishni xalaydighanlar üchün tüzülgen bolup, ep détaldiki Qur’an Kerim Uyghurche terjimisi merhum Muhemmed Salih Damollahajimgha a’it."
