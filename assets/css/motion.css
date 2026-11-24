@@ -65,6 +65,17 @@ html.ew-motion .ew-word-txt.ew-shine {
   animation-delay: calc(var(--i, 0) * 260ms);
 }
 
+html.ew-js .chislaDiv {
+  font-size: 16px;
+}
+html.ew-js .chislaDiv .date-sep {
+  font-size: 18px;
+}
+html.ew-js .ew-moon-wrap svg {
+  width: 22px;
+  height: 22px;
+}
+
 html.ew-motion .chislaDiv > * {
   animation: ew-rise .9s cubic-bezier(.2, .7, .2, 1) both;
 }
@@ -540,11 +551,30 @@ html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(4) { transition-
 html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(5) { transition-delay: .12s; }
 html.ew-motion .d-lang-picker.open .d-lang-dropdown a:nth-child(6) { transition-delay: .15s; }
 
-html.ew-js .footer-social .social-icon { transition: transform .25s ease, opacity .2s, box-shadow .25s; }
+html.ew-js .footer-social .social-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-decoration: none;
+  overflow: hidden;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, .85), 0 4px 12px rgba(0, 0, 0, .2);
+  transition: transform .25s ease, opacity .2s, box-shadow .25s;
+}
+html.ew-js .footer-social .social-icon.yt { background: #ff0000; }
+html.ew-js .footer-social .social-icon.x  { background: #000000; }
+html.ew-js .footer-social .social-icon.fb { background: #1877f2; }
+html.ew-js .footer-social .social-icon.ig { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%); }
+html.ew-js .footer-social .social-icon.li { background: #0a66c2; }
+html.ew-js .footer-social .social-icon.wa { background: #25d366; }
+
 html.ew-js .footer-social .social-icon:hover {
   opacity: 1;
-  transform: translateY(-2px) scale(1.06);       /* sakin: hafif kalkma (app.css'teki 1.15 yerine) */
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, .3), 0 8px 18px rgba(0, 0, 0, .22);
+  transform: translateY(-2px) scale(1.08);       /* sakin: hafif kalkma (app.css'teki 1.15 yerine) */
+  box-shadow: 0 0 0 3px #ffffff, 0 8px 22px rgba(0, 0, 0, .3);
 }
 html.ew-motion .footer-social .social-icon { opacity: 0; }
 html.ew-motion .footer-social .social-icon.ew-in {
