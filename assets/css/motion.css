@@ -156,7 +156,7 @@ html.ew-motion .ew-legs { animation: ew-legs 1.3s ease-in-out infinite alternate
   font-family: 'EwUKIJ', 'UKIJ', 'uyghur', sans-serif;
   font-weight: 700;
   color: #fff;
-  text-shadow: 0 1px 3px rgba(0, 55, 75, .2), 0 0 8px rgba(255, 255, 255, .15);
+  text-shadow: none;
   pointer-events: none;
   -webkit-user-select: none;
   user-select: none;
@@ -204,7 +204,7 @@ html.ew-js .menu.ew-wheel-on .mbtn-inactive .ew-slice { filter: none; }
   border: 2px solid rgba(255, 255, 255, .45);
   background: rgba(20, 86, 106, .9);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(10, 55, 70, .16);
+  box-shadow: none;
   transition: background .2s, border-color .2s, scale .2s;
 }
 .ew-arrow:hover, .ew-seeall:hover { background: #1b6c84; border-color: rgba(255, 255, 255, .8); }
