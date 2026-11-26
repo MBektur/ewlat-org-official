@@ -1,23 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ug">
 
 <head>
 	<!-- ÖNİZLEME: ewlat.org ana sayfasının yerel kopyası (yalnızca test için) -->
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#368393">
 	<!-- SEO Meta Tags -->
-	<meta name="description" content="ئەۋلاد ئەپلىرى ۋە تور بەتلىرى">
+	<meta name="description" content="ئەۋلاد گۇرۇپپىسى (Ewlat.org) — ئۇيغۇرچە قۇرئان كەرىم، دۇئا، ئاۋازلىق كىتاب، لۇغەت، بالىلار فىلىملىرى، يۇمشاق دېتاللار ۋە تور بېكەتلەر مەركىزى. Uygurca Kur'an, sesli kitap, sözlük ve uygulamalar.">
 	<meta name="keywords"
-		content="ئەۋلاد، ئەلاد گۇرۇپپىسى، ئەۋلاد كىتاب، ئەۋلاد نەشرىياتى، ئەۋلاد كارتون فىلىملىرى، فىلىم، كارتون، ئۇيغۇر كىتاب، كىتاب، ژۇرنال، سىيرەت ژۇرنىلى، ئۆسمۈرلەر ژۇرنىلى، ئەۋلاد ئەپ دېتالى، ئاۋازلىق كىتاب، ئاۋازلىق ئەسەرلەر، قۇرئان كەرىم تورى، قۇرئان كەرىم ئەپ دېتالى، ئۇيغۇرچە، ئۇيغۇرچە ماقالىلار ئامبىرى، ئەۋلاد كىتاب بازىرى، ئەۋلاد لۇغىتى،">
-	<meta name="robots" content="index, follow">
+		content="ewlat, ewlat.org, ئەۋلاد، ئەۋلاد گۇرۇپپىسى، ئەۋلاد كىتاب، ئەۋلاد نەشرىياتى، ئەۋلاد كارتون فىلىملىرى، ئۇيغۇر كىتاب، سىيرەت ژۇرنىلى، ئەۋلاد ئەپ دېتالى، ئاۋازلىق كىتاب، ئاۋازلىق ئەسەرلەر، قۇرئان كەرىم تورى، قۇرئان كەرىم ئەپ دېتالى، ئەۋلاد كىتاب بازىرى، ئەۋلاد لۇغىتى، ئەۋلاد ئىملا، رەھبىرىم قۇرئان">
+	<meta name="author" content="Ewlat.org">
+	<meta name="robots" content="index, follow, max-image-preview:large">
 	<link rel="canonical" href="https://www.ewlat.org/">
+	<link rel="alternate" hreflang="x-default" href="https://www.ewlat.org/">
+	<link rel="alternate" hreflang="ug" href="https://www.ewlat.org/?lang=ug">
+	<link rel="alternate" hreflang="ug-Latn" href="https://www.ewlat.org/?lang=ul">
+	<link rel="alternate" hreflang="ug-Cyrl" href="https://www.ewlat.org/?lang=uc">
+	<link rel="alternate" hreflang="tr" href="https://www.ewlat.org/?lang=tr">
+	<link rel="alternate" hreflang="en" href="https://www.ewlat.org/?lang=en">
+	<link rel="alternate" hreflang="ar" href="https://www.ewlat.org/?lang=ar">
 	<!-- Open Graph -->
 	<meta property="og:type" content="website">
 	<meta property="og:site_name" content="Ewlat.org">
 	<meta property="og:locale" content="ug_CN">
-	<meta property="og:title" content="ئەجدادتىن ئەۋلادقا «ئەۋلاد»تىن ئەۋلادقا">
-	<meta property="og:description" content="ئەۋلاد ئەپلىرى ۋە تور بەتلىرى">
+	<meta property="og:locale:alternate" content="tr_TR">
+	<meta property="og:locale:alternate" content="en_US">
+	<meta property="og:locale:alternate" content="ar_AR">
+	<meta property="og:title" content="Ewlat.org — ئەجدادتىن ئەۋلادقا «ئەۋلاد»تىن ئەۋلادقا">
+	<meta property="og:description" content="ئەۋلاد گۇرۇپپىسى (Ewlat.org) — ئۇيغۇرچە قۇرئان كەرىم، ئاۋازلىق كىتاب، لۇغەت، ئەپ دېتاللىرى ۋە تور بېكەتلەر مەركىزى.">
 	<meta property="og:image" content="https://www.ewlat.org/assets/images/og_share.png">
+	<meta property="og:image:alt" content="Ewlat.org — ئەۋلاد گۇرۇپپىسى">
 	<meta property="og:image:width" content="1200">
 	<meta property="og:image:height" content="630">
 	<meta property="og:image:type" content="image/png">
@@ -25,12 +38,43 @@
 	<!-- Twitter Card -->
 	<meta name="twitter:card" content="summary_large_image">
 	<meta name="twitter:site" content="@ewlatnet">
-	<meta name="twitter:title" content="ئەجدادتىن ئەۋلادقا «ئەۋلاد»تىن ئەۋلادقا">
-	<meta name="twitter:description" content="ئەۋلاد ئەپلىرى ۋە تور بەتلىرى">
+	<meta name="twitter:title" content="Ewlat.org — ئەجدادتىن ئەۋلادقا «ئەۋلاد»تىن ئەۋلادقا">
+	<meta name="twitter:description" content="ئەۋلاد گۇرۇپپىسى (Ewlat.org) — ئۇيغۇرچە قۇرئان كەرىم، ئاۋازلىق كىتاب، لۇغەت، ئەپ دېتاللىرى ۋە تور بېكەتلەر.">
 	<meta name="twitter:image" content="https://www.ewlat.org/assets/images/og_share.png">
+	<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@graph": [
+			{
+				"@type": "Organization",
+				"@id": "https://www.ewlat.org/#org",
+				"name": "Ewlat.org",
+				"alternateName": ["ئەۋلاد گۇرۇپپىسى", "Ewlad Grubu", "Ewlad Group"],
+				"url": "https://www.ewlat.org/",
+				"logo": "https://www.ewlat.org/assets/images/og_share.png",
+				"email": "ewlatnet@gmail.com",
+				"sameAs": [
+					"https://www.youtube.com/ewlatnet",
+					"https://x.com/ewlatnet",
+					"https://www.facebook.com/ewlatorg",
+					"https://www.instagram.com/ewlatnet",
+					"https://www.linkedin.com/in/ewlad-guruppisi-047152323/"
+				]
+			},
+			{
+				"@type": "WebSite",
+				"@id": "https://www.ewlat.org/#website",
+				"url": "https://www.ewlat.org/",
+				"name": "Ewlat.org — ئەۋلاد گۇرۇپپىسى",
+				"description": "ئەۋلاد ئەپلىرى ۋە تور بەتلىرى",
+				"publisher": { "@id": "https://www.ewlat.org/#org" },
+				"inLanguage": ["ug", "tr", "en", "ar"]
+			}
+		]
+	}
+	</script>
 
-
-	<title>ئەجدادتىن ئەۋلادقا «ئەۋلاد»تىن ئەۋلادقا</title>
+	<title>Ewlat.org — ئەجدادتىن ئەۋلادقا «ئەۋلاد»تىن ئەۋلادقا</title>
 	<link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
 	<link rel="stylesheet" href="assets/css/bootstrap.rtl.min.css">
 	<link rel="stylesheet" href="assets/css/app.css?v=3">
