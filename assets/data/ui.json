@@ -3,7 +3,8 @@
   "wheel": {
     "slotsPerItem": {
       "normal": 2,
-      "compact": 1
+      "compact": 1,
+      "desktopSlots": 23
     },
     "items": [
       {

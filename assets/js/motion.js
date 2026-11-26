@@ -32,7 +32,7 @@
   /* Veri: arayüz metinleri + çark öğeleri → assets/data/ui.json (elle düzenlenir);
      çark konumları → assets/images/wheel/wheel.json (araçla üretilir). Yüklenemezse çark ve kartlar
      devreye girmez, site olduğu gibi kalır. */
-  var ASSET_V = '?v=15';        // data/ ve images/wheel/ dosyaları değiştiğinde artırın (önbellek)
+  var ASSET_V = '?v=17';        // data/ ve images/wheel/ dosyaları değiştiğinde artırın (önbellek)
   var UI = null, WHEEL = null, APPS_DATA = null;
   function getJSON(url) {
     return fetch(url + ASSET_V).then(function (r) {
@@ -638,7 +638,7 @@
       var COMPACT = (menu.clientWidth || img.clientWidth) < 700;
       // FULL: çarkın tamamı (tam daire) mı, yoksa üst yarısı mı gösterilsin. Telefonda da yarım daire
       // gösteriliyor; true yapılırsa tam daire açılır ve göbek (çocuk + hilal + yazı) dairenin merkezine kayar.
-      var FULL = false, HUB_DY = FULL ? 150 : 0;
+      var FULL = false, ARC_DEG = 180, HUB_DY = FULL ? 150 : 0;
       var urls = [asset('ring.webp'), asset('hub.png'), asset('legs.png'), asset('head.png')];
       for (var ui = 0; ui < N; ui++) urls.push(asset(iconFile(ui)));
       var ringSrc = null, pending = urls.length, failed = false;
@@ -664,7 +664,7 @@
         var R_HUB = WHEEL.ring.inner, R_EDGE = WHEEL.ring.outer;
         // Dar ekranda (telefon): her logo bir kez (12 yer, 30° arayla), logolar/yazılar ~1.55 kat büyük →
         // okunur ve parmakla basılabilir. Geniş ekranda: her logo karşılıklı iki kez (24 yer, 15° arayla).
-        var PER = UI.wheel.slotsPerItem, SLOTS = N * (COMPACT ? PER.compact : PER.normal), SLOT_DEG = 360 / SLOTS, Z = COMPACT ? 1.55 : 1;
+        var PER = UI.wheel.slotsPerItem, SLOTS = (!COMPACT && PER.desktopSlots) ? PER.desktopSlots : N * (COMPACT ? PER.compact : PER.normal), SLOT_DEG = 360 / SLOTS, Z = COMPACT ? 1.55 : 1;
         var GW = 120 * Z, GH = 94 * Z, ICON = 72 * Z, FONT = 13.5 * (COMPACT ? 1.9 : 1);
         // RP: logo merkezlerinin yarıçapı. Logo + altındaki yazı (grup) bandın içinde ortalanır:
         // grubun üstü dış çembere, altı iç çembere eşit uzaklıkta. (Masaüstündeki değer ≈ 436.)
@@ -1321,7 +1321,7 @@
           u.searchParams.delete('app');
           history.replaceState(null, '', u.pathname + u.search + u.hash);
         }
-      } catch (e) {}
+      } catch (e) { }
     });
   });
 
