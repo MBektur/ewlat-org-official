@@ -32,7 +32,7 @@
   /* Veri: arayüz metinleri + çark öğeleri → assets/data/ui.json (elle düzenlenir);
      çark konumları → assets/images/wheel/wheel.json (araçla üretilir). Yüklenemezse çark ve kartlar
      devreye girmez, site olduğu gibi kalır. */
-  var ASSET_V = '?v=11';        // data/ ve images/wheel/ dosyaları değiştiğinde artırın (önbellek)
+  var ASSET_V = '?v=15';        // data/ ve images/wheel/ dosyaları değiştiğinde artırın (önbellek)
   var UI = null, WHEEL = null, APPS_DATA = null;
   function getJSON(url) {
     return fetch(url + ASSET_V).then(function (r) {
@@ -404,7 +404,15 @@
         return b;
       }
       var btns = [];
-      for (var bi = 0; bi < N; bi++) btns.push(origBtns[bi] || createBtn(bi));
+      for (var bi = 0; bi < N; bi++) {
+        if ('href' in ITEMS[bi]) {
+          if (origBtns[bi]) origBtns[bi].style.display = 'none';
+          btns.push(createBtn(bi));
+        } else {
+          btns.push(origBtns[bi] || createBtn(bi));
+        }
+      }
+      for (var oi = N; oi < origBtns.length; oi++) origBtns[oi].style.display = 'none';
       btns.forEach(function (b) {
         b.insertBefore(el('span', 'ew-slice', { 'aria-hidden': 'true' }), b.firstChild);
         $$('a', b).forEach(function (a) { a.setAttribute('draggable', 'false'); });
@@ -692,7 +700,8 @@
         for (var j = 0; j < SLOTS; j++) {
           var i = N - 1 - (j % N);               // dilim j ↔ menu_item_(N-1-j) (sağdan sola)
           var dup = j >= N;                      // ikinci tur: karşılıklı kopya (aria-hidden)
-          var icon = WHEEL.icons[i];             // yalnızca menu.png'den kesilen ilk 12'de var; yeni öğelerde undefined
+          var iconMatch = /^icon-(\d+)\.png$/.exec(iconFile(i));
+          var icon = iconMatch ? WHEEL.icons[parseInt(iconMatch[1], 10)] : null;
           var b = dup ? btns[i].cloneNode(true) : btns[i];
           if (dup) $$('a', b).forEach(function (a) { a.tabIndex = -1; });
           var cab = el('div', 'ew-cabin', dup ? { 'aria-hidden': 'true' } : null);

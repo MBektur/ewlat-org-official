@@ -1,5 +1,5 @@
 {
-  "_doc": "Arayüz verisi. wheel.items: çarktaki öğeler (sıra = menu_item_N). Yeni öğe için sona { label, href, icon } ekleyin (icon: assets/images/wheel/ altında kare PNG). Dilimler ve açılar öğe sayısından hesaplanır. strings: arayüz metinleri; eksik dilde ug kullanılır.",
+  "_doc": "Arayüz verisi. wheel.items: çarktaki tüm öğeler (sıra, label, href, icon doğrudan buradan yönetilir; icon: assets/images/wheel/ altında PNG, href: null ise 'Yakında'). strings: arayüz metinleri; eksik dilde ug kullanılır.",
   "wheel": {
     "slotsPerItem": {
       "normal": 2,
@@ -14,7 +14,9 @@
           "tr": "Dua ve zikirler",
           "en": "Prayers & Dhikr",
           "ar": "الدعاء والذكر"
-        }
+        },
+        "href": "https://www.qurankerim.com/dualar",
+        "icon": "icon-0.png"
       },
       {
         "label": {
@@ -24,7 +26,9 @@
           "tr": "Hatim Kur'an",
           "en": "Quran Khatm",
           "ar": "ختمة القرآن"
-        }
+        },
+        "href": "https://www.qurankerim.com/xetim",
+        "icon": "icon-1.png"
       },
       {
         "label": {
@@ -34,7 +38,9 @@
           "tr": "Ewlad Yayınevi",
           "en": "Ewlad Publishing",
           "ar": "دار نشر أولاد"
-        }
+        },
+        "href": "https://www.ewlatnesriyat.com",
+        "icon": "icon-2.png"
       },
       {
         "label": {
@@ -44,7 +50,9 @@
           "tr": "Ewlad YouTube",
           "en": "Ewlad YouTube",
           "ar": "يوتيوب أولاد"
-        }
+        },
+        "href": "https://www.youtube.com/@ewlatnet",
+        "icon": "icon-3.png"
       },
       {
         "label": {
@@ -54,7 +62,9 @@
           "tr": "E-Kur'an",
           "en": "E-Quran",
           "ar": "القرآن الإلكتروني"
-        }
+        },
+        "href": "https://e-kuran.org/",
+        "icon": "icon-4.png"
       },
       {
         "label": {
@@ -64,7 +74,9 @@
           "tr": "Ewlad Sözlüğü",
           "en": "Ewlad Dictionary",
           "ar": "معجم أولاد"
-        }
+        },
+        "href": "http://www.ewlat.biz",
+        "icon": "icon-5.png"
       },
       {
         "label": {
@@ -74,7 +86,9 @@
           "tr": "Makaleler Arşivi",
           "en": "Articles Archive",
           "ar": "أرشيف المقالات"
-        }
+        },
+        "href": "https://maqale.uyghurkitap.com/",
+        "icon": "icon-6.png"
       },
       {
         "label": {
@@ -84,7 +98,9 @@
           "tr": "Uygur Kitap",
           "en": "Uyghur Books",
           "ar": "الكتب الأويغورية"
-        }
+        },
+        "href": "https://www.uyghurkitap.com/",
+        "icon": "icon-7.png"
       },
       {
         "label": {
@@ -94,7 +110,9 @@
           "tr": "Farabi Derneği",
           "en": "Farabi Society",
           "ar": "جمعية الفارابي"
-        }
+        },
+        "href": null,
+        "icon": "icon-8.png"
       },
       {
         "label": {
@@ -104,7 +122,9 @@
           "tr": "Siyer Dergisi",
           "en": "Siyer Journal",
           "ar": "مجلة السيرة"
-        }
+        },
+        "href": "https://www.siyret.com/",
+        "icon": "icon-9.png"
       },
       {
         "label": {
@@ -114,7 +134,9 @@
           "tr": "Kur'an-ı Kerim",
           "en": "Holy Quran",
           "ar": "القرآن الكريم"
-        }
+        },
+        "href": "https://www.qurankerim.com/",
+        "icon": "icon-10.png"
       },
       {
         "label": {
@@ -124,7 +146,33 @@
           "tr": "Ewlad Çizgi Film",
           "en": "Ewlad Cartoons",
           "ar": "أفلام أولاد الكرتونية"
-        }
+        },
+        "href": "https://www.ewlat.net/",
+        "icon": "icon-11.png"
+      },
+      {
+        "label": {
+          "ug": "ئەۋلاد كىتاب بازىرى",
+          "ul": "Ewlad Kitab Baziri",
+          "uc": "Әвлад Китаб Базири",
+          "tr": "Ewlad Kitap Pazarı",
+          "en": "Ewlad Bookstore",
+          "ar": "سوق أولاد للكتب"
+        },
+        "href": "https://www.ewlatkitap.com/",
+        "icon": "ewlatkitap.png"
+      },
+      {
+        "label": {
+          "ug": "رەھبىرىم قۇرئان",
+          "ul": "Rehberim Qur'an",
+          "uc": "Рәһбирим Қуръан",
+          "tr": "Rehberim Kur'an",
+          "en": "Rehberim Quran",
+          "ar": "رهبرم قرآن"
+        },
+        "href": "https://www.rehberimkuran.com/",
+        "icon": "rehberimkuran.png"
       }
     ]
   },
