@@ -78,7 +78,7 @@
 	<link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
 	<link rel="stylesheet" href="assets/css/bootstrap.rtl.min.css">
 	<link rel="stylesheet" href="assets/css/app.css?v=3">
-	<link rel="stylesheet" href="../assets/css/motion.css?v=33">
+	<link rel="stylesheet" href="../assets/css/motion.css?v=36">
 	<script src="assets/js/jquery-3.7.1.min.js"></script>
 	<script src="assets/js/UQCal.js"></script>
 	<script src="assets/js/bootstrap.bundle.min.js" defer></script>
@@ -370,6 +370,9 @@
 			return ['ug', 'ul', 'uc', 'tr', 'en', 'ar'].indexOf(q) >= 0 ? q : 'ug';
 		})();
 		if (pageLang !== 'ug') document.documentElement.classList.add('ew-i18n-wait');
+		if (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			document.documentElement.classList.add('ew-wheel-wait');
+		}
 		document.documentElement.lang = pageLang;
 		// Canlı sitenin dile göre yaptığı iki şey: slogan çevirisi (hemen, motion.js'ten önce) ve (LTR dillerde) seçicinin sağa hizalanması
 		(function () {
@@ -459,7 +462,7 @@
 			$(".app7").click(function () { $("#myframe").attr('src', 'popup.php?id=7'); $('#appMpdal').modal('show'); });
 		});
 	</script>
-	<script src="../assets/js/motion.js?v=54" defer></script>
+	<script src="../assets/js/motion.js?v=56" defer></script>
 </body>
 
 </html>

@@ -25,7 +25,8 @@
 html.ew-i18n-wait .chislaDiv,
 html.ew-i18n-wait .apps .item-title,
 html.ew-i18n-wait .apps .item-text,
-html.ew-i18n-wait .menu:not(.ew-wheel-on) {
+html.ew-i18n-wait .menu:not(.ew-wheel-on),
+html.ew-wheel-wait .menu:not(.ew-wheel-on) {
   opacity: 0 !important;
 }
 
@@ -109,7 +110,14 @@ html.ew-motion .chislaDiv > .date-sep { animation: none; }
 /* ==========================================================================
    3. YARIM DAİRE MENÜ — dönme dolap
    ========================================================================== */
-html.ew-js .menu > img:first-of-type { position: relative; z-index: 2; }   /* yalnızca orijinal menu.png */
+html.ew-js .menu > img:first-of-type {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1409 / 701;
+}   /* yalnızca orijinal menu.png */
 html.ew-js .top { overflow-x: clip; }   /* hero'dan taşan hiçbir şey sayfayı yana genişletmesin */
 html.ew-js .shadw { opacity: .45; }
 /* overflow:clip'i bilmeyen tarayıcılar (ör. Safari < 16): sayfa düzeyinde yatay taşmayı kapat */
@@ -119,6 +127,7 @@ html.ew-js .shadw { opacity: .45; }
 
 /* Çarkın yarım dairesi alttaki çizgiye (hero'nun alt kenarı) dayanır. Site, ≤1023px'te .top'a padding-bottom: 10px
    veriyor; bu çemberle çizgi arasında boşluk bırakıyordu. Menü ve .top altındaki ek boşluklar sıfırlanır. */
+html.ew-motion .top,
 html.ew-js .top.ew-wheel-top { padding-bottom: 0; }
 html.ew-js .top.ew-wheel-top .menu { margin-bottom: 0; }
 html.ew-js .menu.ew-wheel-on > img:first-of-type { display: block; }   /* satır içi resmin alt boşluğu (baseline) olmasın */
@@ -660,16 +669,52 @@ html.ew-motion #appMpdal.show .modal-dialog { opacity: 1; transform: none; }
 .ew-app .ew-app-status { margin: 0; min-height: 1.4em; font-size: 14px; color: #2a8fa0; }
 
 /* ==========================================================================
-   7. DİL SEÇİCİ & FOOTER
+   7. ÜST ÇUBUK (ewlat.org + DİL SEÇİCİ) & FOOTER
    ========================================================================== */
+html.ew-js .top .d-top-bar {
+  width: 100%;
+  max-width: 1120px;
+  justify-content: space-between !important;
+  align-items: center;
+  gap: 12px;
+}
+.ew-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, .35);
+  background: rgba(255, 255, 255, .16);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+.ew-brand:hover, .ew-brand:focus-visible {
+  background: rgba(255, 255, 255, .28);
+  border-color: rgba(255, 255, 255, .6);
+  color: #fff;
+  transform: translateY(-1px);
+}
+.ew-brand svg { flex-shrink: 0; opacity: .95; }
 html.ew-js .d-lang-trigger { transition: background .2s ease, border-color .2s ease; }
 html.ew-js .d-lang-trigger:hover { background: rgba(255, 255, 255, .28); border-color: rgba(255, 255, 255, .6); }
 html.ew-js .d-lang-dropdown {
   display: block;
+  left: auto;
+  right: 0;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-6px) scale(.97);
-  transform-origin: top left;
+  transform-origin: top right;
   transition: opacity .2s ease, transform .28s cubic-bezier(.2, .8, .2, 1), visibility 0s linear .28s;
 }
 html.ew-js .d-lang-picker.open .d-lang-dropdown {

@@ -22,7 +22,11 @@
   var COARSE = mq('(pointer: coarse)');
 
   root.classList.add('ew-js');
-  if (MOTION) root.classList.add('ew-motion');
+  if (MOTION) {
+    root.classList.add('ew-motion');
+    root.classList.add('ew-wheel-wait');
+    setTimeout(function () { root.classList.remove('ew-wheel-wait'); }, 1500);
+  }
 
   /* ------------------------------------------------------------------ */
   /* Yardımcılar                                                         */
@@ -276,6 +280,21 @@
     try { unlock(); } catch (e) { }
     return { click: click, hover: hover, unlock: unlock };
   })();
+
+  /* ------------------------------------------------------------------ */
+  /* 1b. ÜST ÇUBUK MARKA ROZETİ (ewlat.org)                             */
+  /* ------------------------------------------------------------------ */
+  safe('brand', function () {
+    var bar = $('.d-top-bar');
+    if (!bar || $('.ew-brand', bar)) return;
+    var brand = el('a', 'ew-brand', { href: './', dir: 'ltr', 'aria-label': 'ewlat.org' });
+    brand.innerHTML =
+      '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+      '<path d="M12.7 3a9 9 0 1 0 8.3 12.5A7.2 7.2 0 0 1 12.7 3z"/></svg>' +
+      '<span>ewlat.org</span>';
+    brand.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') ratchet.hover(); });
+    bar.appendChild(brand);
+  });
 
   /* ------------------------------------------------------------------ */
   /* 2a. SLOGAN — kelime kelime açılış + altın parıltı                    */
@@ -628,6 +647,7 @@
       // ---- Sabit menü (hareket kapalıysa ya da çark parçaları yüklenemezse) ----
       var wheelOn = false;
       function staticMode() {
+        root.classList.remove('ew-wheel-wait');
         if (wheelOn) return;
         showHalo();                  // çark yok: sitenin kendi menüsü (menu.png) olduğu gibi kalır
       }
@@ -757,6 +777,7 @@
         top.classList.add('ew-wheel-top');         // çemberin altı ile çizgi arasındaki boşluğu kapatır (CSS)
         img.classList.add('ew-center');            // orijinal görsel yalnızca sabit merkezi göstersin
         wheelOn = true;
+        root.classList.remove('ew-wheel-wait');
 
         var geo = { W: 0, H: 0, s: 1, M: 0, cx: 0, cy: 0, rin: 0, rout: 0 };
         function layout() {
