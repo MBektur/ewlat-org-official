@@ -146,24 +146,33 @@
 
   /** Hedef ekranda ve sekme görünürken çalışan requestAnimationFrame döngüsü. */
   function runWhileVisible(target, frame) {
-    var running = false, inView = true, raf = 0, last = 0;
+    var running = false, inView = true, raf = 0, last = 0, io = null, dead = false;
     function tick(now) {
-      if (!running) return;
+      if (!running || dead) return;
       var dt = last ? Math.min(64, now - last) : 16;
       last = now;
       frame(dt, now);
       raf = requestAnimationFrame(tick);
     }
     function update() {
+      if (dead) return;
       var should = inView && !doc.hidden;
       if (should && !running) { running = true; last = 0; raf = requestAnimationFrame(tick); }
       else if (!should && running) { running = false; cancelAnimationFrame(raf); }
     }
     if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (es) { inView = es[es.length - 1].isIntersecting; update(); }).observe(target);
+      io = new IntersectionObserver(function (es) { inView = es[es.length - 1].isIntersecting; update(); });
+      io.observe(target);
     }
     doc.addEventListener('visibilitychange', update);
     update();
+    return function () {
+      dead = true;
+      running = false;
+      cancelAnimationFrame(raf);
+      doc.removeEventListener('visibilitychange', update);
+      if (io) io.disconnect();
+    };
   }
 
   /** Canvas'ı CSS boyutuna ve ekran yoğunluğuna eşitler. */
@@ -679,7 +688,9 @@
          cabins  : 24 logo (12 bağlantı × 2, karşılıklı); her biri pime tam merkezinden takılı,
                    altındaki yazının ağırlığıyla dik durur ve çarkın ivmesine göre hafifçe sallanır.
          Ortadaki ay + kitap okuyan çocuk (orijinal görselin merkezi) sabit göbektir. */
+      var destroyWheel = null;
       function buildWheel() {
+        if (destroyWheel) { destroyWheel(); destroyWheel = null; }
         // Çarkın bandı: iç kenar (sabit göbek) → dış kenar (wheel.json → ring; araçtaki RING_INNER / RING_OUTER).
         var R_HUB = WHEEL.ring.inner, R_EDGE = WHEEL.ring.outer;
         // Dar ekranda (telefon): her logo bir kez (12 yer, 30° arayla), logolar/yazılar ~1.55 kat büyük →
@@ -861,10 +872,26 @@
         hubShift = HUB_DY;
         layout();
         if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(layout);   // yazı tipi yüklenince hub yazısı yeniden sığdırılır
-        window.addEventListener('resize', debounce(layout, 150));
         placeExtras();
-        // hero yüksekliği font yüklenince / tarih satırı kırılınca değişebilir → okları yeniden yerleştir
-        if ('ResizeObserver' in window) new ResizeObserver(debounce(layout, 50)).observe(top);
+        var resizePending = false;
+        function handleResize() {
+          if (resizePending) return;
+          resizePending = true;
+          requestAnimationFrame(function () {
+            resizePending = false;
+            var nowCompact = (menu.clientWidth || img.clientWidth) < 700;
+            if (nowCompact !== COMPACT) {
+              COMPACT = nowCompact;
+              buildWheel();
+              return;
+            }
+            layout();
+            placeExtras();
+          });
+        }
+        window.addEventListener('resize', handleResize);
+        var ro = ('ResizeObserver' in window) ? new ResizeObserver(handleResize) : null;
+        if (ro) { ro.observe(top); ro.observe(menu); }
 
         // ---- Dönüş: açılışta çevirme → yavaş, sürekli dönüş ----
         var SOUND_MIN = 0.5, travel = 0;  // deg/s: çark dönerken (boşta yavaş dönüş dahil) her dilim geçişinde tık sesi
@@ -939,7 +966,7 @@
 
         clip.classList.add('ew-ready');
         showHalo();
-        runWhileVisible(top, function (dtMs) {
+        var stopLoop = runWhileVisible(top, function (dtMs) {
           var dt = Math.min(.05, dtMs / 1000);
           clock += dt;
           if (!drag || !drag.moved) {
@@ -1000,6 +1027,18 @@
             c.el.style.transform = 'translate(' + (px - gw / 2).toFixed(2) + 'px,' + (py - half).toFixed(2) + 'px) rotate(' + (-c.phi).toFixed(4) + 'rad)';
           }
         });
+
+        destroyWheel = function () {
+          stopLoop();
+          window.removeEventListener('resize', handleResize);
+          if (ro) ro.disconnect();
+          [clip, hub, legs, head, hubText].forEach(function (n) {
+            if (n && n.parentNode) n.parentNode.removeChild(n);
+          });
+          arrows.forEach(function (a) {
+            if (a.el && a.el.parentNode) a.el.parentNode.removeChild(a.el);
+          });
+        };
 
       }
     }, 'menu');
